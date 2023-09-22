@@ -1,0 +1,9 @@
+Goals that I wish to accomplish before the 2024 Season
+
+- Maintain a high quality of code with comments during Preseason
+
+- Integrate new swerve code with 2023 bot
+
+- Experiment with PathPlanner and new swerve code focusing on pathing and movement
+
+- Add functions with intake(and maybe conveyor belt and arm) to PathPlanner while having accurate pathing
