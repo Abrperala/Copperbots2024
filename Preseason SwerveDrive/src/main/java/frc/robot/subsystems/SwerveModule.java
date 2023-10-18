@@ -127,6 +127,7 @@ public class SwerveModule {
         m_angleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
+    
     /**
      * 
      * Run the azimuth motor config
@@ -136,6 +137,7 @@ public class SwerveModule {
     private void configAngleEncoder(){        
         m_angleEncoder.configFactoryDefault();
         m_angleEncoder.configAllSettings(CTREConfigs.swerveCanCoderConfig);
+        m_angleEncoder.setPositionToAbsolute();
     }
 
     /**
