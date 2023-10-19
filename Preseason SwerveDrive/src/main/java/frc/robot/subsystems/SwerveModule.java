@@ -115,7 +115,11 @@ public class SwerveModule {
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(m_angleEncoder.getAbsolutePosition());
     }
-
+    
+    public Rotation2d getAngleOffset(){
+        return m_angleOffset;
+    }
+    
     /**
      * 
      * Reset the module to the absolute position
