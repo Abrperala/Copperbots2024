@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import com.ctre.phoenix.sensors.Pigeon2;
 
 public class SwerveDrivetrain extends SubsystemBase {
     public SwerveDriveOdometry m_swerveOdometry;
@@ -45,7 +46,7 @@ public class SwerveDrivetrain extends SubsystemBase {
             translation.getX(), 
             translation.getY(), 
             rotation, 
-            getYaw()
+            m_gyro.getRotation2d()
         )
         : new ChassisSpeeds(
             translation.getX(), 
@@ -121,7 +122,8 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return (Constants.INVERT_GYRO) ? Rotation2d.fromDegrees(360 - m_gyro.getYaw()) : Rotation2d.fromDegrees(m_gyro.getYaw());
+        return (Constants.INVERT_GYRO) ? Rotation2d.fromDegrees(360 - m_gyro.getYaw()) : Rotation2d.fromDegrees(m_gyro.getYaw() + 180);
+         
     }
 
     @Override
@@ -140,7 +142,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
 
-        SmartDashboard.putNumber("Gyro", m_gyro.getYaw());
+        SmartDashboard.putNumber("Gyro", m_gyro.getYaw() + 180);
 
 
     }

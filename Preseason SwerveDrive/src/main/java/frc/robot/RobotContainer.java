@@ -11,7 +11,9 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 
@@ -66,6 +68,9 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+        // sets the driver controller options button to reset the drive gyro
+        new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
   }
 
