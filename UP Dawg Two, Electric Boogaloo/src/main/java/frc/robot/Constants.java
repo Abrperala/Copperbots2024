@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.auto.PIDConstants;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -22,6 +25,16 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
  
+    public static final class LimelightConstants {
+
+        public static final int DISABLED_PIPELINE = 0;
+        public static final int AIM_PIPELINE = 1; 
+        public static final double TARGET_HEIGHT = 3.0; // TODO: get actual target height (or temp. one...)
+        public static final double MAX_ANGLE_ERROR_X = 5.0; // TODO: find actual max reportable TX (FROM CLOSEST USEFUL SHOT!!)
+        public static final double MAX_ANGLE_ERROR_Y = 5.0; // TODO: find actual max reportable TY (THAT WE WILL REASONABLY BE AIMING FROM!!!)
+        public static final double TOLERANCE_ERROR_X = 2.0; 
+        public static final double TOLERANCE_ERROR_Y = 6.0; 
+    }
 
   /* Azimuth reversed */
   public static boolean FRONT_LEFT_AZIMUTH_REVERSED = false;
@@ -151,4 +164,23 @@ public final class Constants {
     public static final double STICK_DEADBAND = 0.1;
     public static final int DRIVER_PORT = 0;
     public static final int OPERATOR_PORT = 1;
+
+    public static final double AUTO_P_X_CONTROLLER = 0.1; //0.1 for auto 
+    public static final double AUTO_P_Y_CONTROLLER = 0.1; //1.4884 for auto
+    public static final double AUTO_P_THETA_CONTROLLER = 1.375; //2.8 for auto
+    public static final double AUTO_I_THETA_CONTROLLER = 0;
+    public static final double AUTO_D_THETA_CONTROLLER = 0.0;
+    public static final double AUTO_MAX_SPEED = Units.feetToMeters(4.9);
+    public static final double AUTO_MAX_ACCELERATION_MPS_SQUARED = 3;
+
+    public static final TrapezoidProfile.Constraints X_AUTO_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 0.5);
+    public static final TrapezoidProfile.Constraints Y_AUTO_CONSTRAINTS = new TrapezoidProfile.Constraints(0.25, 0.5);
+    public static final TrapezoidProfile.Constraints THETA_AUTO_CONSTRAINTS = new TrapezoidProfile.Constraints(8, 8);
+
+    public static final ProfiledPIDController AUTO_X_CONTROLLER = new ProfiledPIDController(AUTO_P_X_CONTROLLER, 0, 0, X_AUTO_CONSTRAINTS);
+    public static final ProfiledPIDController AUTO_Y_CONTROLLER = new ProfiledPIDController(AUTO_P_Y_CONTROLLER, 0, 0, Y_AUTO_CONSTRAINTS);
+    public static final ProfiledPIDController AUTO_THETA_CONTROLLER = new ProfiledPIDController(AUTO_P_THETA_CONTROLLER, AUTO_I_THETA_CONTROLLER, AUTO_D_THETA_CONTROLLER, THETA_AUTO_CONSTRAINTS);
+
+    public static final PIDConstants AUTO_TRANSLATION_CONSTANTS = new PIDConstants(0.01, 0, 0);
+    public static final PIDConstants AUTO_ROTATION_CONSTANTS = new PIDConstants(2.8, 0, 0);
 }

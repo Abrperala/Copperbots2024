@@ -121,7 +121,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return (Constants.INVERT_GYRO) ? Rotation2d.fromDegrees(360 - m_gyro.getYaw()) : Rotation2d.fromDegrees(m_gyro.getYaw() + 180);
+        return m_gyro.getRotation2d();
          
     }
 
@@ -140,7 +140,6 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
-
         SmartDashboard.putNumber("Gyro", m_gyro.getYaw() + 180);
 
 
