@@ -15,11 +15,13 @@ import frc.robot.commands.ButtonCommands.IndexReverse;
 import frc.robot.commands.ButtonCommands.RunIndex;
 import frc.robot.commands.ButtonCommands.TopIntakeGoBrrrrrrr;
 import frc.robot.commands.ButtonCommands.TopIntakeGoBrrrrrrrBackwards;
+import frc.robot.lib.Limelight;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.BottomRoller;
 import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.TopRoller;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -53,7 +55,7 @@ public class RobotContainer {
   public static final Hand m_hand = new Hand();
   public static final Index m_index = new Index();
   private static final SendableChooser<CommandBase> m_autoChooser = new SendableChooser<>();
-
+  private static final LimelightSubsystem m_limelight = new LimelightSubsystem();
 
   /* Controllers */
   private final PS4Controller driver = new PS4Controller(0);
@@ -127,10 +129,10 @@ public class RobotContainer {
     new JoystickButton(operator, 8).whileTrue(new ParallelCommandGroup(new TopIntakeGoBrrrrrrr(m_topRoller), new BottomIntakeGoBrrrrrrr(m_bottomRoller)));
 
     // sets the operator controller Share button to the RunIndex Command
-    new JoystickButton(operator, 9).whileTrue(new IndexReverse(m_index));
+    //new JoystickButton(operator, 9).whileTrue(new IndexReverse(m_index));
 
     // sets the operator controller options button to the IndexReverse Command
-    //new JoystickButton(operator, 10).whileTrue(new RunIndex(m_index));
+    new JoystickButton(operator, 9).onTrue(new AlignWithTarget(m_limelight, m_drivetrain));
 
     // sets the operator controller ps4 button  to the command togglePiston on intake
     new JoystickButton(operator, 13).onTrue(new InstantCommand(m_intake::togglePiston));

@@ -16,15 +16,16 @@ public class LimelightSubsystem extends SubsystemBase{
 
     private NetworkTable m_table;
     private String m_tableName;
+    
 
     public LimelightSubsystem() {
         
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-        
         m_limelight = new Limelight();
         limelightAimConfig(); // FIXME: start with LL on, keep it on!
         System.out.println("LL set!");
+        System.out.println(m_limelight.isConnected());
     }
 
   public double getAngleErrorX() {
@@ -34,7 +35,26 @@ public class LimelightSubsystem extends SubsystemBase{
   public double getAngleErrorY() {
       return m_limelight.getdegVerticalToTarget();
   }
+    
+  public double getDistanceFromGoal(){  
+    double targetOffsetAngle_Vertical = m_limelight.getdegVerticalToTarget();
 
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    double limelightMountAngleDegrees = 0.0; 
+
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 55.5; 
+
+    // distance from the target to the floor
+    double goalHeightInches = 56.0; 
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    //calculate distance
+    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    return distanceFromLimelightToGoalInches;
+    }
   /**
    * Get the percent of max error in the robot rotation. Capped to a max measurable angle (bc of distance target size changes)
    * @return Percent of max rotation error currently observed
@@ -90,12 +110,13 @@ public class LimelightSubsystem extends SubsystemBase{
         m_limelight.setLEDMode(LedMode.kforceOn);
   }
 
-  @Override
+ @Override
   public void periodic() {
-      SmartDashboard.putBoolean("In Position", inPositionX());
-      SmartDashboard.putNumber(" Angle Error X", getAngleErrorX());
-      SmartDashboard.putNumber(" Angle Error Y", getAngleErrorY());
-  }
+    SmartDashboard.putBoolean("Has Target?", hasTarget());
+    SmartDashboard.putNumber("Angle Error X", getAngleErrorX());
+    SmartDashboard.putNumber("Angle Error Y", getAngleErrorY());
+    SmartDashboard.putNumber("Distance from Target", getDistanceFromGoal());
+}
 
 }
 
