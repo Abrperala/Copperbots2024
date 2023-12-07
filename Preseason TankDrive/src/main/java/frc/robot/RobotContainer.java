@@ -6,12 +6,15 @@ package frc.robot;
 
 import frc.robot.commands.StickDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.elevator;
 import edu.wpi.first.wpilibj.PS4Controller;
 
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = new Drivetrain();
+
+  private final elevator m_Elevator = new elevator();
 
   private final PS4Controller fullControl = new PS4Controller(Constants.OperatorConstants.kFullControllerPort);
 
