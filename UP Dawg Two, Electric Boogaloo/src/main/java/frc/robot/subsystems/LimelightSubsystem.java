@@ -55,7 +55,8 @@ public class LimelightSubsystem extends SubsystemBase{
     double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
     return distanceFromLimelightToGoalInches;
     }
-  /**
+  
+    /**
    * Get the percent of max error in the robot rotation. Capped to a max measurable angle (bc of distance target size changes)
    * @return Percent of max rotation error currently observed
    */

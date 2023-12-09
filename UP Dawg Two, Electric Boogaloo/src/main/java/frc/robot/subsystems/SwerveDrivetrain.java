@@ -38,6 +38,14 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     }
 
+        /**
+         * Drive method for swerve drivetrain.
+         * 
+         * @param translation       The desired translation vector.
+         * @param rotation          The desired rotation value.
+         * @param fieldRelative     Whether the translation is field relative.
+         * @param isOpenLoop        Whether the drive is open loop.
+         */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             Constants.swerveKinematics.toSwerveModuleStates(
@@ -59,12 +67,21 @@ public class SwerveDrivetrain extends SubsystemBase {
         }
     }  
     
+    
+    /**
+     * Set chassis speeds for the swerve drivetrain.
+     * 
+     * @param targetSpeeds  The target chassis speeds.
+     */
     public void setChassisSpeeds(ChassisSpeeds targetSpeeds) {
         setModuleStates(Constants.swerveKinematics.toSwerveModuleStates(targetSpeeds));
     }
 
-
-    /* Used by SwerveControllerCommand in Auto */
+    /**
+     * Set desired states for each swerve module.
+     * 
+     * @param desiredStates  The desired states for each swerve module.
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.MAX_SPEED);
         
@@ -73,18 +90,25 @@ public class SwerveDrivetrain extends SubsystemBase {
         }
     }    
 
+    /**
+     * Gets the current robot pose in the field coordinate system.
+     * 
+     * @return The current robot pose.
+     */
     public Pose2d getPose() {
         return m_swerveOdometry.getPoseMeters();
     }
-
+ 
+    /**
+     * Resets the odometry to a specified pose.
+     * 
+     * @param pose  The desired pose to reset odometry to.
+     */
     public void resetOdometry(Pose2d pose) {
         m_swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    public void resetOdometryAuton(Pose2d pose) {
-        m_swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
-    }
-
+ 
     public void setOdometryToOffset() {
         m_swerveOdometry.resetPosition(Rotation2d.fromDegrees(0.0), getModulePositions(), new Pose2d(-6.14, 1.21, Rotation2d.fromDegrees(0.0)));
     }
@@ -93,6 +117,12 @@ public class SwerveDrivetrain extends SubsystemBase {
         m_swerveOdometry.resetPosition(Rotation2d.fromDegrees(0.0), getModulePositions(), new Pose2d(13.56, 5.2, Rotation2d.fromDegrees(0.0)));
     }
 
+    
+    /**
+     * Gets the current state of each swerve module.
+     * 
+     * @return Array of SwerveModuleState representing the current state of each swerve module.
+     */
     public SwerveModuleState[] getModuleStates(){
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(SwerveModule mod : m_swerveMods){
@@ -101,6 +131,11 @@ public class SwerveDrivetrain extends SubsystemBase {
         return states;
     }
 
+    /**
+     * Gets the current position of each swerve module.
+     * 
+     * @return Array of SwerveModulePosition representing the current position of each swerve module.
+     */
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : m_swerveMods){
@@ -109,17 +144,27 @@ public class SwerveDrivetrain extends SubsystemBase {
         return positions;
     }
 
+    /**
+     * Stops the swerve drivetrain.
+     */
     public void stopSwerve() {
-
         Translation2d stop = new Translation2d(0, 0);
         drive(stop, 0, true, true);
 
     }
 
+     /**
+     * Zeros the gyro by resetting its accumulated yaw.
+     */
     public void zeroGyro(){
         m_gyro.reset();
     }
 
+    /**
+     * Gets the current yaw (rotation around Z-axis) from the gyro.
+     * 
+     * @return The current yaw as a Rotation3d.
+     */
     public Rotation2d getYaw() {
         return m_gyro.getRotation2d();
          
@@ -136,12 +181,9 @@ public class SwerveDrivetrain extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
 
-        
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("Gyro", m_gyro.getYaw() + 180);
-
-
     }
 }
