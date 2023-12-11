@@ -24,7 +24,6 @@ public class Elevator extends SubsystemBase {
     CANSparkMax elevator2 = new CANSparkMax(6, MotorType.kBrushless);
 
     public Elevator(){
-        //encoder.setDistancePerPulse(2/1);
         encoder.reset();
 
     }
@@ -45,15 +44,23 @@ public class Elevator extends SubsystemBase {
         return limitSwitch.get();
     }
 
+
+    /** Sets the speed of the elevators if eStops are not tripped
+     * @param speed
+     */ 
     public void setElevatorSpeed(double speed){
         boolean estop;
-        if(!getlimitSwitch() || !getHallEffect() ){
+        if(getlimitSwitch() || getHallEffect() ){
         elevator1.set(speed);
         elevator2.set(speed);
         estop = false;
+            //TODO: make logic so the elevator can't get perma stunned if costantly tripped
+            // or make a manual control (probably bad idea)
 
         }
         else{
+            elevator1.set(0);
+            elevator2.set(0);
             estop = true;
         }
         SmartDashboard.putBoolean("Estop Tripped?", estop);

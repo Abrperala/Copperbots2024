@@ -24,8 +24,6 @@ public class StickDrive extends CommandBase {
      m_drivetrain.drive(m_forward.getAsDouble(), m_rotation.getAsDouble());
   }
 
-  public void end(){
-    m_drivetrain.drive(0, 0);
-  }
+
 
 }

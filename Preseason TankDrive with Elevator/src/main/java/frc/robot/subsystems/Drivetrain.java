@@ -20,7 +20,7 @@ public class Drivetrain extends SubsystemBase {
     final DifferentialDrive differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
 
     public Drivetrain() {
-        differentialDrive.setSafetyEnabled(false); // very good idea, no idea what this does or if it works, dont care enough to find out
+        differentialDrive.setSafetyEnabled(false); // very good idea 
     }
    
     public void drive(double forward, double rotation) {
