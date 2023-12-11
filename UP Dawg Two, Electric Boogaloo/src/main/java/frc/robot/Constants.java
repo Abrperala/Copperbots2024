@@ -26,12 +26,13 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
  
     public static final class LimelightConstants {
-
+        
+        //TODO: customize limelight variables based on game this year, ask lowell if two pipelines matter or if i can just have one constantly
         public static final int DISABLED_PIPELINE = 0;
         public static final int AIM_PIPELINE = 1; 
-        public static final double TARGET_HEIGHT = 3.0; // TODO: get actual target height (or temp. one...)
-        public static final double MAX_ANGLE_ERROR_X = 5.0; // TODO: find actual max reportable TX (FROM CLOSEST USEFUL SHOT!!)
-        public static final double MAX_ANGLE_ERROR_Y = 5.0; // TODO: find actual max reportable TY (THAT WE WILL REASONABLY BE AIMING FROM!!!)
+        public static final double TARGET_HEIGHT = 3.0; 
+        public static final double MAX_ANGLE_ERROR_X = 5.0; 
+        public static final double MAX_ANGLE_ERROR_Y = 5.0; 
         public static final double TOLERANCE_ERROR_X = 2.0; 
         public static final double TOLERANCE_ERROR_Y = 6.0; 
     }

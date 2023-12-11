@@ -27,7 +27,6 @@ public class EjectIntake extends CommandBase{
 
   @Override
   public boolean isFinished() {
- 
     return true;
   }
 

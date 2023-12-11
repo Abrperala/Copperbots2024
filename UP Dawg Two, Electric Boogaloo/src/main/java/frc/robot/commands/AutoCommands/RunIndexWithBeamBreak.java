@@ -30,7 +30,7 @@ public class RunIndexWithBeamBreak extends CommandBase {
   @Override
   public boolean isFinished() {
     boolean result = false;
-    if (m_index.getBeamBreak()== false){
+    if (m_index.getBeamBreak() == false){
       result = true;
     }
     return result;

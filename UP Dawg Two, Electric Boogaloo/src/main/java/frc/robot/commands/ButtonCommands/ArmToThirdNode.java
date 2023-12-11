@@ -23,7 +23,7 @@ public class ArmToThirdNode extends CommandBase{
 
   @Override
   public void execute() {
-  m_arm.setArmPosition(pid.calculate(m_arm.getEncoderDistance(), 180));
+  m_arm.setArmPosition(pid.calculate(m_arm.getEncoderDistance(), 100));
    }
   
 

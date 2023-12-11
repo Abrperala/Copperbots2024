@@ -8,8 +8,8 @@ Goals that I wish to accomplish before the 2024 Season
 
 - Add functions with intake(and maybe conveyor belt and arm) to PathPlanner while having accurate pathing -completed
 
-- Review limelight and allignment code -not started
+- Review limelight and allignment code -completed
 
 - Look at how climb code worked in 2022 -not started
 
-- program elevator -not started
+- program elevator -in progress
