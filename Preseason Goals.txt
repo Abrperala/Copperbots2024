@@ -10,6 +10,8 @@ Goals that I wish to accomplish before the 2024 Season
 
 - Review limelight and allignment code -completed
 
+- April Tag tracking with Limelight -completed
+
 - Look at how climb code worked in 2022 -not started
 
-- program elevator -in progress
+- program elevator -completed

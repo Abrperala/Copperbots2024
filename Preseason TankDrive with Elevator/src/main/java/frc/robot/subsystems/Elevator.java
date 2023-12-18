@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.wpilibj.CounterBase;
 
@@ -44,6 +46,11 @@ public class Elevator extends SubsystemBase {
         return limitSwitch.get();
     }
 
+    public void setBrake(){
+        elevator1.setIdleMode(IdleMode.kBrake);
+        elevator2.setIdleMode(IdleMode.kCoast);
+    }
+
 
     /** Sets the speed of the elevators if eStops are not tripped
      * @param speed
@@ -51,17 +58,18 @@ public class Elevator extends SubsystemBase {
     public void setElevatorSpeed(double speed){
         boolean estop;
         if(getlimitSwitch() || getHallEffect() ){
-        elevator1.set(speed);
-        elevator2.set(speed);
-        estop = false;
-            //TODO: make logic so the elevator can't get perma stunned if costantly tripped
-            // or make a manual control (probably bad idea)
-
-        }
-        else{
             elevator1.set(0);
             elevator2.set(0);
             estop = true;
+        }
+        else{
+            elevator1.set(speed);
+            elevator2.set(speed);
+            estop = false;
+                //TODO: make logic so the elevator can't get perma stunned if costantly tripped
+                // or make a manual control (probably bad idea)
+    
+            
         }
         SmartDashboard.putBoolean("Estop Tripped?", estop);
 
