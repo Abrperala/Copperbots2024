@@ -110,6 +110,11 @@ public class LimelightSubsystem extends SubsystemBase{
         m_limelight.setPipeline(AIM_PIPELINE);
         m_limelight.setLEDMode(LedMode.kforceOn);
   }
+  
+  public void limelightAprilTagConfig(){
+        m_limelight.setPipeline(APRILTAG_PIPELINE);
+        m_limelight.setLEDMode(LedMode.kforceOff);
+  }
 
  @Override
   public void periodic() {
@@ -117,6 +122,7 @@ public class LimelightSubsystem extends SubsystemBase{
     SmartDashboard.putNumber("Angle Error X", getAngleErrorX());
     SmartDashboard.putNumber("Angle Error Y", getAngleErrorY());
     SmartDashboard.putNumber("Distance from Target", getDistanceFromGoal());
+    
 }
 
 }
