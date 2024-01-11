@@ -23,7 +23,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public SwerveDrivetrain() {
         m_gyro = new AHRS(SPI.Port.kMXP);
-        m_gyro.calibrate();
         zeroGyro();
 
         m_swerveMods = new SwerveModule[] {
@@ -176,8 +175,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         m_swerveOdometry.update(getYaw(), getModulePositions());  
     
         for(SwerveModule mod : m_swerveMods){
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + "Absolute Angle", mod.getCanCoder().getDegrees() - mod.getAngleOffset().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Cancoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }

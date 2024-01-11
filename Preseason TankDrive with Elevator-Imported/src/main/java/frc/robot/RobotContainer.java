@@ -27,7 +27,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    m_drivetrain.setDefaultCommand(new StickDrive(m_drivetrain, ()->fullControl.getRawAxis(1), ()->-fullControl.getRawAxis(0) ));
+    m_drivetrain.setDefaultCommand(new StickDrive(m_drivetrain, ()->fullControl.getRawAxis(0), ()->fullControl.getRawAxis(5) ));
 
   }
 

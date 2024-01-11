@@ -5,7 +5,7 @@
 package frc.robot;
 
 //import com.pathplanner.lib.auto.PIDConstants;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -121,8 +121,8 @@ public final class Constants {
   public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
 
   /* Neutral Modes */
-  public static final NeutralMode AZIMUTH_NEUTRAL_MODE = NeutralMode.Coast;
-  public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
+  public static final NeutralModeValue AZIMUTH_NEUTRAL_MODE = NeutralModeValue.Coast;
+  public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
   /* Swerve Gear Ratios */
   public static final double DRIVE_GEAR_RATIO = (6.75 / 1.0);

@@ -9,17 +9,12 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 
 public final class CTREConfigs {
 
-    public static TalonFXConfiguration swerveAngleFXConfig;
-    public static TalonFXConfiguration swerveDriveFXConfig;
-    public static CANcoderConfiguration swerveCanCoderConfig;
+    public TalonFXConfiguration swerveAngleFXConfig = new TalonFXConfiguration();
+    public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
+    public CANcoderConfiguration swerveCanCoderConfig = new CANcoderConfiguration();
 
 
     public CTREConfigs(){
-
-        swerveAngleFXConfig = new TalonFXConfiguration();
-        swerveDriveFXConfig = new TalonFXConfiguration();
-        swerveCanCoderConfig = new CANcoderConfiguration();
-
 
         CurrentLimitsConfigs angleLimitConfig = new CurrentLimitsConfigs();
 
