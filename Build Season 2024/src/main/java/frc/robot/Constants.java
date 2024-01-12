@@ -27,7 +27,6 @@ import frc.lib.util.SwerveModuleConstants;
  */
 public final class Constants {
  
-
  /* Azimuth reversed */
   public static boolean FRONT_LEFT_AZIMUTH_REVERSED = false;
   public static boolean FRONT_RIGHT_AZIMUTH_REVERSED = false;
@@ -52,37 +51,37 @@ public final class Constants {
           public static final int DRIVE_MOTOR_ID = 2;
           public static final int ANGLE_MOTOR_ID = 1;
           public static final int CANCODER_ID = 9;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(48.3 + 180);
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(132);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
 
       /* Front Right Module - Module 1 */
       public static final class Mod1 {
-          public static final int DRIVE_MOTOR_ID = 4;
-          public static final int ANGLE_MOTOR_ID = 3;
+          public static final int DRIVE_MOTOR_ID = 6;
+          public static final int ANGLE_MOTOR_ID = 5;
           public static final int CANCODER_ID = 10;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(160.4);
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(19);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
       
       /* Back Left Module - Module 2 */
       public static final class Mod2 {
-          public static final int DRIVE_MOTOR_ID = 8;
-          public static final int ANGLE_MOTOR_ID = 7;
+          public static final int DRIVE_MOTOR_ID = 4;
+          public static final int ANGLE_MOTOR_ID = 3;
           public static final int CANCODER_ID = 12;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(234.3 - 180);
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-57);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
 
       /* Back Right Module - Module 3 */
       public static final class Mod3{
-          public static final int DRIVE_MOTOR_ID = 6;
-          public static final int ANGLE_MOTOR_ID = 5;
+          public static final int DRIVE_MOTOR_ID = 8;
+          public static final int ANGLE_MOTOR_ID = 7;
           public static final int CANCODER_ID = 11;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(226.2);
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
@@ -91,21 +90,20 @@ public final class Constants {
   public static final boolean INVERT_GYRO = false;
 
   /* Angle Motor PID Values */
-  public static final double AZIMUTH_P = 0.2;
+  public static final double AZIMUTH_P = 7.2;
   public static final double AZIMUTH_I = 0.0;
   public static final double AZIMUTH_D = 0.1;
   public static final double AZIMUTH_F = 0;
 
   /* Drive Motor Characterization Values */
-  public static final double DRIVE_S = (0.48665 / 12); //Values from SysId divided by 12 to convert to volts for CTRE
-  public static final double DRIVE_V = (2.4132 / 12);
-  public static final double DRIVE_A = (0.06921 / 12);
+  public static final double DRIVE_S = (0.32); 
+  public static final double DRIVE_V = (1.51);
+  public static final double DRIVE_A = (0.27);
 
   /* Drive Motor PID Values */
-  public static final double DRIVE_P = 0.1;  //0.1
+  public static final double DRIVE_P = 0.12;  //0.1
   public static final double DRIVE_I = 0.0;
   public static final double DRIVE_D = 0.0;
-  //public static final SimpleMotorFeedforward DRIVE_F = new SimpleMotorFeedforward(DRIVE_S, DRIVE_V, DRIVE_A);
   public static final double DRIVE_F = 0;
 
   /* Azimuth Current Limiting */
@@ -173,7 +171,6 @@ public final class Constants {
     public static final ProfiledPIDController AUTO_Y_CONTROLLER = new ProfiledPIDController(AUTO_P_Y_CONTROLLER, 0, 0, Y_AUTO_CONSTRAINTS);
     public static final ProfiledPIDController AUTO_THETA_CONTROLLER = new ProfiledPIDController(AUTO_P_THETA_CONTROLLER, AUTO_I_THETA_CONTROLLER, AUTO_D_THETA_CONTROLLER, THETA_AUTO_CONSTRAINTS);
 
-   // public static final PIDConstants AUTO_TRANSLATION_CONSTANTS = new PIDConstants(0.01, 0, 0);
-   // public static final PIDConstants AUTO_ROTATION_CONSTANTS = new PIDConstants(2.8, 0, 0);
+
   }
 

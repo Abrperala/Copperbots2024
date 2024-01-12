@@ -9,10 +9,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class SwerveDrive extends CommandBase {
+public class SwerveDrive extends Command {
 
     private SwerveDrivetrain m_drivetrain;    
     private DoubleSupplier m_translationSup;
