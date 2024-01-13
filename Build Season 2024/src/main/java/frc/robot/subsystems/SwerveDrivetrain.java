@@ -183,6 +183,9 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
-        SmartDashboard.putNumber("Gyro", m_gyro.getYaw() + 180);
+        SmartDashboard.putNumber("yaw", m_gyro.getYaw());
+        SmartDashboard.putNumber("pitch", m_gyro.getPitch());
+        SmartDashboard.putNumber("roll", m_gyro.getRoll());
+        
     }
 }

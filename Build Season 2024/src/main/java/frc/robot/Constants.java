@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.signals.InvertedValue;
 //import com.pathplanner.lib.auto.PIDConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -27,67 +28,55 @@ import frc.lib.util.SwerveModuleConstants;
  */
 public final class Constants {
  
- /* Azimuth reversed */
-  public static boolean FRONT_LEFT_AZIMUTH_REVERSED = false;
-  public static boolean FRONT_RIGHT_AZIMUTH_REVERSED = false;
-  public static boolean BACK_LEFT_AZIMUTH_REVERSED = false;
-  public static boolean BACK_RIGHT_AZIMUTH_REVERSED = false;
-
-  /* Drive motors reversed */
-  public static boolean FRONT_LEFT_DRIVE_REVERSED = true;
-  public static boolean FRONT_RIGHT_DRIVE_REVERSED = true;
-  public static boolean BACK_LEFT_DRIVE_REVERSED = true;
-  public static boolean BACK_RIGHT_DRIVE_REVERSED = true;
-
-  /* CANCoders reversed */
-  public static SensorDirectionValue FRONT_LEFT_CANCODER_REVERSED = SensorDirectionValue.Clockwise_Positive;
-  public static SensorDirectionValue FRONT_RIGHT_CANCODER_REVERSED = SensorDirectionValue.Clockwise_Positive;
-  public static SensorDirectionValue BACK_LEFT_CANCODER_REVERSED = SensorDirectionValue.Clockwise_Positive;
-  public static SensorDirectionValue BACK_RIGHT_CANCODER_REVERSED = SensorDirectionValue.Clockwise_Positive;
+    public static final InvertedValue ANGLE_MOTOR_INVERT = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue DRIVE_MOTOR_INVERT = InvertedValue.Clockwise_Positive;
 
   /* Module Specific Constants */
       /* Front Left Module - Module 0 */
       public static final class Mod0 {
-          public static final int DRIVE_MOTOR_ID = 2;
-          public static final int ANGLE_MOTOR_ID = 1;
-          public static final int CANCODER_ID = 9;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(132);
+          public static final int DRIVE_MOTOR_ID = 8;
+          public static final int ANGLE_MOTOR_ID = 7;
+          public static final int CANCODER_ID = 12;
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(143.5);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
 
       /* Front Right Module - Module 1 */
       public static final class Mod1 {
-          public static final int DRIVE_MOTOR_ID = 6;
-          public static final int ANGLE_MOTOR_ID = 5;
+          public static final int DRIVE_MOTOR_ID = 4;
+          public static final int ANGLE_MOTOR_ID = 3;
           public static final int CANCODER_ID = 10;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(19);
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(154.0);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
       
       /* Back Left Module - Module 2 */
       public static final class Mod2 {
-          public static final int DRIVE_MOTOR_ID = 4;
-          public static final int ANGLE_MOTOR_ID = 3;
-          public static final int CANCODER_ID = 12;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-57);
+          public static final int DRIVE_MOTOR_ID = 6;
+          public static final int ANGLE_MOTOR_ID = 5;
+          public static final int CANCODER_ID = 11;
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-48.6);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
 
       /* Back Right Module - Module 3 */
       public static final class Mod3{
-          public static final int DRIVE_MOTOR_ID = 8;
-          public static final int ANGLE_MOTOR_ID = 7;
-          public static final int CANCODER_ID = 11;
-          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
+          public static final int DRIVE_MOTOR_ID = 2;
+          public static final int ANGLE_MOTOR_ID = 1;
+          public static final int CANCODER_ID = 9;
+          public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(48.5);
           public static final SwerveModuleConstants constants = 
               new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET);
       }
 
   /* Gyro reversed */
   public static final boolean INVERT_GYRO = false;
+
+  
+  public static final SensorDirectionValue CANCODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
 
   /* Angle Motor PID Values */
   public static final double AZIMUTH_P = 7.2;
@@ -106,17 +95,19 @@ public final class Constants {
   public static final double DRIVE_D = 0.0;
   public static final double DRIVE_F = 0;
 
-  /* Azimuth Current Limiting */
-  public static final int AZIMUTH_CONTINUOUS_CURRENT_LIMIT = 25;
-  public static final int AZIMUTH_PEAK_CURRENT_LIMIT = 40;
-  public static final double AZIMUTH_PEAK_CURRENT_DURATION = 0.1;
-  public static final boolean AZIMUTH_ENABLE_CURRENT_LIMIT = true;
+ /* Swerve Current Limiting */
+ public static final int AZIMUTH_CURRENT_LIMIT = 25;
+ public static final int AZIMUTH_CURRENT_THRESHOLD = 40;
+ public static final double AZIMUTH_CURRENT_THRESHOLD_TIME = 0.1;
+ public static final boolean AZIMUTH_ENABLE_CURRENT_LIMIT = true;
 
-  /* Drive Current Limiting */
-  public static final int DRIVE_CONTINUOUS_CURRENT_LIMIT = 35;
-  public static final int DRIVE_PEAK_CURRENT_LIMIT = 60;
-  public static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
-  public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
+ public static final int DRIVE_CURRENT_LIMIT = 35;   
+ public static final int DRIVE_CURRENT_THRESHOLD = 60;
+ public static final double DRIVE_CURRENT_THRESHOLD_TIME = 0.1;
+ public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
+
+ public static final double OPEN_LOOP_RAMP = 0.25;
+ public static final double CLOSED_LOOP_RAMP = 0.0;
 
   /* Neutral Modes */
   public static final NeutralModeValue AZIMUTH_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -124,7 +115,7 @@ public final class Constants {
 
   /* Swerve Gear Ratios */
   public static final double DRIVE_GEAR_RATIO = (6.75 / 1.0);
-  public static final double AZIMUTH_GEAR_RATIO = (-150.0 / 7);
+  public static final double AZIMUTH_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
 
   /* Swerve Profiling Values */
   public static final double MAX_SPEED = (Units.feetToMeters(16.2)); //meters per second (theoretical from SDS)
@@ -136,9 +127,6 @@ public final class Constants {
   public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS =
       new TrapezoidProfile.Constraints(
           Math.PI, (Math.PI * Math.PI));
-
-    public static final double OPEN_LOOP_RAMP = 0.25;
-    public static final double CLOSED_LOOP_RAMP = 0.0;
 
     public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(21.75);
     public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(21.75);

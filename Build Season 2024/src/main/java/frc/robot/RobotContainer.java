@@ -28,7 +28,7 @@ public class RobotContainer {
 
 
   /* Controllers */
-  private final PS4Controller driver = new PS4Controller(0); // TODO: change buttons to correct controllers
+  private final PS4Controller driver = new PS4Controller(0); 
   private final PS4Controller operator = new PS4Controller(1);
 
   /* Drive Controls */
@@ -52,9 +52,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
       new SwerveDrive(
           m_drivetrain, 
-          () -> -operator.getRawAxis(translationAxis), 
-          () -> -operator.getRawAxis(strafeAxis), 
-          () -> -operator.getRawAxis(rotationAxis), 
+          () -> -driver.getRawAxis(translationAxis), 
+          () -> -driver.getRawAxis(strafeAxis), 
+          () -> -driver.getRawAxis(rotationAxis), 
           () -> false
       )
   );
