@@ -48,12 +48,9 @@ public class RobotContainer {
     configureBindings();
     configureAutos();
 
+    // add auton options in the constructor as it only happens once
     // m_autoChooser.setDefaultOption("None", Autos.none());
-
-    // I wanted it to confirm the selected auto, it didnt, TODO: fix it so it
-    // displays selected auto
-    SmartDashboard.putData("Auto mode", m_autoChooser);
-    SmartDashboard.putData("Chosen Auto", m_autoChooser.getSelected());
+    // m_autoChooser.addOption("none", Autos.none());
 
     m_drivetrain.setDefaultCommand(
         new SwerveDrive(
@@ -80,5 +77,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     return m_autoChooser.getSelected();
+  }
+
+  public void displayAutoChooser() {
+    // allows you to choose the options for Auton
+    SmartDashboard.putData("Auto mode", m_autoChooser);
+    // should confirm your selection for Auton, Im pretty sure it will just show me
+    // a button like last time instead of the name of the Auton
+    SmartDashboard.putData("Chosen Auton?", m_autoChooser.getSelected());
+    // this may do what I intended the above to do
+    SmartDashboard.putString("Actually chosen Auton?", m_autoChooser.toString());
   }
 }
