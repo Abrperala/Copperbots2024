@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.lib.util.PathUtils;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -8,6 +9,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -17,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -209,6 +213,31 @@ public class SwerveDrivetrain extends SubsystemBase {
     public Rotation2d getYaw() {
         return m_gyro.getRotation2d();
 
+    }
+
+    public Command followPathCommand(Limelight limelight) {
+        this.resetOdometry(limelight.getBluePose2D());
+        PathPlannerPath path = PathUtils.pathFromPoses(this.getPose(), Constants.BLUE_AMP_SCORING_POSITION,
+                true);
+
+        return new FollowPathHolonomic(
+                path,
+                this::getPose, // Robot pose supplier
+                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
+                                                 // Constants class
+                        new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(0.1, 0.0, 0.0), // Rotation PID constants
+                        Constants.MAX_SPEED, // Max module speed, in m/s
+                        Constants.DRIVEBASE_RADIUS, // Drive base radius in meters. Distance from robot center to
+                                                    // furthest module.
+                        new ReplanningConfig(false, true) // Default path replanning config. See the API for the options
+                                                          // here
+                ),
+                () -> false,
+                this, // Reference to the subsystems to set requirements
+                limelight);
     }
 
     @Override

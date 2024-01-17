@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -28,6 +30,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static SwerveDrivetrain m_drivetrain;
   private static SendableChooser<Command> m_autoChooser;
+  public static Shooter m_shooter;
+  public static Limelight m_limelight;
 
   /* Controllers */
   private final PS4Controller driver = new PS4Controller(0);
@@ -44,12 +48,13 @@ public class RobotContainer {
   public RobotContainer() {
     m_drivetrain = new SwerveDrivetrain();
     m_autoChooser = new SendableChooser<>();
+    m_shooter = new Shooter();
+    m_limelight = new Limelight();
     // runs method below to configure button bindings
     configureBindings();
     configureAutos();
 
     // add auton options in the constructor as it only happens once
-    // m_autoChooser.setDefaultOption("None", Autos.none());
     // m_autoChooser.addOption("none", Autos.none());
 
     m_drivetrain.setDefaultCommand(
@@ -62,6 +67,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
+    new JoystickButton(driver, 1).onTrue(new Shoot(m_shooter));
+
+    new JoystickButton(driver, 2).onTrue(m_drivetrain.followPathCommand(m_limelight));
+
+    new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+
   }
 
   private void configureAutos() {
@@ -80,12 +92,22 @@ public class RobotContainer {
   }
 
   public void displayAutoChooser() {
+
     // allows you to choose the options for Auton
     SmartDashboard.putData("Auto mode", m_autoChooser);
     // should confirm your selection for Auton, Im pretty sure it will just show me
     // a button like last time instead of the name of the Auton
-    SmartDashboard.putData("Chosen Auton?", m_autoChooser.getSelected());
-    // this may do what I intended the above to do
-    SmartDashboard.putString("Actually chosen Auton?", m_autoChooser.toString());
+    SmartDashboard.putString("Chosen Auton?", m_autoChooser.getSelected().toString());
+
+  }
+
+  public void addAutonOptions() {
+    m_autoChooser.setDefaultOption("AlignWith", new AllignWithAmp(m_drivetrain, m_limelight) {
+    });
+    m_autoChooser.addOption("none", new Command() {
+    });
+    m_autoChooser.addOption("null", new Command() {
+    });
+
   }
 }
