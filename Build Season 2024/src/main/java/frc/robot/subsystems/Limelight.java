@@ -37,17 +37,22 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getX() {
-        return getPose2D().getX();
+        return getBluePose2D().getX();
     }
 
     public double getY() {
-        return getPose2D().getY();
+        return getBluePose2D().getY();
+    }
+
+    public double getRotation() {
+        return getBluePose2D().getRotation().getDegrees();
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("pose x", getX());
         SmartDashboard.putNumber("pose y", getY());
+        SmartDashboard.putNumber("LL rot", getRotation());
     }
 
 }

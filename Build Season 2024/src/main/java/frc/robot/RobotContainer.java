@@ -70,7 +70,8 @@ public class RobotContainer {
 
     new JoystickButton(driver, 1).onTrue(new Shoot(m_shooter));
 
-    new JoystickButton(driver, 2).onTrue(m_drivetrain.followPathCommand(m_limelight));
+    new JoystickButton(driver, 2).onTrue(new SequentialCommandGroup(new ResetPoseFromLL(m_limelight, m_drivetrain),
+        m_drivetrain.followPathCommand()));
 
     new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
@@ -102,8 +103,6 @@ public class RobotContainer {
   }
 
   public void addAutonOptions() {
-    m_autoChooser.setDefaultOption("AlignWith", new AllignWithAmp(m_drivetrain, m_limelight) {
-    });
     m_autoChooser.addOption("none", new Command() {
     });
     m_autoChooser.addOption("null", new Command() {

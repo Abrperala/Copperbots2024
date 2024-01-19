@@ -9,9 +9,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
-public final class PathUtils {
+public final class CopperBotUtils {
 
     public static PathPlannerPath pathFromPoses(Pose2d start, Pose2d end, boolean preventFlipping) {
 
@@ -31,6 +33,14 @@ public final class PathUtils {
         path.preventFlipping = preventFlipping;
 
         return path;
+    }
+
+    public static boolean isAllianceBlue() {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Blue;
+        }
+        return false;
     }
 
 }

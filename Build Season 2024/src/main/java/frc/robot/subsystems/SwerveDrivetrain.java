@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.lib.util.PathUtils;
+import frc.lib.util.CopperBotUtils;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 
 public class SwerveDrivetrain extends SubsystemBase {
     public SwerveDriveOdometry m_swerveOdometry;
@@ -33,7 +34,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public SwerveDrivetrain() {
         m_gyro = new AHRS(SPI.Port.kMXP);
-        zeroGyro();
+        while (m_gyro.isCalibrating())
+            ;
+        Timer.delay(5);
+        m_gyro.reset();
+        System.out.println("NavX MXP has been reset!");
 
         autoBuilder = new AutoBuilder();
 
@@ -55,8 +60,7 @@ public class SwerveDrivetrain extends SubsystemBase {
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-                                                 // Constants class
+                new HolonomicPathFollowerConfig( // This should likely live in your constants class
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
                         Constants.MAX_SPEED, // Max module speed, in m/s
@@ -148,6 +152,8 @@ public class SwerveDrivetrain extends SubsystemBase {
      * @param pose The desired pose to reset odometry to.
      */
     public void resetOdometry(Pose2d pose) {
+        System.out.println(pose.getX());
+        System.out.println(pose.getY());
         m_swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
@@ -203,21 +209,22 @@ public class SwerveDrivetrain extends SubsystemBase {
      */
     public void zeroGyro() {
         m_gyro.reset();
+        resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), Rotation2d.fromDegrees(0)));
     }
 
     /**
      * Gets the current yaw (rotation around Z-axis) from the gyro.
      * 
-     * @return The current yaw as a Rotation3d.
+     * @return The current yaw as a Rotation2d.
      */
     public Rotation2d getYaw() {
         return m_gyro.getRotation2d();
 
     }
 
-    public Command followPathCommand(Limelight limelight) {
-        this.resetOdometry(limelight.getBluePose2D());
-        PathPlannerPath path = PathUtils.pathFromPoses(this.getPose(), Constants.BLUE_AMP_SCORING_POSITION,
+    public Command followPathCommand() {
+
+        PathPlannerPath path = CopperBotUtils.pathFromPoses(getPose(), Constants.BLUE_AMP_SCORING_POSITION,
                 true);
 
         return new FollowPathHolonomic(
@@ -227,8 +234,8 @@ public class SwerveDrivetrain extends SubsystemBase {
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
-                        new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(0.1, 0.0, 0.0), // Rotation PID constants
+                        new PIDConstants(0.2, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(0.07, 0.0, 0.0), // Rotation PID constants
                         Constants.MAX_SPEED, // Max module speed, in m/s
                         Constants.DRIVEBASE_RADIUS, // Drive base radius in meters. Distance from robot center to
                                                     // furthest module.
@@ -236,8 +243,8 @@ public class SwerveDrivetrain extends SubsystemBase {
                                                           // here
                 ),
                 () -> false,
-                this, // Reference to the subsystems to set requirements
-                limelight);
+                this// Reference to the subsystems to set requirements
+        );
     }
 
     @Override
@@ -253,9 +260,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
-        SmartDashboard.putNumber("yaw", m_gyro.getYaw());
-        SmartDashboard.putNumber("pitch", m_gyro.getPitch());
-        SmartDashboard.putNumber("roll", m_gyro.getRoll());
+        SmartDashboard.putBoolean("is Alliance Blue?", CopperBotUtils.isAllianceBlue());
 
     }
 }
