@@ -18,8 +18,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot() {
-        rightShooter.set(0);
-        leftShooter.set(-1);
+        rightShooter.set(.1);
+        leftShooter.set(-.1);
     }
 
 }
