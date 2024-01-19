@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.lib.util.LimelightHelpers;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +54,7 @@ public class Limelight extends SubsystemBase {
         SmartDashboard.putNumber("pose x", getX());
         SmartDashboard.putNumber("pose y", getY());
         SmartDashboard.putNumber("LL rot", getRotation());
+        SmartDashboard.putNumber("AprilTag ID #", getFid());
     }
 
 }
