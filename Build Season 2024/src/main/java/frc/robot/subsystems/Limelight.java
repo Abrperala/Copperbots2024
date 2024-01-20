@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import frc.lib.util.CopperBotUtils;
 import frc.lib.util.LimelightHelpers;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,24 +30,25 @@ public class Limelight extends SubsystemBase {
                 + (LimelightHelpers.getLatency_Capture("") / 1000.0);
     }
 
-    public Pose2d getPose2D() {
-        return LimelightHelpers.getBotPose2d("");
-    }
+    public Pose2d getPose2DFromAlliance() {
+        if (CopperBotUtils.isAllianceBlue()) {
+            return LimelightHelpers.getBotPose2d_wpiBlue("");
 
-    public Pose2d getBluePose2D() {
-        return LimelightHelpers.getBotPose2d_wpiBlue("");
+        } else {
+            return LimelightHelpers.getBotPose2d_wpiRed("");
+        }
     }
 
     public double getX() {
-        return getBluePose2D().getX();
+        return getPose2DFromAlliance().getX();
     }
 
     public double getY() {
-        return getBluePose2D().getY();
+        return getPose2DFromAlliance().getY();
     }
 
     public double getRotation() {
-        return getBluePose2D().getRotation().getDegrees();
+        return getPose2DFromAlliance().getRotation().getDegrees();
     }
 
     @Override

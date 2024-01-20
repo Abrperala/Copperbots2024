@@ -44,10 +44,25 @@ public final class CopperBotUtils {
         return false;
     }
 
-    public static Pose2d getGoalPoseFromAT(double apriltag) {
+    public static Pose2d getPoseFromATOnAlliance(double apriltag) {
+
+    }
+
+    }
+
+    public static Pose2d getBlueGoalPoseFromAT(double apriltag) {
         switch ((int) apriltag) {
             case 6:
                 return Constants.BLUE_AMP_SCORING_POSITION;
+            case 9, 10:
+                return null; // Phillip is proving a point...
+            default:
+                return null;
+        }
+    }
+
+    public static Pose2d getRedGoalPoseFromAT(double apriltag) {
+        switch ((int) apriltag) {
             case 5:
                 return Constants.RED_AMP_SCORING_POSITION;
             case 9, 10:
