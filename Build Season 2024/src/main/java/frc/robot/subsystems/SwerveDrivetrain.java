@@ -222,9 +222,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     }
 
-    public Command followPathCommand() {
-
-        PathPlannerPath path = CopperBotUtils.pathFromPoses(getPose(), Constants.BLUE_AMP_SCORING_POSITION,
+    public Command followPathCommand(Pose2d target) {
+        // it seems that it is starting this before the pose gets passed to it
+        PathPlannerPath path = CopperBotUtils.pathFromPoses(getPose(), target,
                 true);
 
         return new FollowPathHolonomic(
