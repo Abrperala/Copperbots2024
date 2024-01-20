@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.subsystems.SwerveDrivetrain;
 
 public final class CopperBotUtils {
 
@@ -41,6 +42,19 @@ public final class CopperBotUtils {
             return alliance.get() == DriverStation.Alliance.Blue;
         }
         return false;
+    }
+
+    public static Pose2d getGoalPoseFromAT(double apriltag) {
+        switch ((int) apriltag) {
+            case 6:
+                return Constants.BLUE_AMP_SCORING_POSITION;
+            case 5:
+                return Constants.RED_AMP_SCORING_POSITION;
+            case 9, 10:
+                return null; // Phillip is proving a point...
+            default:
+                return null;
+        }
     }
 
 }

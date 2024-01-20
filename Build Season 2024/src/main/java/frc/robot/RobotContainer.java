@@ -98,7 +98,8 @@ public class RobotContainer {
     SmartDashboard.putData("Auto mode", m_autoChooser);
     // should confirm your selection for Auton, Im pretty sure it will just show me
     // a button like last time instead of the name of the Auton
-    SmartDashboard.putString("Chosen Auton?", m_autoChooser.getSelected().toString());
+    // SmartDashboard.putString("Chosen Auton?",
+    // m_autoChooser.getSelected().toString());
 
   }
 
