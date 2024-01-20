@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrivetrain;
+import frc.lib.util.CopperBotUtils;
 
 public class ResetPoseFromLL extends Command {
     SwerveDrivetrain m_SwerveDrivetrain;
@@ -22,7 +23,7 @@ public class ResetPoseFromLL extends Command {
 
     @Override
     public void execute() {
-        m_SwerveDrivetrain.resetOdometry(m_Limelight.getBluePose2D());
+        m_SwerveDrivetrain.resetOdometry(CopperBotUtils.getPoseFromATOnAlliance(m_Limelight.getFid()));
         isFinished = true;
     }
 
