@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import frc.lib.util.CopperBotUtils;
 import frc.lib.util.LimelightHelpers;
+import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +49,36 @@ public class Limelight extends SubsystemBase {
 
     public double getRotation() {
         return getPose2DFromAlliance().getRotation().getDegrees();
+    }
+
+    public Pose2d getPoseFromATOnAlliance() {
+        if (CopperBotUtils.isAllianceBlue()) {
+            return getBlueGoalPoseFromAT();
+        } else {
+            return getRedGoalPoseFromAT();
+        }
+    }
+
+    public Pose2d getBlueGoalPoseFromAT() {
+        switch ((int) getFid()) {
+            case 6:
+                return Constants.BLUE_AMP_SCORING_POSITION;
+            case 9, 10:
+                return null;
+            default:
+                return new Pose2d();
+        }
+    }
+
+    public Pose2d getRedGoalPoseFromAT() {
+        switch ((int) getFid()) {
+            case 5:
+                return Constants.RED_AMP_SCORING_POSITION;
+            case 9, 10:
+                return null;
+            default:
+                return new Pose2d();
+        }
     }
 
     @Override

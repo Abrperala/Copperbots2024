@@ -26,7 +26,8 @@ public final class CopperBotUtils {
         PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
                 new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), // The constraints for this path.
-                new GoalEndState(0.0, end.getRotation()) // Goal end state. You can set a holonomic rotation
+                new GoalEndState(0.0, end.getRotation()) // Goal end state. You can set a holonomic
+                                                         // rotation
 
         );
 
@@ -41,37 +42,6 @@ public final class CopperBotUtils {
             return alliance.get() == DriverStation.Alliance.Blue;
         }
         return false;
-    }
-
-    public static Pose2d getPoseFromATOnAlliance(double apriltag) {
-        if (isAllianceBlue()) {
-            return getBlueGoalPoseFromAT(apriltag);
-        } else {
-            return getRedGoalPoseFromAT(apriltag);
-        }
-    }
-
-    public static Pose2d getBlueGoalPoseFromAT(double apriltag) {
-        switch ((int) apriltag) {
-            case 6:
-                System.out.println("jlsdjlfdslkjfdsljjldfsljsdfjldfsjdfjdjlk");
-                return Constants.BLUE_AMP_SCORING_POSITION;
-            case 9, 10:
-                return null;
-            default:
-                return null;
-        }
-    }
-
-    public static Pose2d getRedGoalPoseFromAT(double apriltag) {
-        switch ((int) apriltag) {
-            case 5:
-                return Constants.RED_AMP_SCORING_POSITION;
-            case 9, 10:
-                return null;
-            default:
-                return null;
-        }
     }
 
 }
