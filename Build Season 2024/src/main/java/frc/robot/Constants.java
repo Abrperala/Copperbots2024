@@ -197,7 +197,8 @@ public final class Constants {
 
         public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.85, 7.60,
                         new Rotation2d(Math.toRadians(-90)));
+        public static final Rotation2d BLUE_AMP_SCORING_ROTATION2D = Rotation2d.fromDegrees(-90);
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
                         new Rotation2d(Math.toRadians(90)));
-
+        public static final Rotation2d BLUE_AMP_SCORING_ROTATION2D = Rotation2d.fromDegrees(-90);
 }

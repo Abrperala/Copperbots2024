@@ -3,12 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrivetrain;
-import frc.lib.util.CopperBotUtils;
 
 public class ResetPoseFromLL extends Command {
-    SwerveDrivetrain m_SwerveDrivetrain;
-    Limelight m_Limelight;
-    boolean isFinished = false;
+    private SwerveDrivetrain m_SwerveDrivetrain;
+    private Limelight m_Limelight;
+    private boolean isFinished = false;
 
     public ResetPoseFromLL(Limelight limelight, SwerveDrivetrain swerves) {
         this.m_Limelight = limelight;
