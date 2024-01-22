@@ -82,35 +82,35 @@ public class Limelight extends SubsystemBase {
         }
     }
 
-    public Pose2d getRotFromATOnAlliance() {
-        if (CopperBotUtils.isAllianceBlue()) {
-            return getBlueTargetRotFromAT();
-        } else {
-            return getRedTargetRotFromAT();
-        }
-    }
+    // public Pose2d getRotFromATOnAlliance() {
+    // if (CopperBotUtils.isAllianceBlue()) {
+    // return getBlueTargetRotFromAT();
+    // } else {
+    // return getRedTargetRotFromAT();
+    // }
+    // }
 
-    public Rotation2d getBlueTargetRotFromAT() {
-        switch ((int) getFid()) {
-            case 6:
-                return Constants.BLUE_AMP_SCORING_ROTATION2D;
-            case 9, 10:
-                return null;
-            default:
-                return new Pose2d();
-        }
-    }
+    // public Rotation2d getBlueTargetRotFromAT() {
+    // switch ((int) getFid()) {
+    // case 6:
+    // return Constants.BLUE_AMP_SCORING_ROTATION2D;
+    // case 9, 10:
+    // return null;
+    // default:
+    // return new Pose2d();
+    // }
+    // }
 
-    public Rotation2d getRedTargetRotFromAT() {
-        switch ((int) getFid()) {
-            case 5:
-                return Constants.RED_AMP_SCORING_ROTATION2D;
-            case 9, 10:
-                return null;
-            default:
-                return new Pose2d();
-        }
-    }
+    // public Rotation2d getRedTargetRotFromAT() {
+    // switch ((int) getFid()) {
+    // case 5:
+    // return Constants.RED_AMP_SCORING_ROTATION2D;
+    // case 9, 10:
+    // return null;
+    // default:
+    // return new Pose2d();
+    // }
+    // }
 
     @Override
     public void periodic() {

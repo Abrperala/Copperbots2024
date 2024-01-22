@@ -239,7 +239,7 @@ public class SwerveDrivetrain extends SubsystemBase {
                         Constants.MAX_SPEED, // Max module speed, in m/s
                         Constants.DRIVEBASE_RADIUS, // Drive base radius in meters. Distance from robot center to
                                                     // furthest module.
-                        new ReplanningConfig(false, true) // Default path replanning config. See the API for the options
+                        new ReplanningConfig(true, false) // Default path replanning config. See the API for the options
                                                           // here
                 ),
                 () -> false,

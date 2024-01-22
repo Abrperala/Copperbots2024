@@ -14,7 +14,7 @@ public class Pivots extends SubsystemBase {
     CANSparkMax tall1;
 
     public Pivots() {
-        base1 = new CANSparkMax(Constants.BASE1_PIVOT_ID, MotorType.kBrushless);
+        //  base1 = new CANSparkMax(Constants.BASE1_PIVOT_ID, MotorType.kBrushless);
         // base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
         // tall1 = new CANSparkMax(Constants.TALL_PIVOT_ID, MotorType.kBrushless);
 
