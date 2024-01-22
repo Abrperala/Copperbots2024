@@ -9,9 +9,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
+import frc.robot.subsystems.Limelight;
 
-public final class PathUtils {
+public final class CopperBotUtils {
 
     public static PathPlannerPath pathFromPoses(Pose2d start, Pose2d end, boolean preventFlipping) {
 
@@ -24,13 +26,22 @@ public final class PathUtils {
         PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
                 new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), // The constraints for this path.
-                new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation
+                new GoalEndState(0.0, end.getRotation()) // Goal end state. You can set a holonomic
+                                                         // rotation
 
         );
 
         path.preventFlipping = preventFlipping;
 
         return path;
+    }
+
+    public static boolean isAllianceBlue() {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Blue;
+        }
+        return false;
     }
 
 }

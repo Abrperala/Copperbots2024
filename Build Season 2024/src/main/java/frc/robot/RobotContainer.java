@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.lib.util.CopperBotUtils;
 import frc.robot.commands.*;
 
 /**
@@ -70,7 +71,8 @@ public class RobotContainer {
 
     new JoystickButton(driver, 1).onTrue(new Shoot(m_shooter));
 
-    new JoystickButton(driver, 2).onTrue(m_drivetrain.followPathCommand(m_limelight));
+    new JoystickButton(driver, 2).onTrue(new SequentialCommandGroup(new ResetPoseFromLL(m_limelight, m_drivetrain),
+        m_drivetrain.followPathCommand(m_limelight.getTargetPoseFromAlliance())));
 
     new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
@@ -97,13 +99,12 @@ public class RobotContainer {
     SmartDashboard.putData("Auto mode", m_autoChooser);
     // should confirm your selection for Auton, Im pretty sure it will just show me
     // a button like last time instead of the name of the Auton
-    SmartDashboard.putString("Chosen Auton?", m_autoChooser.getSelected().toString());
+    // SmartDashboard.putString("Chosen Auton?",
+    // m_autoChooser.getSelected().toString());
 
   }
 
   public void addAutonOptions() {
-    m_autoChooser.setDefaultOption("AlignWith", new AllignWithAmp(m_drivetrain, m_limelight) {
-    });
     m_autoChooser.addOption("none", new Command() {
     });
     m_autoChooser.addOption("null", new Command() {

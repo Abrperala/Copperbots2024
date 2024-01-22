@@ -176,6 +176,16 @@ public final class Constants {
                         AUTO_P_THETA_CONTROLLER,
                         AUTO_I_THETA_CONTROLLER, AUTO_D_THETA_CONTROLLER, THETA_AUTO_CONSTRAINTS);
 
+        // Shooter Constants
+        public static final int SHOOT1_ID = 13;
+        public static final int SHOOT2_ID = 14;
+        public static final int INTAKE_ID = 15;
+
+        // Pivot Constants
+        public static final int BASE1_PIVOT_ID = 16;
+        public static final int BASE2_PIVOT_ID = 17;
+        public static final int TALL_PIVOT_ID = 18;
+
         // field elements positions constants
 
         /*
@@ -187,6 +197,10 @@ public final class Constants {
 
         public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.85, 7.60,
                         new Rotation2d(Math.toRadians(-90)));
-        public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d();
-
+        // public static final Rotation2d BLUE_AMP_SCORING_ROTATION2D =
+        // Rotation2d.fromDegrees(-90);
+        public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
+                        new Rotation2d(Math.toRadians(90)));
+        // public static final Rotation2d BLUE_AMP_SCORING_ROTATION2D =
+        // Rotation2d.fromDegrees(-90);
 }
