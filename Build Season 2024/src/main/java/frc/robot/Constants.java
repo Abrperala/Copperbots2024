@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
-//import com.pathplanner.lib.auto.PIDConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
@@ -188,5 +187,15 @@ public final class Constants {
         public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.85, 7.60,
                         new Rotation2d(Math.toRadians(-90)));
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d();
+
+        // Pivot Constants,
+
+        public static final double HEIGHT_FROM_FLOOR_TO_1ST_PIVOT = 16;
+        public static final double LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT = 16;
+        public static final double LENGTH_FROM_2ND_PIVOT_TO_SHOOTER_EXIT = 4.5;
+        public static final double MAX_TOP_PIVOT_ANGLE = 70;
+        public static final double MIN_TOP_PIVOT_ANGLE = -45;
+        public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
+        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
 
 }
