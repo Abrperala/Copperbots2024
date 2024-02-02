@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,12 +19,12 @@ public class Pivots extends SubsystemBase {
     Encoder topPivotEncoder;
 
     public Pivots() {
-        // base1 = new CANSparkMax(Constants.BASE1_PIVOT_ID, MotorType.kBrushless);
+        base1 = new CANSparkMax(16, MotorType.kBrushless);
         // base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
-        // tall1 = new CANSparkMax(Constants.TALL_PIVOT_ID, MotorType.kBrushless);
+        tall1 = new CANSparkMax(18, MotorType.kBrushless);
 
-        bottomPivotEncoder = new Encoder(8, 7, true, CounterBase.EncodingType.k4X);
-        topPivotEncoder = new Encoder(6, 5, true, CounterBase.EncodingType.k4X);
+        bottomPivotEncoder = new Encoder(5, 4, false, CounterBase.EncodingType.k4X);
+        topPivotEncoder = new Encoder(9, 8, false, CounterBase.EncodingType.k4X);
 
         // base1.setIdleMode(IdleMode.kBrake);
         // base2.setIdleMode(IdleMode.kBrake);
@@ -53,11 +54,24 @@ public class Pivots extends SubsystemBase {
         return bottomPivotEncoder.getDistance();
     }
 
+    public void zeroTopEncoder() {
+        topPivotEncoder.reset();
+    }
+
+    public void zeroBottomEncoder() {
+        bottomPivotEncoder.reset();
+    }
+
+    public double getShotAngle(double firstPivotAngle, double secondPivotAngle) {
+        return secondPivotAngle - firstPivotAngle + 90;
+    }
+
     /*
      * Based on a coordinate system where the first angle
-     * (the first pivot) has its reference at the left (is zeroed) and
+     * (the first pivot) has its reference at the left horizontal (is zeroed) and
      * increases in the clockwise direction. The second angle (the second pivot) has
-     * its reference at the right (is zeroed) while the first pivot is 90, and
+     * its reference at the right horizontal (is zeroed) while the first pivot is
+     * 90, and
      * increases in the
      * counterclockwise direction.
      */
@@ -132,5 +146,17 @@ public class Pivots extends SubsystemBase {
     public static double getOffsetOfShooterExitToRobot(double firstPivotAngle, double secondPivotAngle) {
         return getBaseFromPivotToPivot(firstPivotAngle)
                 + getBaseFrom2ndPivotToShooterExit(secondPivotAngle + firstPivotAngle + 90);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("bottomPivotAngle", getBottomPivotAngle());
+        SmartDashboard.putNumber("topPivotAngle", getTopPivotAngle());
+        SmartDashboard.putNumber("ShotAngle", getShotAngle(getBottomPivotAngle(), getTopPivotAngle()));
+        SmartDashboard.putNumber("shooterExitHeight",
+                getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
+        SmartDashboard.putNumber("shooterExitDistance",
+                getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
+
     }
 }

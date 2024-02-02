@@ -134,8 +134,8 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
                         Math.PI, (Math.PI * Math.PI));
 
-        public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(21.75);
-        public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(21.75);
+        public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(27);
+        public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(27);
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
         public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
         public static final double DRIVEBASE_RADIUS = Units
@@ -187,6 +187,11 @@ public final class Constants {
         public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.85, 7.60,
                         new Rotation2d(Math.toRadians(-90)));
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d();
+
+        // Shooter Constants
+
+        public static double SHOOTER_GEARING = 1.25 / 1;
+        public static double SHOOTER_TARGET_RPM = 5000;
 
         // Pivot Constants,
 

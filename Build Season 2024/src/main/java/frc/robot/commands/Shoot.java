@@ -23,7 +23,7 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
-        m_shooter.shoot(-m_speed);
+        m_shooter.setShooterSpeed(-m_speed);
 
     }
 
@@ -35,6 +35,6 @@ public class Shoot extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_shooter.shoot(0);
+        m_shooter.setShooterSpeed(0);
     }
 }
