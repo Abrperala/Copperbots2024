@@ -15,34 +15,41 @@ public class Pivots extends SubsystemBase {
     CANSparkMax base1;
     CANSparkMax base2;
     CANSparkMax tall1;
+
     Encoder bottomPivotEncoder;
     Encoder topPivotEncoder;
 
     public Pivots() {
         base1 = new CANSparkMax(16, MotorType.kBrushless);
-        // base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
+        base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
         tall1 = new CANSparkMax(18, MotorType.kBrushless);
 
         bottomPivotEncoder = new Encoder(5, 4, false, CounterBase.EncodingType.k4X);
         topPivotEncoder = new Encoder(9, 8, false, CounterBase.EncodingType.k4X);
 
-        // base1.setIdleMode(IdleMode.kBrake);
-        // base2.setIdleMode(IdleMode.kBrake);
-        // tall1.setIdleMode(IdleMode.kBrake);
-        // base1.setInverted(false);
-        // base2.setInverted(false);
-        // tall1.setInverted(false);
+        base1.setIdleMode(IdleMode.kBrake);
+        base2.setIdleMode(IdleMode.kBrake);
+        tall1.setIdleMode(IdleMode.kBrake);
+        base1.setInverted(false);
+        base2.setInverted(false);
+        tall1.setInverted(false);
+      
+
         bottomPivotEncoder.setDistancePerPulse(360 / 2048.0);
         topPivotEncoder.setDistancePerPulse(360 / 2048.0);
     }
 
-    public void ChangeBottomPivot(double set) {
-        // base1.set(set);
-        // base2.set(set);
+
+
+    public void ChangeBasePivot(double set) {
+
+         base1.set(set);
+         base2.set(set);
     }
 
+
     public void ChangeTopPivot(double set) {
-        // tall1.set(set);
+         tall1.set(set);
 
     }
 
@@ -157,6 +164,6 @@ public class Pivots extends SubsystemBase {
                 getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
         SmartDashboard.putNumber("shooterExitDistance",
                 getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
-
-    }
+  }
+  
 }

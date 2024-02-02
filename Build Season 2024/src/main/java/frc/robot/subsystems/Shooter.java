@@ -15,8 +15,8 @@ public class Shooter extends SubsystemBase {
     private RelativeEncoder m_bottomEncoder;
 
     public Shooter() {
-        topShooter = new CANSparkMax(13, MotorType.kBrushless);
-        bottomShooter = new CANSparkMax(14, MotorType.kBrushless);
+        topShooter = new CANSparkMax(Constants.SHOOT1_ID, MotorType.kBrushless);
+        bottomShooter = new CANSparkMax(Constants.SHOOT2_ID, MotorType.kBrushless);
 
         m_topEncoder = topShooter.getEncoder();
         m_bottomEncoder = bottomShooter.getEncoder();
@@ -34,6 +34,7 @@ public class Shooter extends SubsystemBase {
     public double getBottomEncoderVelocity() {
         return m_bottomEncoder.getVelocity() * Constants.SHOOTER_GEARING;
     }
+
 
     public boolean shooterAtSpeed() {
         return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM
