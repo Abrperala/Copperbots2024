@@ -1,10 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -14,13 +12,13 @@ public class Drivetrain extends SubsystemBase {
     final CANSparkMax rightCanSparkMax1 = new CANSparkMax(3, MotorType.kBrushless);
     final CANSparkMax rightCanSparkMax2 = new CANSparkMax(4, MotorType.kBrushless);
 
-    final MotorControllerGroup leftMotors = new MotorControllerGroup(leftCanSparkMax1, leftCanSparkMax2);
-    final MotorControllerGroup rightMotors = new MotorControllerGroup(rightCanSparkMax1, rightCanSparkMax2);
 
-    final DifferentialDrive differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+    final DifferentialDrive differentialDrive = new DifferentialDrive(leftCanSparkMax1, rightCanSparkMax1);
 
     public Drivetrain() {
         differentialDrive.setSafetyEnabled(false); // very good idea 
+        leftCanSparkMax2.follow(leftCanSparkMax1);
+        rightCanSparkMax2.follow(rightCanSparkMax1);
     }
    
     public void drive(double forward, double rotation) {

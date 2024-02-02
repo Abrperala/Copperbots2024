@@ -3,28 +3,42 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-    public CANSparkMax leftShooter;
-    public CANSparkMax rightShooter;
-    public CANSparkMax intake;
+    public CANSparkMax topShooter;
+    public CANSparkMax bottomShooter;
+
+    private RelativeEncoder m_topEncoder;
+    private RelativeEncoder m_bottomEncoder;
 
     public Shooter() {
-        // leftShooter = new CANSparkMax(Constants.SHOOT1_ID, MotorType.kBrushless);
-        // rightShooter = new CANSparkMax(Constants.SHOOT2_ID, MotorType.kBrushless);
-        // intake = new CANSparkMax(Constants.INTAKE_ID, MotorType.kBrushed);
+        topShooter = new CANSparkMax(Constants.SHOOT1_ID, MotorType.kBrushless);
+        bottomShooter = new CANSparkMax(Constants.SHOOT2_ID, MotorType.kBrushless);
 
+        m_topEncoder = topShooter.getEncoder();
+        m_bottomEncoder = bottomShooter.getEncoder();
     }
 
-    public void shoot() {
-        // rightShooter.set(.1);
-        // leftShooter.set(1);
+    public void setShooterSpeed(double speed) {
+        topShooter.set(speed);
+        bottomShooter.set(-speed);
     }
 
-    public void intake() {
-        // intake.set(.1);
+    public double getTopEncoderVelocity() {
+        return m_topEncoder.getVelocity() * Constants.SHOOTER_GEARING;
+    }
+
+    public double getBottomEncoderVelocity() {
+        return m_bottomEncoder.getVelocity() * Constants.SHOOTER_GEARING;
+    }
+
+
+    public boolean shooterAtSpeed() {
+        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM
+                && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM;
     }
 
 }

@@ -1,9 +1,12 @@
 package frc.robot;
 
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Pivots;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -33,6 +36,8 @@ public class RobotContainer {
   private static SendableChooser<Command> m_autoChooser;
   public static Shooter m_shooter;
   public static Limelight m_limelight;
+  public static Pivots m_pivots;
+  public static Intake m_intake;
 
   /* Controllers */
   private final PS4Controller driver = new PS4Controller(0);
@@ -51,6 +56,9 @@ public class RobotContainer {
     m_autoChooser = new SendableChooser<>();
     m_shooter = new Shooter();
     m_limelight = new Limelight();
+    m_pivots = new Pivots();
+    m_intake = new Intake();
+
     // runs method below to configure button bindings
     configureBindings();
     configureAutos();
@@ -69,12 +77,20 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    new JoystickButton(driver, 1).onTrue(new Shoot(m_shooter));
+    // new JoystickButton(operator, 1).onTrue(new Shoot(m_shooter));
 
     new JoystickButton(driver, 2).onTrue(new SequentialCommandGroup(new ResetPoseFromLL(m_limelight, m_drivetrain),
         m_drivetrain.followPathCommand(m_limelight.getTargetPoseFromAlliance())));
 
     new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+
+    new JoystickButton(operator, 7).whileTrue(new Shoot(m_shooter, -.3));
+
+    new JoystickButton(operator, 8).whileTrue(new Intaking(m_intake));
+
+    new JoystickButton(operator, 1).onTrue(new InstantCommand(m_pivots::zeroBottomEncoder));
+
+    new JoystickButton(operator, 2).onTrue(new InstantCommand(m_pivots::zeroTopEncoder));
 
   }
 
@@ -107,8 +123,7 @@ public class RobotContainer {
   public void addAutonOptions() {
     m_autoChooser.addOption("none", new Command() {
     });
-    m_autoChooser.addOption("null", new Command() {
-    });
+    m_autoChooser.addOption("4pice center", AutoBuilder.buildAuto("4 Piece Center"));
 
   }
 }

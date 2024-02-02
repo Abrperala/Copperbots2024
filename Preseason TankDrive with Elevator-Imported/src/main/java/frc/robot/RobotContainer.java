@@ -4,11 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.commands.SetElevator;
-import frc.robot.commands.SetElevatorHome;
+// import frc.robot.commands.SetElevator;
+// import frc.robot.commands.SetElevatorHome;
 import frc.robot.commands.StickDrive;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Elevator;
+// import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -18,7 +18,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = new Drivetrain();
 
-  private final Elevator m_elevator = new Elevator();
+  // private final Elevator m_elevator = new Elevator();
 
   private final PS4Controller fullControl = new PS4Controller(Constants.OperatorConstants.kFullControllerPort);
 
