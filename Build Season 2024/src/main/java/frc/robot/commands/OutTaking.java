@@ -1,15 +1,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Intake;
 
-public class Intake extends Command {
+public class OutTaking extends Command {
+    private Intake m_intake;
 
-    private final Shooter m_shooter;
+    public OutTaking(Intake intake) {
+        m_intake = intake;
 
-    public Intake(Shooter shooter) {
-        this.m_shooter = shooter;
-        addRequirements(m_shooter);
+        addRequirements(m_intake);
     }
 
     @Override
@@ -19,7 +19,8 @@ public class Intake extends Command {
 
     @Override
     public void execute() {
-        m_shooter.intake();
+        m_intake.setIntakeSpeed(-.5);
+
     }
 
     @Override
@@ -30,6 +31,6 @@ public class Intake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-
+        m_intake.setIntakeSpeed(0);
     }
 }

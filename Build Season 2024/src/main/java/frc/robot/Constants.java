@@ -198,12 +198,12 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(-90)));
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
                         new Rotation2d(Math.toRadians(90)));
- 
 
         // Shooter Constants
 
-        public static double SHOOTER_GEARING = 1.25 / 1;
-        public static double SHOOTER_TARGET_RPM = 5000;
+        public static double SHOOTER_GEARING = 1.5 / 1;
+        public static double SHOOTER_TARGET_RPM = 6000;
+        public static double SHOOTER_FREE_RPM = 5300 * SHOOTER_GEARING;
 
         // Pivot Constants,
 
@@ -213,5 +213,5 @@ public final class Constants {
         public static final double MAX_TOP_PIVOT_ANGLE = 70;
         public static final double MIN_TOP_PIVOT_ANGLE = -45;
         public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
-        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15
+        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
 }

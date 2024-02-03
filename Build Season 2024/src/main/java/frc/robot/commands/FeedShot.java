@@ -2,12 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 
-public class Intaking extends Command {
+public class FeedShot extends Command {
+
     private Intake m_intake;
 
-    public Intaking(Intake intake) {
+    public FeedShot(Intake intake) {
         m_intake = intake;
 
         addRequirements(m_intake);
@@ -20,13 +20,13 @@ public class Intaking extends Command {
 
     @Override
     public void execute() {
-        m_intake.setIntakeSpeed(.7);
+        m_intake.setIntakeSpeed(.3);
     }
 
     @Override
     public boolean isFinished() {
 
-        return m_intake.isNotePresent();
+        return !m_intake.isNotePresent();
     }
 
     @Override

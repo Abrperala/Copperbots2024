@@ -1,18 +1,15 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class Shoot extends Command {
+public class StopShooter extends Command {
 
     private final Shooter m_shooter;
-    private double m_speed;
 
-    public Shoot(Shooter shooter, double speed) {
+    public StopShooter(Shooter shooter) {
         this.m_shooter = shooter;
-        this.m_speed = speed;
+
         addRequirements(m_shooter);
     }
 
@@ -23,21 +20,19 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
-        m_shooter.setTopShooterSpeed(m_speed);
-        m_shooter.setBottomShooterSpeed(m_speed);
+        m_shooter.setTopShooterSpeed(0);
+        m_shooter.setBottomShooterSpeed(0);
 
     }
 
     @Override
     public boolean isFinished() {
 
-        return false;
+        return true;
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_shooter.setTopShooterSpeed(0);
-        m_shooter.setBottomShooterSpeed(0);
 
     }
 }
