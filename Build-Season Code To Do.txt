@@ -1,12 +1,35 @@
-Shooter-
+Shooter- In progress
+	Make Subsystem -Complete
+	Shoot based on RPM -Complete
+	Make shooter Ramp up to shot -Complete
+	Have function to know if we are at RPM -Complete
+	Calculate RPM based on distance from goal -Not started
 
-Intake-
+Intake- Complete
+	Make Subsystem -Complete
+	Have Sensor to indicate if we have a Note -Complete
+	Feed note into shooter if at RPM -Complete
+	
+Arm- In progress
+	Make Subsystem -Complete
+	Make position to Shoot directly infront of speaker -Not started
+	Make position to ground intake -Not started
+	Make position to source intake -Not started
+	Make position to shoot into Amp -Not started
+	Make position to shoot from the Stage -Not started
+	Make on the fly positions based on distance from Speaker Not started
 
-Arm-
+Alignment- In progress
+	Make Command to go to a pose -Complete
+	Get and update pose based on Limelight -Complete
+	Return Correct target pose based on apriltag# -Complete
+	Make poses for Amps -Complete
+	Make poses for Sources -Not started
+	Make poses for shooter -Not started
 
-Alignment-
+Autos- Not started
+	
 
-Autos-
-
-Climb-
+Climb- Not started
+	
 
