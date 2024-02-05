@@ -13,23 +13,22 @@ import frc.robot.subsystems.Shooter;
 public class ShootToRPM extends Command {
 
     private final Shooter m_shooter;
-    private final PIDController m_pid;
+    private final SimpleMotorFeedforward feedforward;
 
     public ShootToRPM(Shooter shooter) {
-        m_pid = new PIDController(0, 0, 0);
+        feedforward = new SimpleMotorFeedforward(.005, 1 / Constants.SHOOTER_FREE_RPM);
         this.m_shooter = shooter;
         addRequirements(m_shooter);
     }
 
     @Override
     public void initialize() {
-        m_pid.reset();
     }
 
     @Override
     public void execute() {
-        m_shooter.setTopShooterSpeed(1);
-        m_shooter.setBottomShooterSpeed(1);
+        m_shooter.setTopShooterSpeed(feedforward.calculate(Constants.SHOOTER_TARGET_RPM));
+        m_shooter.setBottomShooterSpeed(feedforward.calculate(Constants.SHOOTER_TARGET_RPM));
 
     }
 

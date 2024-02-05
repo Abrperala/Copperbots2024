@@ -44,15 +44,6 @@ public class Shooter extends SubsystemBase {
         bottomShooter.set(speed);
     }
 
-    public void setTopShooterVoltage(double volts) {
-        topShooter.setVoltage(volts);
-
-    }
-
-    public void setBottomShooterVoltage(double volts) {
-        bottomShooter.setVoltage(volts);
-    }
-
     public double getTopEncoderVelocity() {
         return m_topEncoder.getVelocity();
     }
@@ -62,8 +53,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean shooterAtSpeed() {
-        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 200
-                && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 200;
+        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM
+                && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM;
     }
 
     public double getShooterSpeed() {

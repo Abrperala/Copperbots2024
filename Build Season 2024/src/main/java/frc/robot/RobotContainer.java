@@ -88,18 +88,22 @@ public class RobotContainer {
 
     new JoystickButton(testing, 7).whileTrue(new OutTaking(m_intake));
 
-    // new JoystickButton(testing, 14).onTrue(new Shoot(m_shooter, .3));
+    new JoystickButton(testing, 14).onTrue(new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
+        m_shooter::shooterNotRunning));
 
     new JoystickButton(testing, 8)
         .onTrue(new Intaking(m_intake));
 
-    new JoystickButton(testing, 14).onTrue(
-        new SequentialCommandGroup(new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
-            m_shooter::shooterNotRunning),
-            new ConditionalCommand(new FeedShot(m_intake), new StopIntake(m_intake), m_intake::isNotePresent),
-            new ConditionalCommand(new FeedShot(m_intake), new StopIntake(m_intake), m_intake::isNotePresent),
-            new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
-                m_shooter::shooterNotRunning)));
+    // new JoystickButton(testing, 14).onTrue(
+    // new SequentialCommandGroup(
+    // new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
+    // m_intake::isNotePresent),
+    // new ConditionalCommand(new FeedShot(m_intake), new StopIntake(m_intake),
+    // m_intake::isNotePresent),
+    // new ConditionalCommand(new FeedShot(m_intake), new StopIntake(m_intake),
+    // m_intake::isNotePresent),
+    // new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
+    // m_intake::isNotePresent)));
 
     // new JoystickButton(operator, 1).onTrue(new
     // InstantCommand(m_pivots::zeroBottomEncoder));
