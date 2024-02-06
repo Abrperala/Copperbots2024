@@ -35,7 +35,7 @@ Autos- Not started
 
 Climb- Not started
 
-CANdle - Not started
+CANdle- Not started
 	Turn lights yellow if we are doing a self controlled sequence -Not started
 	Turn lights green if we are in driver control and everything is fine -Not started
 	Turn lights orange if we are getting a note from the source -Not started
