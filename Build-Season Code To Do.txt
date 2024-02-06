@@ -4,6 +4,7 @@ Shooter- In progress
 	Make shooter Ramp up to shot -Complete
 	Have function to know if we are at RPM -Complete
 	Calculate RPM based on distance from goal -Not started
+	Have logic to choose RPM based on target -Not started
 
 Intake- Complete
 	Make Subsystem -Complete
@@ -12,6 +13,8 @@ Intake- Complete
 	
 Arm- In progress
 	Make Subsystem -Complete
+	Move bottom pivot to target angle with PID -Not started
+	Move top pivot to target angle with PID -Not started
 	Make position to Shoot directly infront of speaker -Not started
 	Make position to ground intake -Not started
 	Make position to source intake -Not started
@@ -28,8 +31,15 @@ Alignment- In progress
 	Make poses for shooter -Not started
 
 Autos- Not started
-	
+
 
 Climb- Not started
+
+CANdle - Not started
+	Turn lights yellow if we are doing a self controlled sequence -Not started
+	Turn lights green if we are in driver control and everything is fine -Not started
+	Turn lights orange if we are getting a note from the source -Not started
+	turn lights purple if we are aligned to shoot -Not started
+	turn lights red if something is wrong with robot -Not started
 	
 
