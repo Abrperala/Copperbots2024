@@ -11,45 +11,52 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Pivots extends SubsystemBase {
+    private PivotState pivState;
+    private CANSparkMax bottom1;
+    private CANSparkMax bottom2;
+    private CANSparkMax top1;
 
-    CANSparkMax base1;
-    CANSparkMax base2;
-    CANSparkMax tall1;
-
-    Encoder bottomPivotEncoder;
-    Encoder topPivotEncoder;
+    private Encoder bottomPivotEncoder;
+    private Encoder topPivotEncoder;
 
     public Pivots() {
-        base1 = new CANSparkMax(16, MotorType.kBrushless);
-        base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
-        tall1 = new CANSparkMax(18, MotorType.kBrushless);
+        bottom1 = new CANSparkMax(Constants.BASE1_PIVOT_ID, MotorType.kBrushless);
+        bottom2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
+        top1 = new CANSparkMax(Constants.TOP_PIVOT_ID, MotorType.kBrushless);
 
         bottomPivotEncoder = new Encoder(5, 4, false, CounterBase.EncodingType.k4X);
         topPivotEncoder = new Encoder(9, 8, false, CounterBase.EncodingType.k4X);
 
-        base1.setIdleMode(IdleMode.kBrake);
-        base2.setIdleMode(IdleMode.kBrake);
-        tall1.setIdleMode(IdleMode.kBrake);
-        base1.setInverted(false);
-        base2.setInverted(false);
-        tall1.setInverted(false);
-      
+        bottom1.setIdleMode(IdleMode.kBrake);
+        bottom2.setIdleMode(IdleMode.kBrake);
+        top1.setIdleMode(IdleMode.kBrake);
+        bottom1.setInverted(false);
+        bottom2.setInverted(false);
+        top1.setInverted(false);
 
         bottomPivotEncoder.setDistancePerPulse(360 / 2048.0);
         topPivotEncoder.setDistancePerPulse(360 / 2048.0);
     }
 
+    public void ChangeBottomPivot(double set) {
 
-
-    public void ChangeBasePivot(double set) {
-
-         base1.set(set);
-         base2.set(set);
+        bottom1.set(set);
+        bottom2.set(set);
     }
 
+    public void ChangeTopPivot(double set) {
+        top1.set(set);
+
+    }
+
+    public void ChangeBottomPivot(double set) {
+
+        bottom1.set(set);
+        bottom2.set(set);
+    }
 
     public void ChangeTopPivot(double set) {
-         tall1.set(set);
+        top1.set(set);
 
     }
 
@@ -155,6 +162,36 @@ public class Pivots extends SubsystemBase {
                 + getBaseFrom2ndPivotToShooterExit(secondPivotAngle + firstPivotAngle + 90);
     }
 
+    public PivotState getPivotState() {
+
+        return pivState;
+
+    }
+
+    public void setPivotState(PivotState state) {
+        pivState = state;
+
+    }
+
+    public enum PivotState {
+        // TODO: Input correct angles
+        FLOORINTAKE(0, 0),
+        SOURCEINTAKE(0, 0),
+        SPEAKERSHOOT(0, 0),
+        STAGESPEAKERSHOOT(0, 0),
+        AMPSHOOT(0, 0),
+        CENTERLINESHOOT(0, 0),
+        ZONESHOOT(0, 0);
+
+        public final double topAng;
+        public final double bottomAng;
+
+        private PivotState(int bottomAngle, int topAngle) {
+            this.bottomAng = bottomAngle;
+            this.topAng = topAngle;
+        }
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("bottomPivotAngle", getBottomPivotAngle());
@@ -164,6 +201,6 @@ public class Pivots extends SubsystemBase {
                 getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
         SmartDashboard.putNumber("shooterExitDistance",
                 getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
-  }
-  
+    }
+
 }
