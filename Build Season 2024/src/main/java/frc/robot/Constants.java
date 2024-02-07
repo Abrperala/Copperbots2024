@@ -198,14 +198,13 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(-90)));
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
                         new Rotation2d(Math.toRadians(90)));
- 
 
         // Shooter Constants
 
         public static double SHOOTER_GEARING = 1.25 / 1;
         public static double SHOOTER_TARGET_RPM = 5000;
 
-        // Pivot Constants,
+        // Pivot Constants
 
         public static final double HEIGHT_FROM_FLOOR_TO_1ST_PIVOT = 16;
         public static final double LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT = 16;
@@ -213,5 +212,33 @@ public final class Constants {
         public static final double MAX_TOP_PIVOT_ANGLE = 70;
         public static final double MIN_TOP_PIVOT_ANGLE = -45;
         public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
-        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15
+        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
+
+        // LED Constants
+        public static final int CANdleID = 20;
+
+        public static final int PURPLE_R = 128;
+        public static final int PURPLE_G = 0;
+        public static final int PURPLE_B = 128;
+        public static final int GREEN_R = 0;
+        public static final int GREEN_G = 128;
+        public static final int GREEN_B = 0;
+        public static final int ORANGE_R = 255;
+        public static final int ORANGE_G = 128;
+        public static final int ORANGE_B = 0;
+        public static final int RED_R = 255;
+        public static final int RED_G = 0;
+        public static final int RED_B = 0;
+        public static final int YELLOW_R = 255;
+        public static final int YELLOW_G = 118;
+        public static final int YELLOW_B = 0;
+        public static final int NONE_R = 0;
+        public static final int NONE_G = 0;
+        public static final int NONE_B = 0;
+        public static final int WHITE_R = 255;
+        public static final int WHITE_G = 255;
+        public static final int WHITE_B = 255;
+        public static final int COPPER_R = 184;
+        public static final int COPPER_G = 115;
+        public static final int COPPER_B = 51;
 }

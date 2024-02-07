@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pivots;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -38,10 +40,12 @@ public class RobotContainer {
   public static Limelight m_limelight;
   public static Pivots m_pivots;
   public static Intake m_intake;
+  public static Candle m_candle;
 
   /* Controllers */
   private final PS4Controller driver = new PS4Controller(0);
   private final PS4Controller operator = new PS4Controller(1);
+  private final PS4Controller testing = new PS4Controller(2);
 
   /* Drive Controls */
   private final int translationAxis = PS4Controller.Axis.kLeftY.value;
@@ -58,6 +62,7 @@ public class RobotContainer {
     m_limelight = new Limelight();
     m_pivots = new Pivots();
     m_intake = new Intake();
+    m_candle = new Candle();
 
     // runs method below to configure button bindings
     configureBindings();
@@ -69,9 +74,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         new SwerveDrive(
             m_drivetrain,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis),
+            () -> -testing.getRawAxis(translationAxis),
+            () -> -testing.getRawAxis(strafeAxis),
+            () -> -testing.getRawAxis(rotationAxis),
             () -> false));
   }
 
@@ -82,15 +87,7 @@ public class RobotContainer {
     new JoystickButton(driver, 2).onTrue(new SequentialCommandGroup(new ResetPoseFromLL(m_limelight, m_drivetrain),
         m_drivetrain.followPathCommand(m_limelight.getTargetPoseFromAlliance())));
 
-    new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
-
-    new JoystickButton(operator, 7).whileTrue(new Shoot(m_shooter, -.3));
-
-    new JoystickButton(operator, 8).whileTrue(new Intaking(m_intake));
-
-    new JoystickButton(operator, 1).onTrue(new InstantCommand(m_pivots::zeroBottomEncoder));
-
-    new JoystickButton(operator, 2).onTrue(new InstantCommand(m_pivots::zeroTopEncoder));
+    new JoystickButton(testing, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
   }
 
@@ -123,7 +120,7 @@ public class RobotContainer {
   public void addAutonOptions() {
     m_autoChooser.addOption("none", new Command() {
     });
-    m_autoChooser.addOption("4pice center", AutoBuilder.buildAuto("4 Piece Center"));
+    m_autoChooser.addOption("4piece center", AutoBuilder.buildAuto("4 Piece Center"));
 
   }
 }
