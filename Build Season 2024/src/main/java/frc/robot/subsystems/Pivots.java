@@ -20,53 +20,51 @@ public class Pivots extends SubsystemBase {
     Encoder topPivotEncoder;
 
     public Pivots() {
-        base1 = new CANSparkMax(16, MotorType.kBrushless);
-        base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
-        tall1 = new CANSparkMax(18, MotorType.kBrushless);
+        // base1 = new CANSparkMax(16, MotorType.kBrushless);
+        // base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
+        // tall1 = new CANSparkMax(18, MotorType.kBrushless);
 
-        bottomPivotEncoder = new Encoder(5, 4, false, CounterBase.EncodingType.k4X);
-        topPivotEncoder = new Encoder(9, 8, false, CounterBase.EncodingType.k4X);
+        // bottomPivotEncoder = new Encoder(5, 4, false, CounterBase.EncodingType.k4X);
+        // topPivotEncoder = new Encoder(9, 8, false, CounterBase.EncodingType.k4X);
 
-        base1.setIdleMode(IdleMode.kBrake);
-        base2.setIdleMode(IdleMode.kBrake);
-        tall1.setIdleMode(IdleMode.kBrake);
-        base1.setInverted(false);
-        base2.setInverted(false);
-        tall1.setInverted(false);
-      
+        // base1.setIdleMode(IdleMode.kBrake);
+        // base2.setIdleMode(IdleMode.kBrake);
+        // tall1.setIdleMode(IdleMode.kBrake);
+        // base1.setInverted(false);
+        // base2.setInverted(false);
+        // tall1.setInverted(false);
 
-        bottomPivotEncoder.setDistancePerPulse(360 / 2048.0);
-        topPivotEncoder.setDistancePerPulse(360 / 2048.0);
+        // bottomPivotEncoder.setDistancePerPulse(360 / 2048.0);
+        // topPivotEncoder.setDistancePerPulse(360 / 2048.0);
     }
-
-
 
     public void ChangeBasePivot(double set) {
 
-         base1.set(set);
-         base2.set(set);
+        // base1.set(set);
+        // base2.set(set);
     }
 
-
     public void ChangeTopPivot(double set) {
-         tall1.set(set);
+        // tall1.set(set);
 
     }
 
     public double getTopPivotAngle() {
-        return topPivotEncoder.getDistance();
+        // return topPivotEncoder.getDistance();
+        return 0;
     }
 
     public double getBottomPivotAngle() {
-        return bottomPivotEncoder.getDistance();
+        // return bottomPivotEncoder.getDistance();
+        return 0;
     }
 
     public void zeroTopEncoder() {
-        topPivotEncoder.reset();
+        // topPivotEncoder.reset();
     }
 
     public void zeroBottomEncoder() {
-        bottomPivotEncoder.reset();
+        // bottomPivotEncoder.reset();
     }
 
     public double getShotAngle(double firstPivotAngle, double secondPivotAngle) {
@@ -164,6 +162,6 @@ public class Pivots extends SubsystemBase {
                 getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
         SmartDashboard.putNumber("shooterExitDistance",
                 getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
-  }
-  
+    }
+
 }
