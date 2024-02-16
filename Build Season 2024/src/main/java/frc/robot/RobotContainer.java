@@ -87,7 +87,15 @@ public class RobotContainer {
     new JoystickButton(driver, 2).onTrue(new SequentialCommandGroup(new ResetPoseFromLL(m_limelight, m_drivetrain),
         m_drivetrain.followPathCommand(m_limelight.getTargetPoseFromAlliance())));
 
-    new JoystickButton(testing, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+    new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+
+    new JoystickButton(operator, 7).whileTrue(new Shoot(m_shooter, -.3));
+
+    new JoystickButton(operator, 8).whileTrue(new Intaking(m_intake));
+
+    new JoystickButton(operator, 1).onTrue(new InstantCommand(m_pivots::zeroBottomEncoder));
+
+    new JoystickButton(operator, 2).onTrue(new InstantCommand(m_pivots::zeroTopEncoder));
 
   }
 

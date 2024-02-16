@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
 
   /**

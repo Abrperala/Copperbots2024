@@ -6,15 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.led.FireAnimation;
-import com.ctre.phoenix.led.LarsonAnimation;
-import com.ctre.phoenix.led.RainbowAnimation;
-import com.ctre.phoenix.led.RgbFadeAnimation;
-import com.ctre.phoenix.led.StrobeAnimation;
-import com.ctre.phoenix.led.TwinkleAnimation;
+
 import com.ctre.phoenix.led.CANdle.LEDStripType;
-import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
-import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,7 +27,7 @@ public class Candle extends SubsystemBase {
         configAll.brightnessScalar = 1;
         m_candle.configAllSettings(configAll, 100);
         m_candle.clearAnimation(0);
-        ledstate = LEDState.YELLOW;
+        ledstate = LEDState.WHITE;
         setLEDSTate(ledstate);
     }
 
