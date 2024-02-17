@@ -183,7 +183,7 @@ public final class Constants {
         // Pivot Constants
         public static final int BASE1_PIVOT_ID = 16;
         public static final int BASE2_PIVOT_ID = 17;
-        public static final int TALL_PIVOT_ID = 18;
+        public static final int TOP_PIVOT_ID = 18;
 
         // field elements positions constants
 
@@ -198,7 +198,6 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(-90)));
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
                         new Rotation2d(Math.toRadians(90)));
- 
 
         // Shooter Constants
 
@@ -213,5 +212,5 @@ public final class Constants {
         public static final double MAX_TOP_PIVOT_ANGLE = 70;
         public static final double MIN_TOP_PIVOT_ANGLE = -45;
         public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
-        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15
+        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
 }
