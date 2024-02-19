@@ -1,12 +1,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 public final class CTREConfigs {
@@ -15,15 +12,14 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
     public CANcoderConfiguration swerveCanCoderConfig = new CANcoderConfiguration();
 
+    public CTREConfigs() {
 
-    public CTREConfigs(){
-
-  /** Swerve Angle Motor Configurations */
+        /** Swerve Angle Motor Configurations */
         /* Motor Inverts and Neutral Mode */
         MotorOutputConfigs angleMotorOutput = swerveAngleFXConfig.MotorOutput;
         angleMotorOutput.Inverted = Constants.ANGLE_MOTOR_INVERT;
         angleMotorOutput.NeutralMode = Constants.AZIMUTH_NEUTRAL_MODE;
-        
+
         /* Current Limiting */
         CurrentLimitsConfigs angleCurrentLimits = swerveAngleFXConfig.CurrentLimits;
         angleCurrentLimits.SupplyCurrentLimitEnable = Constants.AZIMUTH_ENABLE_CURRENT_LIMIT;
@@ -62,10 +58,8 @@ public final class CTREConfigs {
 
         swerveDriveFXConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = Constants.CLOSED_LOOP_RAMP;
         swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.CLOSED_LOOP_RAMP;
-        
+
         /** Swerve CANCoder Configuration */
         swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.CANCODER_INVERT;
     }
 }
-      
-    

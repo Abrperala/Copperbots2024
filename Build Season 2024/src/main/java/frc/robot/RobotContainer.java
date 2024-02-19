@@ -1,11 +1,12 @@
 package frc.robot;
 
+import frc.robot.subsystems.BasePivot;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Pivots;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
+import frc.robot.subsystems.TopPivot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -38,7 +39,8 @@ public class RobotContainer {
   private static SendableChooser<Command> m_autoChooser;
   public static Shooter m_shooter;
   public static Limelight m_limelight;
-  public static Pivots m_pivots;
+  public static TopPivot m_topPivot;
+  public static BasePivot m_basePivot;
   public static Intake m_intake;
   public static Candle m_candle;
 
@@ -60,7 +62,8 @@ public class RobotContainer {
     m_autoChooser = new SendableChooser<>();
     m_shooter = new Shooter();
     m_limelight = new Limelight();
-    m_pivots = new Pivots();
+    m_basePivot = new BasePivot();
+    m_topPivot = new TopPivot();
     m_intake = new Intake();
     m_candle = new Candle();
 
@@ -93,9 +96,33 @@ public class RobotContainer {
 
     new JoystickButton(operator, 8).whileTrue(new Intaking(m_intake));
 
-    new JoystickButton(operator, 1).onTrue(new InstantCommand(m_pivots::zeroBottomEncoder));
+    // new JoystickButton(operator, 1).onTrue(new SetTopPivotToAngle(m_topPivot,
+    // -40));
 
-    new JoystickButton(operator, 2).onTrue(new InstantCommand(m_pivots::zeroTopEncoder));
+    // new JoystickButton(operator, 3).onTrue(new SetTopPivotToAngle(m_topPivot,
+    // 70));
+
+    // new JoystickButton(operator, 4).onTrue(new SetTopPivotToAngle(m_topPivot,
+    // 100));
+
+    new JoystickButton(operator, 1).onTrue(new SetBasePivotToAngle(m_basePivot, -11));
+
+    new JoystickButton(operator, 2).onTrue(new SetTopPivotToAngle(m_topPivot, 36));
+
+    new JoystickButton(operator, 3).onTrue(new SetBasePivotToAngle(m_basePivot, 45));
+
+    new JoystickButton(operator, 4).onTrue(new SetBasePivotToAngle(m_basePivot, 90));
+
+    new JoystickButton(operator, 14).onTrue(new InstantCommand(m_topPivot::stopPivot));
+
+    // new JoystickButton(operator, 1).onTrue(new InstantCommand(() ->
+    // m_basePivot.setPivot(.11)));
+
+    // new JoystickButton(operator, 1).onTrue(new SetBasePivotToAngle(m_basePivot,
+    // 0));
+
+    // new JoystickButton(operator, 2).onTrue(new SetBasePivotToAngle(m_basePivot,
+    // 90));
 
   }
 

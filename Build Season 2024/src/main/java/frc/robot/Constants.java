@@ -183,7 +183,7 @@ public final class Constants {
         // Pivot Constants
         public static final int BASE1_PIVOT_ID = 16;
         public static final int BASE2_PIVOT_ID = 17;
-        public static final int TALL_PIVOT_ID = 18;
+        public static final int TOP_PIVOT_ID = 18;
 
         // field elements positions constants
 
