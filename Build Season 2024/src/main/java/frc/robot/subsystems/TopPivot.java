@@ -29,6 +29,10 @@ public class TopPivot extends SubsystemBase {
         top1.set(set);
     }
 
+    public void stopPivot() {
+        top1.set(0);
+    }
+
     public double getPivotAngle() {
         return topPivotEncoder.getDistance();
     }

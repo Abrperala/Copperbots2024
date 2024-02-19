@@ -9,8 +9,8 @@ public class SetTopPivotToAngle extends Command {
 
     private final TopPivot m_topPivot;
     private double m_angle;
-    private Constraints topConstraints = new Constraints(4, 3);
-    private ProfiledPIDController topPID = new ProfiledPIDController(.05, 0, 0, topConstraints);
+    private Constraints topConstraints = new Constraints(350, 200);
+    private ProfiledPIDController topPID = new ProfiledPIDController(.01, 0, 0, topConstraints);
 
     public SetTopPivotToAngle(TopPivot pivot, double angle) {
         this.m_topPivot = pivot;
@@ -30,7 +30,11 @@ public class SetTopPivotToAngle extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        if (Math.abs(m_angle - m_topPivot.getPivotAngle()) < 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

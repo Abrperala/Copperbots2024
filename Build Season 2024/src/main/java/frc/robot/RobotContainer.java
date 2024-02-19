@@ -91,18 +91,33 @@ public class RobotContainer {
 
     new JoystickButton(operator, 8).whileTrue(new Intaking(m_intake));
 
-    new JoystickButton(operator, 3).onTrue(new SetTopPivotToAngle(m_topPivot, 0));
+    // new JoystickButton(operator, 1).onTrue(new SetTopPivotToAngle(m_topPivot,
+    // -40));
 
-    new JoystickButton(operator, 4).onTrue(new SetTopPivotToAngle(m_topPivot, 70));
+    // new JoystickButton(operator, 3).onTrue(new SetTopPivotToAngle(m_topPivot,
+    // 70));
+
+    // new JoystickButton(operator, 4).onTrue(new SetTopPivotToAngle(m_topPivot,
+    // 100));
+
+    new JoystickButton(operator, 1).onTrue(new SetBasePivotToAngle(m_basePivot, -11));
+
+    new JoystickButton(operator, 2).onTrue(new SetTopPivotToAngle(m_topPivot, 36));
+
+    new JoystickButton(operator, 3).onTrue(new SetBasePivotToAngle(m_basePivot, 45));
+
+    new JoystickButton(operator, 4).onTrue(new SetBasePivotToAngle(m_basePivot, 90));
+
+    new JoystickButton(operator, 14).onTrue(new InstantCommand(m_topPivot::stopPivot));
 
     // new JoystickButton(operator, 1).onTrue(new InstantCommand(() ->
     // m_basePivot.setPivot(.11)));
 
-    new JoystickButton(operator, 1).onTrue(new SetBasePivotToAngle(m_basePivot,
-        0));
+    // new JoystickButton(operator, 1).onTrue(new SetBasePivotToAngle(m_basePivot,
+    // 0));
 
-    new JoystickButton(operator, 2).onTrue(new SetBasePivotToAngle(m_basePivot,
-        90));
+    // new JoystickButton(operator, 2).onTrue(new SetBasePivotToAngle(m_basePivot,
+    // 90));
 
   }
 
