@@ -51,6 +51,14 @@ public class Pivots extends SubsystemBase {
 
     }
 
+    // public double getTopPivotAngle() {
+    // return topPivotEncoder.getDistance();
+    // }
+
+    // public double getBottomPivotAngle() {
+    // return bottomPivotEncoder.getDistance();
+    // }
+
     public double getTopPivotAngle() {
         // return topPivotEncoder.getDistance();
         return 0;
@@ -157,6 +165,7 @@ public class Pivots extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         SmartDashboard.putNumber("bottomPivotAngle", getBottomPivotAngle());
         SmartDashboard.putNumber("topPivotAngle", getTopPivotAngle());
         SmartDashboard.putNumber("ShotAngle", getShotAngle(getBottomPivotAngle(), getTopPivotAngle()));
@@ -164,6 +173,7 @@ public class Pivots extends SubsystemBase {
                 getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
         SmartDashboard.putNumber("shooterExitDistance",
                 getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
+
     }
 
 }

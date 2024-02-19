@@ -175,11 +175,6 @@ public final class Constants {
                         AUTO_P_THETA_CONTROLLER,
                         AUTO_I_THETA_CONTROLLER, AUTO_D_THETA_CONTROLLER, THETA_AUTO_CONSTRAINTS);
 
-        // Shooter Constants
-        public static final int SHOOT1_ID = 13;
-        public static final int SHOOT2_ID = 14;
-        public static final int INTAKE_ID = 15;
-
         // Pivot Constants
         public static final int BASE1_PIVOT_ID = 16;
         public static final int BASE2_PIVOT_ID = 17;
@@ -200,9 +195,13 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(90)));
 
         // Shooter Constants
+        public static final int SHOOT1_ID = 13;
+        public static final int SHOOT2_ID = 14;
+        public static final int INTAKE_ID = 15;
 
-        public static double SHOOTER_GEARING = 1.25 / 1;
-        public static double SHOOTER_TARGET_RPM = 5000;
+        public static double SHOOTER_GEARING = 1.5 / 1;
+        public static double SHOOTER_TARGET_RPM = 6000;
+        public static double SHOOTER_FREE_RPM = 5300 * SHOOTER_GEARING;
 
         // Pivot Constants
 
@@ -213,6 +212,7 @@ public final class Constants {
         public static final double MIN_TOP_PIVOT_ANGLE = -45;
         public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
         public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
+
 
         // LED Constants
         public static final int CANdleID = 20;
@@ -241,4 +241,5 @@ public final class Constants {
         public static final int COPPER_R = 184;
         public static final int COPPER_G = 115;
         public static final int COPPER_B = 51;
+
 }

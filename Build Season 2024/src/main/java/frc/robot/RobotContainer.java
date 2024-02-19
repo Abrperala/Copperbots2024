@@ -90,11 +90,33 @@ public class RobotContainer {
     new JoystickButton(driver, 2).onTrue(new SequentialCommandGroup(new ResetPoseFromLL(m_limelight, m_drivetrain),
         m_drivetrain.followPathCommand(m_limelight.getTargetPoseFromAlliance())));
 
-    new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+    new JoystickButton(testing, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
-    new JoystickButton(operator, 7).whileTrue(new Shoot(m_shooter, -.3));
+    new JoystickButton(testing, 7).whileTrue(new OutTaking(m_intake));
 
-    new JoystickButton(operator, 8).whileTrue(new Intaking(m_intake));
+    new JoystickButton(testing, 14).onTrue(new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
+        m_shooter::shooterNotRunning));
+
+
+    new JoystickButton(testing, 8)
+        .onTrue(new Intaking(m_intake));
+
+    // new JoystickButton(testing, 14).onTrue(
+    // new SequentialCommandGroup(
+    // new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
+    // m_intake::isNotePresent),
+    // new ConditionalCommand(new FeedShot(m_intake), new StopIntake(m_intake),
+    // m_intake::isNotePresent),
+    // new ConditionalCommand(new FeedShot(m_intake), new StopIntake(m_intake),
+    // m_intake::isNotePresent),
+    // new ConditionalCommand(new ShootToRPM(m_shooter), new StopShooter(m_shooter),
+    // m_intake::isNotePresent)));
+
+    // new JoystickButton(operator, 1).onTrue(new
+    // InstantCommand(m_pivots::zeroBottomEncoder));
+
+    // new JoystickButton(operator, 2).onTrue(new
+    // InstantCommand(m_pivots::zeroTopEncoder));
 
     // new JoystickButton(operator, 1).onTrue(new SetTopPivotToAngle(m_topPivot,
     // -40));
@@ -123,6 +145,7 @@ public class RobotContainer {
 
     // new JoystickButton(operator, 2).onTrue(new SetBasePivotToAngle(m_basePivot,
     // 90));
+
 
   }
 
