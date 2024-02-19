@@ -178,7 +178,7 @@ public final class Constants {
         // Pivot Constants
         public static final int BASE1_PIVOT_ID = 16;
         public static final int BASE2_PIVOT_ID = 17;
-        public static final int TALL_PIVOT_ID = 18;
+        public static final int TOP_PIVOT_ID = 18;
 
         // field elements positions constants
 
@@ -203,7 +203,7 @@ public final class Constants {
         public static double SHOOTER_TARGET_RPM = 6000;
         public static double SHOOTER_FREE_RPM = 5300 * SHOOTER_GEARING;
 
-        // Pivot Constants,
+        // Pivot Constants
 
         public static final double HEIGHT_FROM_FLOOR_TO_1ST_PIVOT = 16;
         public static final double LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT = 16;
@@ -212,4 +212,34 @@ public final class Constants {
         public static final double MIN_TOP_PIVOT_ANGLE = -45;
         public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
         public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
+
+
+        // LED Constants
+        public static final int CANdleID = 20;
+
+        public static final int PURPLE_R = 128;
+        public static final int PURPLE_G = 0;
+        public static final int PURPLE_B = 128;
+        public static final int GREEN_R = 0;
+        public static final int GREEN_G = 128;
+        public static final int GREEN_B = 0;
+        public static final int ORANGE_R = 255;
+        public static final int ORANGE_G = 128;
+        public static final int ORANGE_B = 0;
+        public static final int RED_R = 255;
+        public static final int RED_G = 0;
+        public static final int RED_B = 0;
+        public static final int YELLOW_R = 255;
+        public static final int YELLOW_G = 118;
+        public static final int YELLOW_B = 0;
+        public static final int NONE_R = 0;
+        public static final int NONE_G = 0;
+        public static final int NONE_B = 0;
+        public static final int WHITE_R = 255;
+        public static final int WHITE_G = 255;
+        public static final int WHITE_B = 255;
+        public static final int COPPER_R = 184;
+        public static final int COPPER_G = 115;
+        public static final int COPPER_B = 51;
+
 }

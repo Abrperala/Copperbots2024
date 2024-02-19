@@ -25,10 +25,11 @@ public class Intake extends SubsystemBase {
         m_colorMatcher.addColorMatch(kGreenTarget);
         m_colorMatcher.addColorMatch(kOrangeTarget);
         intake = new CANSparkMax(15, MotorType.kBrushed);
+
     }
 
     public void setIntakeSpeed(double speed) {
-        intake.set(speed);
+        // intake.set(speed);
     }
 
     public Color getColorSensor() {

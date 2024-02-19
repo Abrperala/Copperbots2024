@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -56,6 +58,16 @@ public class Pivots extends SubsystemBase {
     // public double getBottomPivotAngle() {
     // return bottomPivotEncoder.getDistance();
     // }
+
+    public double getTopPivotAngle() {
+        // return topPivotEncoder.getDistance();
+        return 0;
+    }
+
+    public double getBottomPivotAngle() {
+        // return bottomPivotEncoder.getDistance();
+        return 0;
+    }
 
     public void zeroTopEncoder() {
         // topPivotEncoder.reset();
@@ -153,14 +165,15 @@ public class Pivots extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("bottomPivotAngle", getBottomPivotAngle());
-        // SmartDashboard.putNumber("topPivotAngle", getTopPivotAngle());
-        // SmartDashboard.putNumber("ShotAngle", getShotAngle(getBottomPivotAngle(),
-        // getTopPivotAngle()));
-        // SmartDashboard.putNumber("shooterExitHeight",
-        // getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
-        // SmartDashboard.putNumber("shooterExitDistance",
-        // getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
+
+        SmartDashboard.putNumber("bottomPivotAngle", getBottomPivotAngle());
+        SmartDashboard.putNumber("topPivotAngle", getTopPivotAngle());
+        SmartDashboard.putNumber("ShotAngle", getShotAngle(getBottomPivotAngle(), getTopPivotAngle()));
+        SmartDashboard.putNumber("shooterExitHeight",
+                getHeightFromFloorToShooterExit(getTopPivotAngle(), getBottomPivotAngle()));
+        SmartDashboard.putNumber("shooterExitDistance",
+                getOffsetOfShooterExitToRobot(getTopPivotAngle(), getBottomPivotAngle()));
+
     }
 
 }
