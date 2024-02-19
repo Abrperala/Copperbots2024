@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.BasePivot;
+import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -40,10 +42,12 @@ public class RobotContainer {
   public static TopPivot m_topPivot;
   public static BasePivot m_basePivot;
   public static Intake m_intake;
+  public static Candle m_candle;
 
   /* Controllers */
   private final PS4Controller driver = new PS4Controller(0);
   private final PS4Controller operator = new PS4Controller(1);
+  private final PS4Controller testing = new PS4Controller(2);
 
   /* Drive Controls */
   private final int translationAxis = PS4Controller.Axis.kLeftY.value;
@@ -61,6 +65,7 @@ public class RobotContainer {
     m_basePivot = new BasePivot();
     m_topPivot = new TopPivot();
     m_intake = new Intake();
+    m_candle = new Candle();
 
     // runs method below to configure button bindings
     configureBindings();
@@ -72,9 +77,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         new SwerveDrive(
             m_drivetrain,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis),
+            () -> -testing.getRawAxis(translationAxis),
+            () -> -testing.getRawAxis(strafeAxis),
+            () -> -testing.getRawAxis(rotationAxis),
             () -> false));
   }
 
@@ -150,7 +155,7 @@ public class RobotContainer {
   public void addAutonOptions() {
     m_autoChooser.addOption("none", new Command() {
     });
-    m_autoChooser.addOption("4pice center", AutoBuilder.buildAuto("4 Piece Center"));
+    m_autoChooser.addOption("4piece center", AutoBuilder.buildAuto("4 Piece Center"));
 
   }
 }

@@ -10,10 +10,10 @@ public class Intake extends SubsystemBase {
     public CANSparkMax intake;
 
     public Intake() {
-        intake = new CANSparkMax(15, MotorType.kBrushed);
+        // intake = new CANSparkMax(15, MotorType.kBrushed);
     }
 
     public void setIntakeSpeed(double speed) {
-        intake.set(speed);
+        // intake.set(speed);
     }
 }

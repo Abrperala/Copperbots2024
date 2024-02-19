@@ -21,7 +21,7 @@ public class StickDrive extends Command {
 
   @Override
   public void execute() {
-     m_drivetrain.drive(m_forward.getAsDouble(), m_rotation.getAsDouble());
+     m_drivetrain.drive(m_forward.getAsDouble() * .5, m_rotation.getAsDouble() * .5);
   }
 
 

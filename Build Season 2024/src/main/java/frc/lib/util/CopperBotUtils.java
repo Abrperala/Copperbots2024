@@ -28,7 +28,6 @@ public final class CopperBotUtils {
                 new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), // The constraints for this path.
                 new GoalEndState(0.0, end.getRotation()) // Goal end state. You can set a holonomic
                                                          // rotation
-
         );
 
         path.preventFlipping = preventFlipping;

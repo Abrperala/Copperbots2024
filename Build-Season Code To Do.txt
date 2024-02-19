@@ -1,0 +1,45 @@
+Shooter- In progress
+	Make Subsystem -Complete
+	Shoot based on RPM -Complete
+	Make shooter Ramp up to shot -Complete
+	Have function to know if we are at RPM -Complete
+	Calculate RPM based on distance from goal -Not started
+	Have logic to choose RPM based on target -Not started
+
+Intake- Complete
+	Make Subsystem -Complete
+	Have Sensor to indicate if we have a Note -Complete
+	Feed note into shooter if at RPM -Complete
+	
+Arm- In progress
+	Make Subsystem -Complete
+	Move bottom pivot to target angle with PID -Not started
+	Move top pivot to target angle with PID -Not started
+	Make position to Shoot directly infront of speaker -Not started
+	Make position to ground intake -Not started
+	Make position to source intake -Not started
+	Make position to shoot into Amp -Not started
+	Make position to shoot from the Stage -Not started
+	Make on the fly positions based on distance from Speaker Not started
+
+Alignment- In progress
+	Make Command to go to a pose -Complete
+	Get and update pose based on Limelight -Complete
+	Return Correct target pose based on apriltag# -Complete
+	Make poses for Amps -Complete
+	Make poses for Sources -Not started
+	Make poses for shooter -Not started
+
+Autos- Not started
+
+
+Climb- Not started
+
+CANdle- Not started
+	Turn lights yellow if we are doing a self controlled sequence -Not started
+	Turn lights green if we are in driver control and everything is fine -Not started
+	Turn lights orange if we are getting a note from the source -Not started
+	turn lights purple if we are aligned to shoot -Not started
+	turn lights red if something is wrong with robot -Not started
+	
+
