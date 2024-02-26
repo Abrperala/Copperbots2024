@@ -1,15 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Climb;
 
-public class OutTaking extends Command {
-    private Intake m_intake;
+public class ClimbUp extends Command {
+    private Climb m_climb;
 
-    public OutTaking(Intake intake) {
-        m_intake = intake;
-
-        addRequirements(m_intake);
+    public ClimbUp(Climb climb) {
+        this.m_climb = climb;
+        addRequirements(m_climb);
     }
 
     @Override
@@ -19,8 +18,7 @@ public class OutTaking extends Command {
 
     @Override
     public void execute() {
-        m_intake.setIntakeSpeed(-.7);
-
+        m_climb.setClimb(.7);
     }
 
     @Override
@@ -31,6 +29,8 @@ public class OutTaking extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setIntakeSpeed(0);
+        m_climb.setClimb(0);
+        ;
     }
+
 }

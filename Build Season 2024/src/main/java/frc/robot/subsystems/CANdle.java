@@ -24,10 +24,11 @@ public class Candle extends SubsystemBase {
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
         configAll.stripType = LEDStripType.RGB;
-        configAll.brightnessScalar = 1;
+        configAll.brightnessScalar = .2;
+
         m_candle.configAllSettings(configAll, 100);
         m_candle.clearAnimation(0);
-        ledstate = LEDState.WHITE;
+        ledstate = LEDState.GREEN;
         setLEDSTate(ledstate);
     }
 
@@ -52,7 +53,8 @@ public class Candle extends SubsystemBase {
         RED(Constants.RED_R, Constants.RED_G, Constants.RED_B),
         BLACK(Constants.NONE_R, Constants.NONE_G, Constants.NONE_B),
         WHITE(Constants.WHITE_R, Constants.WHITE_G, Constants.WHITE_B),
-        COPPER(Constants.COPPER_R, Constants.COPPER_G, Constants.COPPER_B)
+        COPPER(Constants.COPPER_R, Constants.COPPER_G, Constants.COPPER_B),
+        PINK(255, 50, 193)
 
         ;
 
@@ -72,6 +74,7 @@ public class Candle extends SubsystemBase {
         SmartDashboard.putNumber("LED_R", getLEDState().r);
         SmartDashboard.putNumber("LED_G", getLEDState().g);
         SmartDashboard.putNumber("LED_B", getLEDState().b);
+        SmartDashboard.putNumber("CANdle TEMP", m_candle.getTemperature());
 
     }
 

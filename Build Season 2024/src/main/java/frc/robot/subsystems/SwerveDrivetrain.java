@@ -7,21 +7,27 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import java.util.List;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,6 +37,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     public SwerveModule[] m_swerveMods;
     public AHRS m_gyro;
     public AutoBuilder autoBuilder;
+    private Field2d field;
 
     public SwerveDrivetrain() {
         m_gyro = new AHRS(SPI.Port.kMXP);
@@ -62,8 +69,8 @@ public class SwerveDrivetrain extends SubsystemBase {
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
-                        new PIDConstants(3, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(3, 0.0, 0.0), // Rotation PID constants
+                        new PIDConstants(.02, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(.07, 0.0, 0.0), // Rotation PID constants
 
                         Constants.MAX_SPEED, // Max module speed, in m/s
                         Constants.DRIVEBASE_RADIUS, // Drive base radius in meters. Distance from robot center to
@@ -85,6 +92,9 @@ public class SwerveDrivetrain extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
 
+        field = new Field2d();
+        SmartDashboard.putData("Field", field);
+
     }
 
     /**
@@ -101,7 +111,9 @@ public class SwerveDrivetrain extends SubsystemBase {
                         translation.getX(),
                         translation.getY(),
                         rotation,
-                        m_gyro.getRotation2d())
+                        m_gyro.getRotation2d()) // drive based on gyro
+
+                        // getPose().getRotation()) // drive based on pose based on gyro?
                         : new ChassisSpeeds(
                                 translation.getX(),
                                 translation.getY(),
@@ -224,34 +236,64 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     }
 
-    public Command followPathCommand(Pose2d target) {
-        // it seems that it is starting this before the pose gets passed to it
-        PathPlannerPath path = CopperBotUtils.pathFromPoses(getPose(), target,
-                true);
+    public Command followPathCommand(int aprilTagId) {
+        if (!hasTargetAprilTag(aprilTagId)) {
+            return new WaitCommand(0.1);
+        } else {
 
-        return new FollowPathHolonomic(
-                path,
-                this::getPose, // Robot pose supplier
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-                                                 // Constants class
-                        new PIDConstants(0.2, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(0.07, 0.0, 0.0), // Rotation PID constants
-                        Constants.MAX_SPEED, // Max module speed, in m/s
-                        Constants.DRIVEBASE_RADIUS, // Drive base radius in meters. Distance from robot center to
-                                                    // furthest module.
-                        new ReplanningConfig(true, false) // Default path replanning config. See the API for the options
-                                                          // here
-                ),
-                () -> false,
-                this// Reference to the subsystems to set requirements
-        );
+            Pose2d target = getTargetPoseFromAlliance(aprilTagId);
+
+            return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
+        }
+
+    }
+
+    public Pose2d getTargetPoseFromAlliance(int aprilTagID) {
+        if (CopperBotUtils.isAllianceBlue()) {
+            switch (aprilTagID) {
+                case 6:
+                    return Constants.BLUE_AMP_SCORING_POSITION;
+                case 1:
+                    return Constants.BLUE_CLOSE_SOURCE_POSITION;
+                case 2:
+                    return Constants.BLUE_FAR_SOURCE_POSITION;
+                default:
+                    return null;
+            }
+        } else {
+            switch (aprilTagID) {
+                case 5:
+                    return Constants.RED_AMP_SCORING_POSITION;
+                case 9:
+                    return Constants.RED_FAR_SOURCE_POSITION;
+                case 10:
+                    return Constants.RED_CLOSE_SOURCE_POSITION;
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public boolean hasTargetAprilTag(int aprilTagID) {
+        if (CopperBotUtils.isAllianceBlue()) {
+            if (aprilTagID == 1 || aprilTagID == 2 || aprilTagID == 6) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (aprilTagID == 5 || aprilTagID == 9 || aprilTagID == 10) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     @Override
     public void periodic() {
         m_swerveOdometry.update(getYaw(), getModulePositions());
+        field.setRobotPose(getPose());
 
         for (SwerveModule mod : m_swerveMods) {
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Cancoder", mod.getCANcoder().getDegrees());
@@ -262,6 +304,8 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
+
         SmartDashboard.putBoolean("is Alliance Blue?", CopperBotUtils.isAllianceBlue());
 
     }

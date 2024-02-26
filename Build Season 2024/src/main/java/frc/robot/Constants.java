@@ -40,7 +40,8 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 8;
                 public static final int ANGLE_MOTOR_ID = 7;
                 public static final int CANCODER_ID = 12;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(143.5);
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(143.701172);
+
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -51,7 +52,8 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 4;
                 public static final int ANGLE_MOTOR_ID = 3;
                 public static final int CANCODER_ID = 10;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(154.0);
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(165.498047);
+
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -62,7 +64,7 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 6;
                 public static final int ANGLE_MOTOR_ID = 5;
                 public static final int CANCODER_ID = 11;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-48.6);
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-41.923828);
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -73,7 +75,7 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 2;
                 public static final int ANGLE_MOTOR_ID = 1;
                 public static final int CANCODER_ID = 9;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(48.5);
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(47.197266);
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -180,6 +182,19 @@ public final class Constants {
         public static final int BASE2_PIVOT_ID = 17;
         public static final int TOP_PIVOT_ID = 18;
 
+        // LimeLight Constants, not actually used in code, but used in Limelight Configs
+
+        /*
+         * Front LL:
+         * Forward: .1016
+         * Right: -.2921
+         * Up: .2819
+         * 
+         * Rear LL:
+         * 
+         * 
+         */
+
         // field elements positions constants
 
         /*
@@ -193,6 +208,18 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(-90)));
         public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
                         new Rotation2d(Math.toRadians(90)));
+        // apriltag 2
+        public static final Pose2d BLUE_FAR_SOURCE_POSITION = new Pose2d(15.8, 1.18,
+                        new Rotation2d(Math.toRadians(120)));
+        // apriltag 1
+        public static final Pose2d BLUE_CLOSE_SOURCE_POSITION = new Pose2d(14.85, .55,
+                        new Rotation2d(Math.toRadians(120)));
+        // apriltag 9
+        public static final Pose2d RED_FAR_SOURCE_POSITION = new Pose2d(16.1, 6.7,
+                        new Rotation2d(Math.toRadians(-45)));
+        // apriltag 10
+        public static final Pose2d RED_CLOSE_SOURCE_POSITION = new Pose2d(14.8, 7.33,
+                        new Rotation2d(Math.toRadians(-45)));
 
         // Shooter Constants
         public static final int SHOOT1_ID = 13;
@@ -212,7 +239,6 @@ public final class Constants {
         public static final double MIN_TOP_PIVOT_ANGLE = -45;
         public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
         public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
-
 
         // LED Constants
         public static final int CANdleID = 20;

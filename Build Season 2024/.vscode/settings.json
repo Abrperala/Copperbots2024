@@ -29,5 +29,5 @@
   "java.format.settings.url": "eclipse-formatter.xml",
   "editor.defaultFormatter": "redhat.java",
   "editor.formatOnSave": true,
-  "git.enabled": false
+  "git.enabled": true
 }

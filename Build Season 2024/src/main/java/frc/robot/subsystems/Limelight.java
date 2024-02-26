@@ -22,8 +22,8 @@ public class Limelight extends SubsystemBase {
         return LimelightHelpers.getTV("");
     }
 
-    public double getFid() {
-        return LimelightHelpers.getFiducialID("");
+    public int getFid() {
+        return (int) LimelightHelpers.getFiducialID("");
     }
 
     public double getTimeStamp() {
@@ -52,65 +52,21 @@ public class Limelight extends SubsystemBase {
         return getPose2DFromAlliance().getRotation().getDegrees();
     }
 
-    public Pose2d getTargetPoseFromAlliance() {
+    public boolean hasTargetAprilTag() {
         if (CopperBotUtils.isAllianceBlue()) {
-            return getBlueTargetPoseFromAT();
+            if (getFid() == 1 || getFid() == 2 || getFid() == 6) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return getRedTargetPoseFromAT();
+            if (getFid() == 5 || getFid() == 9 || getFid() == 10) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
-
-    public Pose2d getBlueTargetPoseFromAT() {
-        switch ((int) getFid()) {
-            case 6:
-                return Constants.BLUE_AMP_SCORING_POSITION;
-            case 9, 10:
-                return null;
-            default:
-                return new Pose2d();
-        }
-    }
-
-    public Pose2d getRedTargetPoseFromAT() {
-        switch ((int) getFid()) {
-            case 5:
-                return Constants.RED_AMP_SCORING_POSITION;
-            case 9, 10:
-                return null;
-            default:
-                return new Pose2d();
-        }
-    }
-
-    // public Pose2d getRotFromATOnAlliance() {
-    // if (CopperBotUtils.isAllianceBlue()) {
-    // return getBlueTargetRotFromAT();
-    // } else {
-    // return getRedTargetRotFromAT();
-    // }
-    // }
-
-    // public Rotation2d getBlueTargetRotFromAT() {
-    // switch ((int) getFid()) {
-    // case 6:
-    // return Constants.BLUE_AMP_SCORING_ROTATION2D;
-    // case 9, 10:
-    // return null;
-    // default:
-    // return new Pose2d();
-    // }
-    // }
-
-    // public Rotation2d getRedTargetRotFromAT() {
-    // switch ((int) getFid()) {
-    // case 5:
-    // return Constants.RED_AMP_SCORING_ROTATION2D;
-    // case 9, 10:
-    // return null;
-    // default:
-    // return new Pose2d();
-    // }
-    // }
 
     @Override
     public void periodic() {
@@ -118,6 +74,7 @@ public class Limelight extends SubsystemBase {
         SmartDashboard.putNumber("pose y", getY());
         SmartDashboard.putNumber("LL rot", getRotation());
         SmartDashboard.putNumber("AprilTag ID #", getFid());
+        SmartDashboard.putBoolean("Apriltag Present", hasTargetAprilTag());
     }
 
 }

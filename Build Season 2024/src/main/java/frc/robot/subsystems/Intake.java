@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,10 +27,15 @@ public class Intake extends SubsystemBase {
         m_colorMatcher.addColorMatch(kOrangeTarget);
         intake = new CANSparkMax(15, MotorType.kBrushed);
 
+        intake.setIdleMode(IdleMode.kBrake);
     }
 
     public void setIntakeSpeed(double speed) {
-        // intake.set(speed);
+        intake.set(speed);
+    }
+
+    public boolean colorSensorConnected() {
+        return m_colorSensor.isConnected();
     }
 
     public Color getColorSensor() {

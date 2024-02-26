@@ -5,14 +5,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BasePivot;
 
-public class SetBasePivotToAngle extends Command {
+public class KeepBasePivotToAngle extends Command {
 
     private final BasePivot m_basePivot;
     private double m_angle;
     private Constraints topConstraints = new Constraints(350, 200);
     private ProfiledPIDController basePID = new ProfiledPIDController(.01, 0, 0, topConstraints);
 
-    public SetBasePivotToAngle(BasePivot pivot, double angle) {
+    public KeepBasePivotToAngle(BasePivot pivot, double angle) {
         this.m_basePivot = pivot;
         this.m_angle = angle;
         addRequirements(m_basePivot);
@@ -35,13 +35,7 @@ public class SetBasePivotToAngle extends Command {
 
     @Override
     public boolean isFinished() {
-
-        if (Math.abs(m_angle - m_basePivot.getPivotAngle()) < 2) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return false;
     }
 
     @Override

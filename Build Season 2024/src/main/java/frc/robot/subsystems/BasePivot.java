@@ -1,8 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,23 +9,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class BasePivot extends SubsystemBase {
-    private CANSparkMax base1;
-    private CANSparkMax base2;
+    private TalonFX bottomMotor;
+    private TalonFX topMotor;
 
     private DutyCycleEncoder basePivotEncoder;
 
     public BasePivot() {
-        base1 = new CANSparkMax(Constants.BASE1_PIVOT_ID, MotorType.kBrushless);
-        base2 = new CANSparkMax(Constants.BASE2_PIVOT_ID, MotorType.kBrushless);
+        bottomMotor = new TalonFX(Constants.BASE1_PIVOT_ID);
+        topMotor = new TalonFX(Constants.BASE2_PIVOT_ID);
 
         // A is blue, B is yellow
         basePivotEncoder = new DutyCycleEncoder(0);
 
-        base1.setIdleMode(IdleMode.kBrake);
-        base2.setIdleMode(IdleMode.kBrake);
+        bottomMotor.setNeutralMode(NeutralModeValue.Brake);
+        topMotor.setNeutralMode(NeutralModeValue.Brake);
 
-        base1.setInverted(false);
-        base2.setInverted(false);
+        bottomMotor.setInverted(false);
+        topMotor.setInverted(false);
 
         basePivotEncoder.setDistancePerRotation(360);
 
@@ -35,8 +34,8 @@ public class BasePivot extends SubsystemBase {
     }
 
     public void setPivot(double set) {
-        base1.set(set);
-        base2.set(set);
+        bottomMotor.set(set);
+        topMotor.set(set);
     }
 
     public double getPivotAngle() {

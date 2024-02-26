@@ -22,7 +22,9 @@ public class ResetPoseFromLL extends Command {
 
     @Override
     public void execute() {
-        m_SwerveDrivetrain.resetOdometry(m_Limelight.getPose2DFromAlliance());
+        if (m_Limelight.getTargetPoseFromAlliance() != null) {
+            m_SwerveDrivetrain.resetOdometry(m_Limelight.getPose2DFromAlliance());
+        }
         isFinished = true;
     }
 
