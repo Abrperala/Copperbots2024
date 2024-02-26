@@ -136,8 +136,7 @@ public class RobotContainer {
 								new WaitCommand(.2),
 								new ParallelCommandGroup(
 										m_drivetrain.followPathCommand(
-												m_limelight.getFid(),
-												m_limelight.hasTargetAprilTag()),
+												m_limelight.getFid()),
 										m_selectCommand),
 								new SetLeds(m_candle, Candle.LEDState.GREEN)),
 
