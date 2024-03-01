@@ -9,13 +9,13 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.GeneralUtils;
 import frc.robot.Constants;
 
 public class TopPivot extends SubsystemBase {
     // private CANSparkMax top1;
     private TalonFX topMotor;
     private DutyCycleEncoder topPivotEncoder;
-    private double startingEncoder;
 
     public TopPivot() {
         topMotor = new TalonFX(Constants.TOP_PIVOT_ID);
@@ -28,9 +28,8 @@ public class TopPivot extends SubsystemBase {
         // top1.setInverted(false);
 
         topPivotEncoder.setDistancePerRotation(360);
-        // set the position offset to about 40 degrees
-        topPivotEncoder.setPositionOffset(.11);
-        startingEncoder = topPivotEncoder.getDistance();
+        // set the position offset to about 10 degrees
+        topPivotEncoder.setPositionOffset(0.0187);
 
     }
 
@@ -45,12 +44,7 @@ public class TopPivot extends SubsystemBase {
     }
 
     public double getPivotAngle() {
-        if (startingEncoder > 150) {
-            return topPivotEncoder.getDistance() - 360;
-        } else {
-            return topPivotEncoder.getDistance();
-        }
-
+        return topPivotEncoder.getDistance();
     }
 
     @Override

@@ -66,11 +66,11 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("detected color", getDetectedColor());
+        // SmartDashboard.putString("detected color", getDetectedColor());
         SmartDashboard.putBoolean("is note present", isNotePresent());
-        SmartDashboard.putNumber("blue", getColorSensor().blue);
-        SmartDashboard.putNumber("red", getColorSensor().red);
-        SmartDashboard.putNumber("green", getColorSensor().green);
+        // SmartDashboard.putNumber("blue", getColorSensor().blue);
+        // SmartDashboard.putNumber("red", getColorSensor().red);
+        // SmartDashboard.putNumber("green", getColorSensor().green);
 
     }
 }

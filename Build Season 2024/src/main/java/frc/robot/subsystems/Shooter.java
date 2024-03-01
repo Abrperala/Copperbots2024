@@ -1,5 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -11,51 +17,58 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-    public CANSparkMax topShooter;
-    public CANSparkMax bottomShooter;
-
-    private RelativeEncoder m_topEncoder;
-    private RelativeEncoder m_bottomEncoder;
+    public TalonFX topShooter;
+    public TalonFX bottomShooter;
+    public VelocityVoltage m_request;
+    private VelocityDutyCycle shooterVelocity = new VelocityDutyCycle(0);
 
     public Shooter() {
-        topShooter = new CANSparkMax(Constants.SHOOT1_ID, MotorType.kBrushless);
-        bottomShooter = new CANSparkMax(Constants.SHOOT2_ID, MotorType.kBrushless);
+        topShooter = new TalonFX(Constants.SHOOT1_ID);
+        bottomShooter = new TalonFX(Constants.SHOOT2_ID);
+
+        m_request = new VelocityVoltage(0).withSlot(0);
+
+        var slot0Configs = new Slot0Configs();
+        slot0Configs.kS = 0.05; // Add 0.05 V output to overcome static friction
+        slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = 0.11; // An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = 0; // no output for integrated error
+        slot0Configs.kD = 0; // no output for error derivative
+
+        topShooter.getConfigurator().apply(slot0Configs);
+        bottomShooter.getConfigurator().apply(slot0Configs);
 
         topShooter.setInverted(false);
         bottomShooter.setInverted(true);
-        topShooter.setIdleMode(IdleMode.kCoast);
-        bottomShooter.setIdleMode(IdleMode.kCoast);
-        bottomShooter.setOpenLoopRampRate(1);
-        topShooter.setOpenLoopRampRate(1);
-
-        m_topEncoder = topShooter.getEncoder();
-        m_bottomEncoder = bottomShooter.getEncoder();
-
-        m_topEncoder.setVelocityConversionFactor(Constants.SHOOTER_GEARING);
-        m_bottomEncoder.setVelocityConversionFactor(Constants.SHOOTER_GEARING);
+        topShooter.setNeutralMode(NeutralModeValue.Coast);
+        bottomShooter.setNeutralMode(NeutralModeValue.Coast);
     }
 
-    public void setTopShooterSpeed(double speed) {
-        topShooter.set(speed);
+    public void shooterRun(double velocity) {
 
-    }
+        shooterVelocity.Velocity = velocity;
+        topShooter.setControl(shooterVelocity);
+        bottomShooter.setControl(shooterVelocity);
 
-    public void setBottomShooterSpeed(double speed) {
-        bottomShooter.set(speed);
     }
 
     public double getTopEncoderVelocity() {
-        return m_topEncoder.getVelocity();
+        return topShooter.getVelocity().getValueAsDouble() * Constants.SHOOTER_GEARING * 60;
     }
 
     public double getBottomEncoderVelocity() {
-        return m_bottomEncoder.getVelocity();
+        return bottomShooter.getVelocity().getValueAsDouble() * Constants.SHOOTER_GEARING * 60;
 
     }
 
+    public void stopShooter() {
+        topShooter.stopMotor();
+        bottomShooter.stopMotor();
+    }
+
     public boolean shooterAtSpeed() {
-        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 300;
-        // && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 300;
+        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 100
+                && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 100;
 
     }
 
@@ -69,7 +82,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Shooter Ready?", shooterAtSpeed());
+        // SmartDashboard.putBoolean("Shooter Ready?", shooterAtSpeed());
         SmartDashboard.putNumber("Top Shooter RPM", getTopEncoderVelocity());
         SmartDashboard.putNumber("Bottom Shooter RPM", getBottomEncoderVelocity());
         SmartDashboard.putBoolean("Shooter not running?", shooterNotRunning());

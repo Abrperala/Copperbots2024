@@ -71,9 +71,9 @@ public class Candle extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("LED_R", getLEDState().r);
-        SmartDashboard.putNumber("LED_G", getLEDState().g);
-        SmartDashboard.putNumber("LED_B", getLEDState().b);
+        // SmartDashboard.putNumber("LED_R", getLEDState().r);
+        // SmartDashboard.putNumber("LED_G", getLEDState().g);
+        // SmartDashboard.putNumber("LED_B", getLEDState().b);
         SmartDashboard.putNumber("CANdle TEMP", m_candle.getTemperature());
 
     }

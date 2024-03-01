@@ -18,8 +18,7 @@ public class BasePivot extends SubsystemBase {
         bottomMotor = new TalonFX(Constants.BASE1_PIVOT_ID);
         topMotor = new TalonFX(Constants.BASE2_PIVOT_ID);
 
-        // A is blue, B is yellow
-        basePivotEncoder = new DutyCycleEncoder(0);
+        basePivotEncoder = new DutyCycleEncoder(3);
 
         bottomMotor.setNeutralMode(NeutralModeValue.Brake);
         topMotor.setNeutralMode(NeutralModeValue.Brake);

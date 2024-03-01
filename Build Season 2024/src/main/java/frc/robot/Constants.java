@@ -8,11 +8,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.SwerveModuleConstants;
@@ -69,6 +72,8 @@ public final class Constants {
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
         }
+
+        // TODO: figure out why BR module is 90 degrees off sometimes
 
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
@@ -194,7 +199,18 @@ public final class Constants {
          * 
          * 
          */
+        // values from Team Spectrum 3847’s X-Ray robot from last year
+        // https://www.chiefdelphi.com/t/swerve-drive-pose-estimator-and-add-vision-measurement-using-limelight-is-very-jittery/453306/5
+        public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.1, 0.1, 10);
 
+        /**
+         * Standard deviations of the vision measurements. Increase these numbers to
+         * trust global measurements from vision less. This matrix is in the form
+         * [x, y, theta]ᵀ, with units in meters and radians.
+         */
+
+        // values from Team Spectrum 3847’s X-Ray robot from last year
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(5, 5, 500);
         // field elements positions constants
 
         /*
@@ -203,6 +219,10 @@ public final class Constants {
          * / Red Amp:
          * /
          */
+
+        public static final double HEIGHT_TO_SPEAKER_TARGET = 89;
+        public static final Pose2d BLUE_SPEAKER_POSE = new Pose2d(0.076, 5.547868, new Rotation2d());
+        public static final Pose2d RED_SPEAKER_POSE = new Pose2d(16.465042, 5.547868, new Rotation2d());
 
         public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.85, 7.60,
                         new Rotation2d(Math.toRadians(-90)));
@@ -227,17 +247,16 @@ public final class Constants {
         public static final int INTAKE_ID = 15;
 
         public static double SHOOTER_GEARING = 1.5 / 1;
-        public static double SHOOTER_TARGET_RPM = 6000;
+        public static double SHOOTER_TARGET_RPM = 6300;
         public static double SHOOTER_FREE_RPM = 5300 * SHOOTER_GEARING;
 
         // Pivot Constants
 
-        public static final double HEIGHT_FROM_FLOOR_TO_1ST_PIVOT = 16;
-        public static final double LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT = 16;
-        public static final double LENGTH_FROM_2ND_PIVOT_TO_SHOOTER_EXIT = 4.5;
-        public static final double MAX_TOP_PIVOT_ANGLE = 70;
-        public static final double MIN_TOP_PIVOT_ANGLE = -45;
-        public static final double MAX_BOTTOM_PIVOT_ANGLE = 100;
+        public static final double HEIGHT_FROM_FLOOR_TO_1ST_PIVOT = 13.25;
+        public static final double LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT = 19;
+        public static final double MAX_TOP_PIVOT_ANGLE = 160;
+        public static final double MIN_TOP_PIVOT_ANGLE = -60;
+        public static final double MAX_BOTTOM_PIVOT_ANGLE = 130;
         public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
 
         // LED Constants

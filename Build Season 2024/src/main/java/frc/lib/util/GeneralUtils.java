@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
 
-public final class CopperBotUtils {
+public final class GeneralUtils {
 
     public static PathPlannerPath pathFromPoses(Pose2d start, Pose2d end, boolean preventFlipping) {
 

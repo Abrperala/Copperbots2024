@@ -24,7 +24,7 @@ public class Climb extends SubsystemBase {
 
     public void setClimb(double set) {
         starboardCclimb.set(set);
-        // portClimb.set(set);
+        portClimb.set(set);
     }
 
 }

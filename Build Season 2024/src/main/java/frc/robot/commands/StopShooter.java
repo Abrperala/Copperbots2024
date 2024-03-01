@@ -20,8 +20,7 @@ public class StopShooter extends Command {
 
     @Override
     public void execute() {
-        m_shooter.setTopShooterSpeed(0);
-        m_shooter.setBottomShooterSpeed(0);
+        m_shooter.stopShooter();
 
     }
 

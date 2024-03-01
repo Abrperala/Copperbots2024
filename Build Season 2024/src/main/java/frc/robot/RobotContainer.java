@@ -11,6 +11,7 @@ import frc.robot.subsystems.TopPivot;
 
 import java.util.Map;
 
+import com.ctre.phoenix.time.StopWatch;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -26,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.lib.util.CopperBotUtils;
+import frc.lib.util.GeneralUtils;
 import frc.robot.commands.*;
 
 /**
@@ -89,16 +90,51 @@ public class RobotContainer {
 				Map.ofEntries(
 						Map.entry(CommandSelector.ZERO, new WaitCommand(.1)),
 						Map.entry(CommandSelector.ONE,
-								new SequentialCommandGroup(
-										new SetTopPivotToAngle(m_topPivot, 87),
-										new SetBasePivotToAngle(m_basePivot,
-												127),
-										new Intaking(m_intake),
-										new SetBasePivotToAngle(m_basePivot,
-												90),
-										new SetTopPivotToAngle(m_topPivot, 0))),
-						Map.entry(CommandSelector.TWO, new WaitCommand(.1)),
-						Map.entry(CommandSelector.THREE, new WaitCommand(.1))),
+								new ParallelCommandGroup(
+										m_drivetrain.followPathCommandtoAT1(),
+										new SequentialCommandGroup(
+												new SetTopPivotToAngle(m_topPivot, 87),
+												new SetBasePivotToAngle(m_basePivot,
+														127),
+												new Intaking(m_intake),
+												new SetBasePivotToAngle(m_basePivot,
+														90),
+												new SetTopPivotToAngle(m_topPivot, 0)))),
+						Map.entry(CommandSelector.TWO,
+								new ParallelCommandGroup(
+										m_drivetrain.followPathCommandtoAT2(),
+										new SequentialCommandGroup(
+												new SetTopPivotToAngle(m_topPivot, 87),
+												new SetBasePivotToAngle(m_basePivot,
+														127),
+												new Intaking(m_intake),
+												new SetBasePivotToAngle(m_basePivot,
+														90),
+												new SetTopPivotToAngle(m_topPivot, 0)))),
+						Map.entry(CommandSelector.SEVEN,
+								new ParallelRaceGroup(
+										new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+										new KeepBasePivotToAngle(m_basePivot, 90),
+										new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
+										new SequentialCommandGroup(
+												new ShootToRPM(m_shooter),
+												new FeedShot(m_intake),
+												new WaitCommand(.3),
+												new StopIntake(m_intake),
+												new StopShooter(m_shooter)))),
+						Map.entry(CommandSelector.EIGHT,
+								new ParallelRaceGroup(
+										new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+										new KeepBasePivotToAngle(m_basePivot, 90),
+										new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
+										new SequentialCommandGroup(
+												new ShootToRPM(m_shooter),
+												new FeedShot(m_intake),
+												new WaitCommand(.3),
+												new StopIntake(m_intake),
+												new StopShooter(m_shooter))))
+
+				),
 
 				this::select);
 		// runs method below to configure button bindings
@@ -132,15 +168,10 @@ public class RobotContainer {
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetLeds(m_candle, Candle.LEDState.YELLOW),
-								new ResetPoseFromLL(m_limelight, m_drivetrain),
-								new WaitCommand(.2),
-								new ParallelCommandGroup(
-										m_drivetrain.followPathCommand(
-												m_limelight.getFid()),
-										m_selectCommand),
+								m_selectCommand,
 								new SetLeds(m_candle, Candle.LEDState.GREEN)),
 
-						new WaitCommand(.1),
+						new InstantCommand(),
 
 						m_limelight::hasTargetAprilTag));
 
@@ -151,10 +182,12 @@ public class RobotContainer {
 		new JoystickButton(testing, 13).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
-								new ConditionalCommand(new ShootToRPM(m_shooter),
+								new ConditionalCommand(
+										new SequentialCommandGroup(new ShootToRPM(m_shooter)),
 										new StopShooter(m_shooter),
 										m_intake::isNotePresent),
-								new ConditionalCommand(new FeedShot(m_intake),
+								new ConditionalCommand(
+										new SequentialCommandGroup(new FeedShot(m_intake), new WaitCommand(.6)),
 										new StopIntake(m_intake),
 										m_intake::isNotePresent),
 								new ConditionalCommand(new FeedShot(m_intake),
@@ -175,13 +208,15 @@ public class RobotContainer {
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetTopPivotToAngle(m_topPivot, 36),
-								new SetBasePivotToAngle(m_basePivot, -11),
+								new SetBasePivotToAngle(m_basePivot, -15),
 								new Intaking(m_intake),
 								new SetBasePivotToAngle(m_basePivot, 90)),
 
 						new SequentialCommandGroup(
 								new SetTopPivotToAngle(m_topPivot, 36),
-								new SetBasePivotToAngle(m_basePivot, -11)),
+								new SetBasePivotToAngle(m_basePivot, -15
+
+								)),
 
 						m_intake::colorSensorConnected));
 
@@ -195,9 +230,7 @@ public class RobotContainer {
 				new SequentialCommandGroup(
 						new ParallelRaceGroup(
 								new KeepBasePivotToAngle(m_basePivot, 22),
-								new KeepTopPivotToAngle(m_topPivot, 153
-
-								)))); // ,
+								new KeepTopPivotToAngle(m_topPivot, 153)))); // ,
 		// new SequentialCommandGroup(
 		// new WaitCommand(2),
 		// new ParallelRaceGroup(
@@ -222,10 +255,10 @@ public class RobotContainer {
 		new JoystickButton(testing, 8).whileTrue(
 				new Intaking(m_intake));
 
-		new JoystickButton(operator, 7).whileTrue(
+		new JoystickButton(driver, 7).whileTrue(
 				new ClimbDown(m_climb));
 
-		new JoystickButton(operator, 8).whileTrue(
+		new JoystickButton(driver, 8).whileTrue(
 				new ClimbUp(m_climb));
 
 	}
@@ -268,7 +301,25 @@ public class RobotContainer {
 		ZERO,
 		ONE,
 		TWO,
-		THREE
+		THREE,
+		FOUR,
+		FIVE,
+		SIX,
+		SEVEN,
+		EIGHT,
+		NINE,
+		TEN,
+		ELEVEN,
+		TWELVE,
+		THIRTEEN,
+		FOURTEEN,
+		FIFTEEN,
+		SIXTEEN,
+		SEVENTEEN,
+		EIGHTTEEN,
+		NINETEEN,
+		TWENTY
+
 	}
 
 	// An example selector method for the selectcommand. Returns the selector that
@@ -279,6 +330,45 @@ public class RobotContainer {
 		switch ((int) m_limelight.getFid()) {
 			case 1:
 				return CommandSelector.ONE;
+			case 2:
+				return CommandSelector.TWO;
+			case 3:
+				return CommandSelector.THREE;
+			case 4:
+				return CommandSelector.FOUR;
+			case 5:
+				return CommandSelector.FIVE;
+			case 6:
+				return CommandSelector.SIX;
+			case 7:
+				return CommandSelector.SEVEN;
+			case 8:
+				return CommandSelector.EIGHT;
+			case 9:
+				return CommandSelector.NINE;
+			case 10:
+				return CommandSelector.TEN;
+			case 11:
+				return CommandSelector.ELEVEN;
+			case 12:
+				return CommandSelector.TWELVE;
+			case 13:
+				return CommandSelector.THIRTEEN;
+			case 14:
+				return CommandSelector.FOURTEEN;
+			case 15:
+				return CommandSelector.FIFTEEN;
+			case 16:
+				return CommandSelector.SIXTEEN;
+			case 17:
+				return CommandSelector.SEVENTEEN;
+			case 18:
+				return CommandSelector.EIGHTTEEN;
+			case 19:
+				return CommandSelector.NINETEEN;
+			case 20:
+				return CommandSelector.TWENTY;
+
 			default:
 				return CommandSelector.ZERO;
 		}

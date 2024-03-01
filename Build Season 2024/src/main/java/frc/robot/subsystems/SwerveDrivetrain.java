@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.lib.util.CopperBotUtils;
+import frc.lib.util.GeneralUtils;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -23,9 +24,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,11 +36,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SwerveDrivetrain extends SubsystemBase {
-    public SwerveDriveOdometry m_swerveOdometry;
     public SwerveModule[] m_swerveMods;
     public AHRS m_gyro;
     public AutoBuilder autoBuilder;
-    private Field2d field;
+    private final SwerveDrivePoseEstimator poseEstimator;
+    private Limelight m_limeLight = Limelight.getInstance();
 
     public SwerveDrivetrain() {
         m_gyro = new AHRS(SPI.Port.kMXP);
@@ -56,9 +59,9 @@ public class SwerveDrivetrain extends SubsystemBase {
                 new SwerveModule(3, Constants.Mod3.constants)
         };
 
-        m_swerveOdometry = new SwerveDriveOdometry(Constants.swerveKinematics, getYaw(), getModulePositions());
-
-        setOdometryForOdometryAlign();
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.swerveKinematics,
+                getYaw(), getModulePositions(),
+                new Pose2d(0, 0, m_gyro.getRotation2d()), Constants.STATE_STDS, Constants.VISION_STDS);
 
         // Auto stuffs
 
@@ -92,9 +95,6 @@ public class SwerveDrivetrain extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
 
-        field = new Field2d();
-        SmartDashboard.putData("Field", field);
-
     }
 
     /**
@@ -111,9 +111,9 @@ public class SwerveDrivetrain extends SubsystemBase {
                         translation.getX(),
                         translation.getY(),
                         rotation,
-                        m_gyro.getRotation2d()) // drive based on gyro
+                        // m_gyro.getRotation2d()) // drive based on gyro
 
-                        // getPose().getRotation()) // drive based on pose based on gyro?
+                        getPose().getRotation()) // drive based on pose based on gyro?
                         : new ChassisSpeeds(
                                 translation.getX(),
                                 translation.getY(),
@@ -157,7 +157,7 @@ public class SwerveDrivetrain extends SubsystemBase {
      * @return The current robot pose.
      */
     public Pose2d getPose() {
-        return m_swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     /**
@@ -168,17 +168,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         System.out.println(pose.getX());
         System.out.println(pose.getY());
-        m_swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
-    }
-
-    public void setOdometryToOffset() {
-        m_swerveOdometry.resetPosition(Rotation2d.fromDegrees(0.0), getModulePositions(),
-                new Pose2d(-6.14, 1.21, Rotation2d.fromDegrees(0.0)));
-    }
-
-    public void setOdometryForOdometryAlign() {
-        m_swerveOdometry.resetPosition(Rotation2d.fromDegrees(0.0), getModulePositions(),
-                new Pose2d(13.56, 5.2, Rotation2d.fromDegrees(0.0)));
+        poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
     /**
@@ -236,77 +226,98 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     }
 
-    public Command followPathCommand(int aprilTagId) {
-        if (!hasTargetAprilTag(aprilTagId)) {
-            return new WaitCommand(0.1);
-        } else {
-
-            Pose2d target = getTargetPoseFromAlliance(aprilTagId);
-
-            return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
-        }
-
+    // Blue pathfinding commands
+    public Command followPathCommandtoAT1() {
+        Pose2d target = Constants.BLUE_CLOSE_SOURCE_POSITION;
+        return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
     }
 
-    public Pose2d getTargetPoseFromAlliance(int aprilTagID) {
-        if (CopperBotUtils.isAllianceBlue()) {
-            switch (aprilTagID) {
-                case 6:
-                    return Constants.BLUE_AMP_SCORING_POSITION;
-                case 1:
-                    return Constants.BLUE_CLOSE_SOURCE_POSITION;
-                case 2:
-                    return Constants.BLUE_FAR_SOURCE_POSITION;
-                default:
-                    return null;
-            }
-        } else {
-            switch (aprilTagID) {
-                case 5:
-                    return Constants.RED_AMP_SCORING_POSITION;
-                case 9:
-                    return Constants.RED_FAR_SOURCE_POSITION;
-                case 10:
-                    return Constants.RED_CLOSE_SOURCE_POSITION;
-                default:
-                    return null;
-            }
-        }
+    public Command followPathCommandtoAT2() {
+        Pose2d target = Constants.BLUE_FAR_SOURCE_POSITION;
+        return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
     }
 
-    public boolean hasTargetAprilTag(int aprilTagID) {
-        if (CopperBotUtils.isAllianceBlue()) {
-            if (aprilTagID == 1 || aprilTagID == 2 || aprilTagID == 6) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (aprilTagID == 5 || aprilTagID == 9 || aprilTagID == 10) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+    public Command followPathCommandtoAT6() {
+        Pose2d target = Constants.BLUE_AMP_SCORING_POSITION;
+        return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
+    }
+
+    // Red pathfinding commands
+    public Command followPathCommandtoAT5() {
+        Pose2d target = Constants.RED_AMP_SCORING_POSITION;
+        return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
+    }
+
+    public Command followPathCommandtoAT9() {
+        Pose2d target = Constants.RED_FAR_SOURCE_POSITION;
+        return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
+    }
+
+    public Command followPathCommandtoAT10() {
+        Pose2d target = Constants.RED_CLOSE_SOURCE_POSITION;
+        return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
+    }
+
+    // gets distance from speaker in meters
+    public double getDistanceFromSpeaker() {
+        Pose2d speakerPose = Constants.BLUE_SPEAKER_POSE;
+        double x = getPose().getX() - speakerPose.getX();
+        double y = getPose().getY() - speakerPose.getY();
+        double distance = Math.sqrt(x * x + y * y);
+        return distance;
+    }
+
+    public double getAngleToFaceSpeaker() {
+        Pose2d speakerPose = Constants.BLUE_SPEAKER_POSE;
+        double x = getPose().getX() - speakerPose.getX();
+        double y = getPose().getY() - speakerPose.getY();
+        double angle = Units.radiansToDegrees(Math.atan(y / x));
+        return angle;
+    }
+
+    public double getRegToScoreInSpeaker() {
+        double output = 56.9553 * Math.pow(0.8289, getDistanceFromSpeaker());
+        return -output;
+    }
+
+    public double getTrigToScoreInSpeaker() {
+        double height = Constants.HEIGHT_TO_SPEAKER_TARGET
+                - (Constants.LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT + Constants.HEIGHT_FROM_FLOOR_TO_1ST_PIVOT);
+        double output = Units.radiansToDegrees(Math.atan(Units.inchesToMeters(height) / getDistanceFromSpeaker()));
+
+        return -output;
+    }
+
+    public double getAverageofMethods() {
+        return (getRegToScoreInSpeaker() + getTrigToScoreInSpeaker()) / 2;
     }
 
     @Override
     public void periodic() {
-        m_swerveOdometry.update(getYaw(), getModulePositions());
-        field.setRobotPose(getPose());
+        poseEstimator.update(getYaw(), getModulePositions());
+
+        final Pose2d estimatedPose = m_limeLight
+                .getPose2DFromAlliance();
+        if (m_limeLight.getFid() != -1) {
+            poseEstimator.addVisionMeasurement(estimatedPose, m_limeLight.getTimeStamp());
+        }
 
         for (SwerveModule mod : m_swerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Cancoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Cancoder",
+                    mod.getCANcoder().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated",
+                    mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity",
+                    mod.getState().speedMetersPerSecond);
         }
 
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
-
-        SmartDashboard.putBoolean("is Alliance Blue?", CopperBotUtils.isAllianceBlue());
+        SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
+        SmartDashboard.putNumber("angle To Face Speaker", getAngleToFaceSpeaker());
+        SmartDashboard.putNumber("angle to shoot in speaker", getTrigToScoreInSpeaker());
 
     }
 }
