@@ -206,47 +206,25 @@ public class RobotContainer {
 
 		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
-		// button to shoot or toggle shooter based on if we have a connected color
-		// sensor
+		// button to toggle shooter 
 		new JoystickButton(operator, 14).onTrue(
-				new ConditionalCommand(
-						new SequentialCommandGroup(
-								new ConditionalCommand(
-										new SequentialCommandGroup(new ShootToRPM(m_shooter)),
-										new StopShooter(m_shooter),
-										m_intake::isNotePresent),
-								new ConditionalCommand(
-										new SequentialCommandGroup(new FeedShot(m_intake), new WaitCommand(.6)),
-										new StopIntake(m_intake),
-										m_intake::isNotePresent),
-								new ConditionalCommand(new FeedShot(m_intake),
-										new StopIntake(m_intake),
-										m_intake::isNotePresent),
-								new ConditionalCommand(new ShootToRPM(m_shooter),
-										new StopShooter(m_shooter),
-										m_intake::isNotePresent)),
-
-						new ConditionalCommand(new ShootToRPM(m_shooter),
+						new ConditionalCommand(
+							new ShootToRPM(m_shooter),
 								new StopShooter(m_shooter),
-								m_shooter::shooterNotRunning),
+								m_shooter::shooterNotRunning)); 
 
-						m_intake::colorSensorConnected));
+	
 
 		// button to ground intake
 		new JoystickButton(driver, 1).onTrue(
-				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetTopPivotToAngle(m_topPivot, 36),
 								new SetBasePivotToAngle(m_basePivot, -12),
 								new Intaking(m_intake),
 								new SetBasePivotToAngle(m_basePivot, 90),
-								new SetTopPivotToAngle(m_topPivot, -47)),
+								new SetTopPivotToAngle(m_topPivot, -47)))
 
-						new SequentialCommandGroup(
-								new SetTopPivotToAngle(m_topPivot, 36),
-								new SetBasePivotToAngle(m_basePivot, -12)),
 
-						m_intake::colorSensorConnected));
 
 		// button for operator to set the arms to ground intake, used for traversing
 		new JoystickButton(operator, 1).onTrue(

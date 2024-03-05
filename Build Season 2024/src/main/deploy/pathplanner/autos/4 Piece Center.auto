@@ -12,63 +12,172 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4pc 1st Path"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4pc 2nd Path"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4pc 3rdPath"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4pc 4th Path"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Start Shooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AngleForSubwooferShot"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Feed Shot"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "4pc 5th Path"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 1st Path"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "4pc 6th Path"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AngleForSubwooferShot"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 2nd Path"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Feed Shot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 3rdPath"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AngleForSubwooferShot"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 4th Path"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feed Shot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 5th Path"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AngleForSubwooferShot"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 6th Path"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feed Shot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
           }
         },
         {
