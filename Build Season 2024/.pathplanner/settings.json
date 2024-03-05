@@ -3,9 +3,10 @@
   "robotLength": 0.8382,
   "holonomicMode": true,
   "pathFolders": [
+    "1PieceCenter",
     "2PieceDisruptSource",
     "4PieceCenter",
-    "1PieceCenter"
+    "3Piece Source"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

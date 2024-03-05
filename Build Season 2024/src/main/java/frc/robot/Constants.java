@@ -74,8 +74,6 @@ public final class Constants {
                                 CANCODER_ID, ANGLE_OFFSET);
         }
 
-        // TODO: figure out why BR module is 90 degrees off sometimes
-
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
                 public static final int DRIVE_MOTOR_ID = 2;

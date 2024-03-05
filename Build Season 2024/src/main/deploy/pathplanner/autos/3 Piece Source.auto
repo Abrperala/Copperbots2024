@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.48
+      "x": 0.75,
+      "y": 4.45
     },
-    "rotation": 0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -41,15 +41,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "3pc Source Path 1"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "4pc 1st Path"
+                  "name": "Intake"
                 }
               }
             ]
@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4pc 2nd Path"
+                  "pathName": "3pc Source Path 2"
                 }
               }
             ]
@@ -93,7 +93,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4pc 3rdPath"
+                  "pathName": "3pc Source Path 3"
                 }
               }
             ]
@@ -112,95 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4pc 4th Path"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Feed Shot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 5th Path"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "AngleForSubwooferShot"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 6th Path"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Feed Shot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 7th Path"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 8th Path"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AngleForSubwooferShot"
+                  "pathName": "3pc Source Path 4"
                 }
               }
             ]

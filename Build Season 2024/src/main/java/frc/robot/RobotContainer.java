@@ -12,25 +12,22 @@ import frc.robot.subsystems.TopPivot;
 
 import java.util.Map;
 
-import com.ctre.phoenix.time.StopWatch;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.lib.util.GeneralUtils;
 import frc.robot.commands.*;
 
 /**
@@ -206,25 +203,25 @@ public class RobotContainer {
 
 		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
-		// button to toggle shooter 
+		// button to toggle shooter
 		new JoystickButton(operator, 14).onTrue(
-						new ConditionalCommand(
-							new ShootToRPM(m_shooter),
-								new StopShooter(m_shooter),
-								m_shooter::shooterNotRunning)); 
+				new ConditionalCommand(
+						new ShootToRPM(m_shooter),
+						new StopShooter(m_shooter),
+						m_shooter::shooterNotRunning));
 
-	
+		new JoystickButton(operator, 4).onTrue(
+				new ConditionalCommand(new FeedShot(m_intake), new PrintCommand("Shooter isn't Ready!"),
+						m_shooter::shooterAtSpeed));
 
 		// button to ground intake
 		new JoystickButton(driver, 1).onTrue(
-						new SequentialCommandGroup(
-								new SetTopPivotToAngle(m_topPivot, 36),
-								new SetBasePivotToAngle(m_basePivot, -12),
-								new Intaking(m_intake),
-								new SetBasePivotToAngle(m_basePivot, 90),
-								new SetTopPivotToAngle(m_topPivot, -47)))
-
-
+				new SequentialCommandGroup(
+						new SetTopPivotToAngle(m_topPivot, 36),
+						new SetBasePivotToAngle(m_basePivot, -12),
+						new Intaking(m_intake),
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, -47)));
 
 		// button for operator to set the arms to ground intake, used for traversing
 		new JoystickButton(operator, 1).onTrue(
@@ -259,7 +256,8 @@ public class RobotContainer {
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 85),
 						new SetBasePivotToAngle(m_basePivot, 60),
-						new Intaking(m_intake), new SetBasePivotToAngle(m_basePivot, 90),
+						new Intaking(m_intake),
+						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetTopPivotToAngle(m_topPivot, -47)));
 
 		new JoystickButton(driver, 7).whileTrue(
@@ -286,42 +284,39 @@ public class RobotContainer {
 	}
 
 	private void configureAutos() {
-		NamedCommands.registerCommand("stopDrive", new InstantCommand());
+		NamedCommands.registerCommand("AngleForSubwooferShot",
+				new SequentialCommandGroup(
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, -47)));
 		NamedCommands.registerCommand("Shoot",
 				new SequentialCommandGroup(
-						new SequentialCommandGroup(
-								new SetBasePivotToAngle(m_basePivot, 90),
-								new SetTopPivotToAngle(m_topPivot, -45)),
-						new SequentialCommandGroup(
-								new ConditionalCommand(
-										new SequentialCommandGroup(
-												new ShootToRPM(m_shooter)),
-										new StopShooter(m_shooter),
-										m_intake::isNotePresent),
-								new ConditionalCommand(
-										new SequentialCommandGroup(
-												new FeedShot(m_intake),
-												new WaitCommand(.6)),
-										new StopIntake(m_intake),
-										m_intake::isNotePresent),
-								new ConditionalCommand(
+						new ConditionalCommand(
+								new SequentialCommandGroup(
+										new ShootToRPM(m_shooter)),
+								new StopShooter(m_shooter),
+								m_intake::isNotePresent),
+						new ConditionalCommand(
+								new SequentialCommandGroup(
 										new FeedShot(m_intake),
-										new StopIntake(m_intake),
-										m_intake::isNotePresent),
-								new ConditionalCommand(
-										new ShootToRPM(m_shooter),
-										new StopShooter(m_shooter),
-										m_intake::isNotePresent))));
+										new WaitCommand(.6)),
+								new StopIntake(m_intake),
+								m_intake::isNotePresent),
+						new ConditionalCommand(
+								new FeedShot(m_intake),
+								new StopIntake(m_intake),
+								m_intake::isNotePresent),
+						new ConditionalCommand(
+								new ShootToRPM(m_shooter),
+								new StopShooter(m_shooter),
+								m_intake::isNotePresent)));
 		NamedCommands.registerCommand("Start Shooter", new ShootToRPM(m_shooter));
-		NamedCommands.registerCommand("FeedShot", new FeedShot(m_intake));
+		NamedCommands.registerCommand("Feed Shot", new FeedShot(m_intake));
 		NamedCommands.registerCommand("Stop Shooter", new StopShooter(m_shooter));
 		NamedCommands.registerCommand("Intake",
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 36),
 						new SetBasePivotToAngle(m_basePivot, -12),
-						new Intaking(m_intake),
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -45)));
+						new Intaking(m_intake)));
 
 	}
 
