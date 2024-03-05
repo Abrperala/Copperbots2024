@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Candle extends SubsystemBase {
-    private final CANdle m_candle = new CANdle(Constants.CANdleID, "DriveBus");
+    // private final CANdle m_candle = new CANdle(Constants.CANdleID, "DriveBus");
     // change for git test?
     public LEDState ledstate;
 
@@ -26,8 +26,8 @@ public class Candle extends SubsystemBase {
         configAll.stripType = LEDStripType.RGB;
         configAll.brightnessScalar = .2;
 
-        m_candle.configAllSettings(configAll, 100);
-        m_candle.clearAnimation(0);
+        // m_candle.configAllSettings(configAll, 100);
+        // m_candle.clearAnimation(0);
         ledstate = LEDState.GREEN;
         setLEDSTate(ledstate);
     }
@@ -35,7 +35,7 @@ public class Candle extends SubsystemBase {
     public void setLEDSTate(LEDState state) {
 
         ledstate = state;
-        m_candle.setLEDs(state.r, state.g, state.b);
+        // m_candle.setLEDs(state.r, state.g, state.b);
     }
 
     public LEDState getLEDState() {
@@ -74,7 +74,7 @@ public class Candle extends SubsystemBase {
         // SmartDashboard.putNumber("LED_R", getLEDState().r);
         // SmartDashboard.putNumber("LED_G", getLEDState().g);
         // SmartDashboard.putNumber("LED_B", getLEDState().b);
-        SmartDashboard.putNumber("CANdle TEMP", m_candle.getTemperature());
+        // SmartDashboard.putNumber("CANdle TEMP", m_candle.getTemperature());
 
     }
 

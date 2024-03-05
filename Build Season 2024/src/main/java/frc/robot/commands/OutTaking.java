@@ -19,18 +19,17 @@ public class OutTaking extends Command {
 
     @Override
     public void execute() {
-        m_intake.setIntakeSpeed(-.7);
+        m_intake.setIntakeSpeed(-1);
 
     }
 
     @Override
     public boolean isFinished() {
 
-        return false;
+        return true;
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setIntakeSpeed(0);
     }
 }

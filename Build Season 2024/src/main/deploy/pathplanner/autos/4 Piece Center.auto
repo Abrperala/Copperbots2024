@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4pc 1st Path"
@@ -24,6 +30,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4pc 3rdPath"
@@ -33,6 +45,36 @@
           "type": "path",
           "data": {
             "pathName": "4pc 4th Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4pc 5th Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4pc 6th Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4pc 7th Path"
           }
         }
       ]

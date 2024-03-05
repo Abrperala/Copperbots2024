@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.lib.geometry.Translation2dPlus;
 import frc.lib.util.GeneralUtils;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -7,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,9 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SwerveDrivetrain extends SubsystemBase {
+    private static final Translation2d[] WHEEL_POSITIONS = Arrays.copyOf(Constants.moduleTranslations,
+            Constants.moduleTranslations.length);;
+
     public SwerveModule[] m_swerveMods;
     public AHRS m_gyro;
     public AutoBuilder autoBuilder;
@@ -105,23 +110,85 @@ public class SwerveDrivetrain extends SubsystemBase {
      * @param fieldRelative Whether the translation is field relative.
      * @param isOpenLoop    Whether the drive is open loop.
      */
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop,
+            boolean isEvading, boolean isLocked) {
+
+        if (isLocked) {
+
+            final SwerveModuleState[] swerveModuleStates = new SwerveModuleState[] {
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(135)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(225))
+            };
+
+            for (SwerveModule mod : m_swerveMods) {
+                mod.setDesiredState(swerveModuleStates[mod.m_moduleNumber], isOpenLoop);
+            }
+
+        } else {
+
+            final Translation2d centerOfRotation;
+
+            if (isEvading && fieldRelative) {
+                centerOfRotation = getCenterOfRotation(translation.getAngle(), rotation);
+            } else {
+                centerOfRotation = new Translation2d();
+            }
+
+            final ChassisSpeeds chassisSpeeds;
+
+            if (fieldRelative) {
+
+                chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                         translation.getX(),
                         translation.getY(),
                         rotation,
-                        // m_gyro.getRotation2d()) // drive based on gyro
+                        getPose().getRotation());
 
-                        getPose().getRotation()) // drive based on pose based on gyro?
-                        : new ChassisSpeeds(
-                                translation.getX(),
-                                translation.getY(),
-                                rotation));
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.MAX_SPEED);
+            } else {
 
-        for (SwerveModule mod : m_swerveMods) {
-            mod.setDesiredState(swerveModuleStates[mod.m_moduleNumber], isOpenLoop);
+                chassisSpeeds = new ChassisSpeeds(
+                        translation.getX(),
+                        translation.getY(),
+                        rotation);
+            }
+
+            final var swerveModuleStates = Constants.swerveKinematics.toSwerveModuleStates(chassisSpeeds,
+                    centerOfRotation);
+            SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.MAX_SPEED);
+
+            for (SwerveModule mod : m_swerveMods) {
+                mod.setDesiredState(swerveModuleStates[mod.m_moduleNumber], isOpenLoop);
+            }
+
+        }
+
+    }
+
+    private Translation2d getCenterOfRotation(final Rotation2d direction, final double rotation) {
+        final var here = new Translation2dPlus(1.0, direction.minus(getYaw()));
+
+        var cwCenter = WHEEL_POSITIONS[0];
+        var ccwCenter = WHEEL_POSITIONS[WHEEL_POSITIONS.length - 1];
+
+        for (int i = 0; i < WHEEL_POSITIONS.length - 1; i++) {
+            final var cw = WHEEL_POSITIONS[i];
+            final var ccw = WHEEL_POSITIONS[i + 1];
+
+            if (here.isWithinAngle(cw, ccw)) {
+                cwCenter = ccw;
+                ccwCenter = cw;
+            }
+        }
+
+        // if clockwise
+        if (Math.signum(rotation) == 1.0) {
+            return cwCenter;
+        } else if (Math.signum(rotation) == -1.0) {
+            return ccwCenter;
+        } else {
+            return new Translation2d();
         }
     }
 
@@ -130,8 +197,11 @@ public class SwerveDrivetrain extends SubsystemBase {
      * 
      * @param targetSpeeds The target chassis speeds.
      */
-    public void setChassisSpeeds(ChassisSpeeds targetSpeeds) {
-        setModuleStates(Constants.swerveKinematics.toSwerveModuleStates(targetSpeeds));
+    public void setChassisSpeeds(ChassisSpeeds robotRelativeSpeeds) {
+        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+        SwerveModuleState[] targetStates = Constants.swerveKinematics.toSwerveModuleStates(targetSpeeds);
+        setModuleStates(targetStates);
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -171,12 +241,6 @@ public class SwerveDrivetrain extends SubsystemBase {
         poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    /**
-     * Gets the current state of each swerve module.
-     * 
-     * @return Array of SwerveModuleState representing the current state of each
-     *         swerve module.
-     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : m_swerveMods) {
@@ -185,27 +249,12 @@ public class SwerveDrivetrain extends SubsystemBase {
         return states;
     }
 
-    /**
-     * Gets the current position of each swerve module.
-     * 
-     * @return Array of SwerveModulePosition representing the current position of
-     *         each swerve module.
-     */
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : m_swerveMods) {
             positions[mod.m_moduleNumber] = mod.getPosition();
         }
         return positions;
-    }
-
-    /**
-     * Stops the swerve drivetrain.
-     */
-    public void stopSwerve() {
-        Translation2d stop = new Translation2d(0, 0);
-        drive(stop, 0, true, true);
-
     }
 
     /**
@@ -226,7 +275,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     }
 
+    //
     // Blue pathfinding commands
+    //
     public Command followPathCommandtoAT1() {
         Pose2d target = Constants.BLUE_CLOSE_SOURCE_POSITION;
         return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
@@ -242,7 +293,9 @@ public class SwerveDrivetrain extends SubsystemBase {
         return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
     }
 
+    //
     // Red pathfinding commands
+    //
     public Command followPathCommandtoAT5() {
         Pose2d target = Constants.RED_AMP_SCORING_POSITION;
         return AutoBuilder.pathfindToPose(target, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI), 0);
@@ -260,7 +313,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     // gets distance from speaker in meters
     public double getDistanceFromSpeaker() {
-        Pose2d speakerPose = Constants.BLUE_SPEAKER_POSE;
+        Pose2d speakerPose;
+        if (GeneralUtils.isAllianceBlue()) {
+            speakerPose = Constants.BLUE_SPEAKER_POSE;
+        } else {
+            speakerPose = Constants.RED_SPEAKER_POSE;
+
+        }
         double x = getPose().getX() - speakerPose.getX();
         double y = getPose().getY() - speakerPose.getY();
         double distance = Math.sqrt(x * x + y * y);
@@ -268,7 +327,12 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public double getAngleToFaceSpeaker() {
-        Pose2d speakerPose = Constants.BLUE_SPEAKER_POSE;
+        Pose2d speakerPose;
+        if (GeneralUtils.isAllianceBlue()) {
+            speakerPose = Constants.BLUE_SPEAKER_POSE;
+        } else {
+            speakerPose = Constants.RED_SPEAKER_POSE;
+        }
         double x = getPose().getX() - speakerPose.getX();
         double y = getPose().getY() - speakerPose.getY();
         double angle = Units.radiansToDegrees(Math.atan(y / x));
@@ -299,12 +363,13 @@ public class SwerveDrivetrain extends SubsystemBase {
         final Pose2d estimatedPose = m_limeLight
                 .getPose2DFromAlliance();
         if (m_limeLight.getFid() != -1) {
-            poseEstimator.addVisionMeasurement(estimatedPose, m_limeLight.getTimeStamp());
+            poseEstimator.addVisionMeasurement(estimatedPose,
+                    m_limeLight.getTimeStamp());
         }
 
         for (SwerveModule mod : m_swerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Cancoder",
-                    mod.getCANcoder().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",
+                    mod.getCANcoder().getDegrees() - mod.m_angleOffset.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated",
                     mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity",
@@ -317,7 +382,8 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
         SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
         SmartDashboard.putNumber("angle To Face Speaker", getAngleToFaceSpeaker());
-        SmartDashboard.putNumber("angle to shoot in speaker", getTrigToScoreInSpeaker());
+        SmartDashboard.putNumber("angle to shoot in speaker",
+                getTrigToScoreInSpeaker());
 
     }
 }

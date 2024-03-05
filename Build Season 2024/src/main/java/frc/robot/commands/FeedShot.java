@@ -20,7 +20,7 @@ public class FeedShot extends Command {
 
     @Override
     public void execute() {
-        m_intake.setIntakeSpeed(.3);
+        m_intake.setIntakeSpeed(.5);
     }
 
     @Override

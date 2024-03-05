@@ -1,13 +1,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.PortClimber;
 
-public class ClimbUp extends Command {
-    private Climb m_climb;
+public class PortClimb extends Command {
+    private PortClimber m_climb;
+    private double m_speed;
 
-    public ClimbUp(Climb climb) {
+    public PortClimb(PortClimber climb, double speed) {
         this.m_climb = climb;
+        this.m_speed = speed;
         addRequirements(m_climb);
     }
 
@@ -18,7 +20,7 @@ public class ClimbUp extends Command {
 
     @Override
     public void execute() {
-        m_climb.setClimb(.7);
+        m_climb.setPortClimb(m_speed);
     }
 
     @Override
@@ -29,8 +31,7 @@ public class ClimbUp extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_climb.setClimb(0);
-        ;
+        m_climb.setPortClimb(0);
     }
 
 }

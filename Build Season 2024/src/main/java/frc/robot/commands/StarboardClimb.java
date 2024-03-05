@@ -1,13 +1,17 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.StarboardClimber;
 
-public class ClimbDown extends Command {
-    private Climb m_climb;
+public class StarboardClimb extends Command {
+    private StarboardClimber m_climb;
+    private double m_speed;
 
-    public ClimbDown(Climb climb) {
+    public StarboardClimb(StarboardClimber climb, double speed) {
         this.m_climb = climb;
+        this.m_speed = speed;
         addRequirements(m_climb);
     }
 
@@ -18,7 +22,7 @@ public class ClimbDown extends Command {
 
     @Override
     public void execute() {
-        m_climb.setClimb(-.7);
+        m_climb.setStarboardClimb(m_speed);
     }
 
     @Override
@@ -29,8 +33,7 @@ public class ClimbDown extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_climb.setClimb(0);
-        ;
+        m_climb.setStarboardClimb(0);
     }
 
 }

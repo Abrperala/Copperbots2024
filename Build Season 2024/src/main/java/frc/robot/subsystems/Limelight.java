@@ -21,6 +21,8 @@ public class Limelight extends SubsystemBase {
     public Limelight() {
     }
 
+    // set angle 35
+
     public static Limelight instance;
 
     public static Limelight getInstance() {
@@ -72,7 +74,7 @@ public class Limelight extends SubsystemBase {
                 return false;
             }
         } else {
-            if (getFid() == 5 || getFid() == 9 || getFid() == 10) {
+            if (getFid() == 5 || getFid() == 9 || getFid() == 10 || getFid() == 3 || getFid() == 4) {
                 return true;
             } else {
                 return false;

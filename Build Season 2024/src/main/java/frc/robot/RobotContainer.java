@@ -2,10 +2,11 @@ package frc.robot;
 
 import frc.robot.subsystems.BasePivot;
 import frc.robot.subsystems.Candle;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.PortClimber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.StarboardClimber;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.TopPivot;
 
@@ -16,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.util.GeneralUtils;
 import frc.robot.commands.*;
 
@@ -52,7 +55,8 @@ public class RobotContainer {
 	public static BasePivot m_basePivot;
 	public static Intake m_intake;
 	public static Candle m_candle;
-	public static Climb m_climb;
+	public static PortClimber m_portClimb;
+	public static StarboardClimber m_starboardClimb;
 
 	/* Controllers */
 	private final PS4Controller driver = new PS4Controller(0);
@@ -63,6 +67,11 @@ public class RobotContainer {
 	private final int translationAxis = PS4Controller.Axis.kLeftY.value;
 	private final int strafeAxis = PS4Controller.Axis.kLeftX.value;
 	private final int rotationAxis = PS4Controller.Axis.kRightX.value;
+
+	private final JoystickButton isEvading = new JoystickButton(driver, 5);
+	private final JoystickButton isRotatingFast = new JoystickButton(driver, 6);
+
+	private final POVButton isLocked = new POVButton(driver, 180);
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -76,7 +85,8 @@ public class RobotContainer {
 		m_topPivot = new TopPivot();
 		m_intake = new Intake();
 		m_candle = new Candle();
-		m_climb = new Climb();
+		m_portClimb = new PortClimber();
+		m_starboardClimb = new StarboardClimber();
 
 		// An example selectcommand. Will select from the three commands based on the
 		// value returned
@@ -88,29 +98,45 @@ public class RobotContainer {
 		m_selectCommand = new SelectCommand<>(
 				// Maps selector values to commands
 				Map.ofEntries(
-						Map.entry(CommandSelector.ZERO, new WaitCommand(.1)),
-						Map.entry(CommandSelector.ONE,
-								new ParallelCommandGroup(
-										m_drivetrain.followPathCommandtoAT1(),
-										new SequentialCommandGroup(
-												new SetTopPivotToAngle(m_topPivot, 87),
-												new SetBasePivotToAngle(m_basePivot,
-														127),
-												new Intaking(m_intake),
-												new SetBasePivotToAngle(m_basePivot,
-														90),
-												new SetTopPivotToAngle(m_topPivot, 0)))),
-						Map.entry(CommandSelector.TWO,
-								new ParallelCommandGroup(
-										m_drivetrain.followPathCommandtoAT2(),
-										new SequentialCommandGroup(
-												new SetTopPivotToAngle(m_topPivot, 87),
-												new SetBasePivotToAngle(m_basePivot,
-														127),
-												new Intaking(m_intake),
-												new SetBasePivotToAngle(m_basePivot,
-														90),
-												new SetTopPivotToAngle(m_topPivot, 0)))),
+						Map.entry(CommandSelector.ZERO, new InstantCommand()),
+						// Map.entry(CommandSelector.ONE,
+						// new ParallelCommandGroup(
+						// m_drivetrain.followPathCommandtoAT1(),
+						// new SequentialCommandGroup(
+						// new SetTopPivotToAngle(m_topPivot, 87),
+						// new SetBasePivotToAngle(m_basePivot,
+						// 127),
+						// new Intaking(m_intake),
+						// new SetBasePivotToAngle(m_basePivot,
+						// 90),
+						// new SetTopPivotToAngle(m_topPivot, 0)))),
+						// Map.entry(CommandSelector.TWO,
+						// new ParallelCommandGroup(
+						// m_drivetrain.followPathCommandtoAT2(),
+						// new SequentialCommandGroup(
+						// new SetTopPivotToAngle(m_topPivot, 87),
+						// new SetBasePivotToAngle(m_basePivot,
+						// 127),
+						// new Intaking(m_intake),
+						// new SetBasePivotToAngle(m_basePivot,
+						// 90),
+						// new SetTopPivotToAngle(m_topPivot, 0)))),
+						// Map.entry(CommandSelector.SIX,
+						// new ParallelCommandGroup(
+						// m_drivetrain.followPathCommandtoAT6(),
+						// new SequentialCommandGroup(
+						// new SetTopPivotToAngle(m_topPivot, 80),
+						// new SetBasePivotToAngle(m_basePivot, 138),
+						// new ParallelRaceGroup(
+						// new OutTaking(m_intake),
+						// new WaitCommand(.3)),
+						// new SetTopPivotToAngle(m_topPivot, 105),
+						// new ParallelRaceGroup(
+						// new OutTaking(m_intake),
+						// new WaitCommand(1)),
+						// new StopIntake(m_intake),
+						// new SetBasePivotToAngle(m_basePivot, 90),
+						// new SetTopPivotToAngle(m_topPivot, 0)))),
 						Map.entry(CommandSelector.SEVEN,
 								new ParallelRaceGroup(
 										new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
@@ -118,8 +144,9 @@ public class RobotContainer {
 										new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
 										new SequentialCommandGroup(
 												new ShootToRPM(m_shooter),
-												new FeedShot(m_intake),
 												new WaitCommand(.3),
+												new FeedShot(m_intake),
+												new WaitCommand(.5),
 												new StopIntake(m_intake),
 												new StopShooter(m_shooter)))),
 						Map.entry(CommandSelector.EIGHT,
@@ -129,8 +156,9 @@ public class RobotContainer {
 										new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
 										new SequentialCommandGroup(
 												new ShootToRPM(m_shooter),
-												new FeedShot(m_intake),
 												new WaitCommand(.3),
+												new FeedShot(m_intake),
+												new WaitCommand(.5),
 												new StopIntake(m_intake),
 												new StopShooter(m_shooter))))
 
@@ -147,13 +175,16 @@ public class RobotContainer {
 		m_drivetrain.setDefaultCommand(
 				new SwerveDrive(
 						m_drivetrain,
-						() -> -testing.getRawAxis(translationAxis),
-						() -> -testing.getRawAxis(strafeAxis),
-						() -> -testing.getRawAxis(rotationAxis),
-						() -> false));
+						() -> driver.getRawAxis(translationAxis),
+						() -> driver.getRawAxis(strafeAxis),
+						() -> driver.getRawAxis(rotationAxis),
+						() -> false,
+						() -> isEvading.getAsBoolean(),
+						() -> isLocked.getAsBoolean(),
+						() -> isRotatingFast.getAsBoolean()));
 
 		m_basePivot.setDefaultCommand(
-				new ManualBasePivot(m_basePivot, () -> -operator.getRawAxis(1)));
+				new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
 		m_topPivot.setDefaultCommand(
 				new ManualTopPivot(m_topPivot, () -> -operator.getRawAxis(5)));
 
@@ -161,10 +192,9 @@ public class RobotContainer {
 
 	private void configureBindings() {
 
-		// new JoystickButton(operator, 1).onTrue(new Shoot(m_shooter));
+		// TODO: change buttons for comp
 
-		new JoystickButton(testing, 14).onTrue(
-
+		new JoystickButton(driver, 14).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetLeds(m_candle, Candle.LEDState.YELLOW),
@@ -172,14 +202,13 @@ public class RobotContainer {
 								new SetLeds(m_candle, Candle.LEDState.GREEN)),
 
 						new InstantCommand(),
-
 						m_limelight::hasTargetAprilTag));
 
-		new JoystickButton(testing, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
-		// new JoystickButton(testing, 7).whileTrue(new OutTaking(m_intake));
-
-		new JoystickButton(testing, 13).onTrue(
+		// button to shoot or toggle shooter based on if we have a connected color
+		// sensor
+		new JoystickButton(operator, 14).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new ConditionalCommand(
@@ -204,67 +233,117 @@ public class RobotContainer {
 						m_intake::colorSensorConnected));
 
 		// button to ground intake
-		new JoystickButton(testing, 1).onTrue(
+		new JoystickButton(driver, 1).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetTopPivotToAngle(m_topPivot, 36),
-								new SetBasePivotToAngle(m_basePivot, -15),
+								new SetBasePivotToAngle(m_basePivot, -12),
 								new Intaking(m_intake),
-								new SetBasePivotToAngle(m_basePivot, 90)),
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -47)),
 
 						new SequentialCommandGroup(
 								new SetTopPivotToAngle(m_topPivot, 36),
-								new SetBasePivotToAngle(m_basePivot, -15
-
-								)),
+								new SetBasePivotToAngle(m_basePivot, -12)),
 
 						m_intake::colorSensorConnected));
 
+		// button for operator to set the arms to ground intake, used for traversing
+		new JoystickButton(operator, 1).onTrue(
+				new SequentialCommandGroup(
+						new SetTopPivotToAngle(m_topPivot, 36),
+						new SetBasePivotToAngle(m_basePivot, -12)));
+
 		// sets angle to infront of speaker
-		new JoystickButton(testing, 2).onTrue(
-				new SequentialCommandGroup(new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -50)));
+		new JoystickButton(operator, 2).onTrue(
+
+				new SequentialCommandGroup(
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, -47)));
 
 		// Button to Score in Amp
-		new JoystickButton(testing, 3).onTrue(
+		// top 21, bottom 66, to top 53, 135 bottom, 67 top, 122 bottom, 92 top
+		new JoystickButton(driver, 3).onTrue(
 				new SequentialCommandGroup(
-						new ParallelRaceGroup(
-								new KeepBasePivotToAngle(m_basePivot, 22),
-								new KeepTopPivotToAngle(m_topPivot, 153)))); // ,
-		// new SequentialCommandGroup(
-		// new WaitCommand(2),
-		// new ParallelRaceGroup(
-		// new WaitCommand(2),
-		// new OutTaking(m_intake)))),
+						new SetTopPivotToAngle(m_topPivot, 0),
+						new SetBasePivotToAngle(m_basePivot, 70),
+						new OutTaking(m_intake),
+						new WaitCommand(.3),
+						new SetTopPivotToAngle(m_topPivot, 23),
+						new StopIntake(m_intake),
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, 0))
 
-		// new SetBasePivotToAngle(m_basePivot, 90),
-		// new SetTopPivotToAngle(m_topPivot, 5)));
+		);
 
-		// button for source intake
-		new JoystickButton(testing, 4).onTrue(
+		// button for source intake top 85, bottom 60
+		new JoystickButton(operator, 3).onTrue(
 				new SequentialCommandGroup(
-						new SetTopPivotToAngle(m_topPivot, 87),
-						new SetBasePivotToAngle(m_basePivot, 127),
-						new Intaking(m_intake), new SetBasePivotToAngle(m_basePivot, 90)
-
-				));
-
-		new JoystickButton(testing, 7).whileTrue(
-				new OutTaking(m_intake));
-
-		new JoystickButton(testing, 8).whileTrue(
-				new Intaking(m_intake));
+						new SetTopPivotToAngle(m_topPivot, 85),
+						new SetBasePivotToAngle(m_basePivot, 60),
+						new Intaking(m_intake), new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, -47)));
 
 		new JoystickButton(driver, 7).whileTrue(
-				new ClimbDown(m_climb));
+				new OutTaking(m_intake));
+
+		new JoystickButton(driver, 7).onFalse(
+				new StopIntake(m_intake));
 
 		new JoystickButton(driver, 8).whileTrue(
-				new ClimbUp(m_climb));
+				new Intaking(m_intake));
+
+		new JoystickButton(operator, 6).whileTrue(
+				new StarboardClimb(m_starboardClimb, -.7));
+
+		new JoystickButton(operator, 5).whileTrue(
+				new PortClimb(m_portClimb, -.7));
+
+		new JoystickButton(operator, 8).whileTrue(
+				new StarboardClimb(m_starboardClimb, .7));
+
+		new JoystickButton(operator, 7).whileTrue(
+				new PortClimb(m_portClimb, .7));
 
 	}
 
 	private void configureAutos() {
-		NamedCommands.registerCommand("stopDrive", new InstantCommand(m_drivetrain::stopSwerve));
+		NamedCommands.registerCommand("stopDrive", new InstantCommand());
+		NamedCommands.registerCommand("Shoot",
+				new SequentialCommandGroup(
+						new SequentialCommandGroup(
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -45)),
+						new SequentialCommandGroup(
+								new ConditionalCommand(
+										new SequentialCommandGroup(
+												new ShootToRPM(m_shooter)),
+										new StopShooter(m_shooter),
+										m_intake::isNotePresent),
+								new ConditionalCommand(
+										new SequentialCommandGroup(
+												new FeedShot(m_intake),
+												new WaitCommand(.6)),
+										new StopIntake(m_intake),
+										m_intake::isNotePresent),
+								new ConditionalCommand(
+										new FeedShot(m_intake),
+										new StopIntake(m_intake),
+										m_intake::isNotePresent),
+								new ConditionalCommand(
+										new ShootToRPM(m_shooter),
+										new StopShooter(m_shooter),
+										m_intake::isNotePresent))));
+		NamedCommands.registerCommand("Start Shooter", new ShootToRPM(m_shooter));
+		NamedCommands.registerCommand("FeedShot", new FeedShot(m_intake));
+		NamedCommands.registerCommand("Stop Shooter", new StopShooter(m_shooter));
+		NamedCommands.registerCommand("Intake",
+				new SequentialCommandGroup(
+						new SetTopPivotToAngle(m_topPivot, 36),
+						new SetBasePivotToAngle(m_basePivot, -12),
+						new Intaking(m_intake),
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, -45)));
 
 	}
 
@@ -284,15 +363,15 @@ public class RobotContainer {
 		SmartDashboard.putData("Auto mode", m_autoChooser);
 		// should confirm your selection for Auton, Im pretty sure it will just show me
 		// a button like last time instead of the name of the Auton
-		// SmartDashboard.putString("Chosen Auton?",
-		// m_autoChooser.getSelected().toString());
+		SmartDashboard.putString("Chosen Auton?", m_autoChooser.getSelected().toString());
 
 	}
 
 	public void addAutonOptions() {
-		m_autoChooser.addOption("none", new Command() {
+		m_autoChooser.setDefaultOption("none", new InstantCommand() {
 		});
-		m_autoChooser.addOption("4piece center", AutoBuilder.buildAuto("4 Piece Center"));
+		m_autoChooser.addOption("1 piece center", AutoBuilder.buildAuto("1 Piece Center"));
+		m_autoChooser.addOption("4 piece center", AutoBuilder.buildAuto("4 Piece Center"));
 
 	}
 

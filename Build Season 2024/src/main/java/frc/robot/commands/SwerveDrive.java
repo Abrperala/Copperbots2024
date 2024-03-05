@@ -11,56 +11,74 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-
 public class SwerveDrive extends Command {
 
-    private SwerveDrivetrain m_drivetrain;    
+    private SwerveDrivetrain m_swerveDrivetrain;
     private DoubleSupplier m_translationSup;
     private DoubleSupplier m_strafeSup;
     private DoubleSupplier m_rotationSup;
     private BooleanSupplier m_robotCentricSup;
-    private SlewRateLimiter m_xAxisARateLimiter;
-    private SlewRateLimiter m_yAxisARateLimiter;
+    private SlewRateLimiter m_xAxisLimiter;
+    private SlewRateLimiter m_yAxisLimiter;
+    private BooleanSupplier m_isEvading;
+    private BooleanSupplier m_isLocked;
+    private BooleanSupplier m_isRotatingFast;
 
-    public SwerveDrive(SwerveDrivetrain drivetrain, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+    public SwerveDrive(SwerveDrivetrain swerveDrivetrain,
+            DoubleSupplier translationSup,
+            DoubleSupplier strafeSup,
+            DoubleSupplier rotationSup,
+            BooleanSupplier robotCentricSup,
+            BooleanSupplier isEvading,
+            BooleanSupplier isLocked,
+            BooleanSupplier isRotatingFast) {
 
-        m_drivetrain = drivetrain;
-        addRequirements(m_drivetrain);
+        m_swerveDrivetrain = swerveDrivetrain;
+        addRequirements(m_swerveDrivetrain);
 
         m_translationSup = translationSup;
         m_strafeSup = strafeSup;
         m_rotationSup = rotationSup;
         m_robotCentricSup = robotCentricSup;
+        m_isEvading = isEvading;
+        m_isLocked = isLocked;
+        m_isRotatingFast = isRotatingFast;
 
-        m_xAxisARateLimiter = new SlewRateLimiter(Constants.A_RATE_LIMITER);
-        m_yAxisARateLimiter = new SlewRateLimiter(Constants.A_RATE_LIMITER);
+        m_xAxisLimiter = new SlewRateLimiter(Constants.RATE_LIMITER);
+        m_yAxisLimiter = new SlewRateLimiter(Constants.RATE_LIMITER);
 
     }
 
     @Override
     public void execute() {
 
+        double rotationScalar = 1;
+
+        if (m_isRotatingFast.getAsBoolean()) {
+            rotationScalar = 2;
+        } else {
+            rotationScalar = 1;
+        }
+
         /* Get Values, Deadband */
         double xAxis = MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.STICK_DEADBAND);
         double yAxis = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.STICK_DEADBAND);
         double rAxis = MathUtil.applyDeadband(m_rotationSup.getAsDouble(), Constants.STICK_DEADBAND);
 
-        /* Square joystick inputs */
-        double rAxisSquared = rAxis > 0 ? rAxis * rAxis : rAxis * rAxis * -1;
-        double xAxisSquared = xAxis > 0 ? xAxis * xAxis : xAxis * xAxis * -1;
-        double yAxisSquared = yAxis > 0 ? yAxis * yAxis : yAxis * yAxis * -1;
+        double xAxisSquared = xAxis * xAxis * Math.signum(xAxis);
+        double yAxisSquared = yAxis * yAxis * Math.signum(yAxis);
+        double rAxisSquared = rAxis * rAxis * Math.signum(rAxis) * rotationScalar;
 
-        /* Filter joystick inputs using slew rate limiter */
-        double yAxisFiltered = m_yAxisARateLimiter.calculate(yAxisSquared);
-        double xAxisFiltered = m_xAxisARateLimiter.calculate(xAxisSquared);
+        double xAxisFiltered = m_xAxisLimiter.calculate(xAxisSquared);
+        double yAxisFiltered = m_yAxisLimiter.calculate(yAxisSquared);
 
-        /* Drive */ 
-        m_drivetrain.drive(
-            new Translation2d(xAxisFiltered, yAxisFiltered).times(Constants.MAX_SPEED), 
-            rAxisSquared * Constants.MAX_ANGULAR_VELOCITY, 
-            !m_robotCentricSup.getAsBoolean(), 
-            true
-        );
-
+        /* Drive */
+        m_swerveDrivetrain.drive(
+                new Translation2d(-xAxisFiltered, -yAxisFiltered).times(Constants.MAX_SPEED),
+                -rAxisSquared * Constants.MAX_ANGULAR_VELOCITY,
+                !m_robotCentricSup.getAsBoolean(),
+                true,
+                m_isEvading.getAsBoolean(),
+                m_isLocked.getAsBoolean());
     }
 }

@@ -30,6 +30,10 @@ public class KeepTopPivotToAngle extends Command {
 
     @Override
     public boolean isFinished() {
+        if (!m_topPivot.isinRange()) {
+            return true;
+
+        }
         return false;
     }
 

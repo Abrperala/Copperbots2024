@@ -14,7 +14,7 @@ public class AutoTopPivot extends Command {
     private final TopPivot m_topPivot;
     private DoubleSupplier m_angle;
     private Constraints topConstraints = new Constraints(350, 200);
-    private ProfiledPIDController topPID = new ProfiledPIDController(.01, 0, 0, topConstraints);
+    private ProfiledPIDController topPID = new ProfiledPIDController(.01, 0.0, 0, topConstraints);
 
     public AutoTopPivot(TopPivot pivot, DoubleSupplier angle) {
         this.m_topPivot = pivot;

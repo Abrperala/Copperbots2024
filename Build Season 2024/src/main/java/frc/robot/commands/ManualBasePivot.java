@@ -26,7 +26,7 @@ public class ManualBasePivot extends Command {
 
     @Override
     public void execute() {
-        m_basePivot.setPivot(m_JoySupplier.getAsDouble() * .25);
+        m_basePivot.manualSetPivot(m_JoySupplier.getAsDouble() * .25);
     }
 
     @Override

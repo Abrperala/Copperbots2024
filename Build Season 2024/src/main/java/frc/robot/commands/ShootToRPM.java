@@ -21,7 +21,7 @@ public class ShootToRPM extends Command {
 
     @Override
     public void execute() {
-        m_shooter.shooterRun(70);
+        m_shooter.shooterRun(100);
 
     }
 

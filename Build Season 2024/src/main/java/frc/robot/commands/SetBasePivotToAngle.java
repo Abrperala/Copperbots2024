@@ -9,7 +9,7 @@ public class SetBasePivotToAngle extends Command {
 
     private final BasePivot m_basePivot;
     private double m_angle;
-    private Constraints topConstraints = new Constraints(350, 200);
+    private Constraints topConstraints = new Constraints(375, 210);
     private ProfiledPIDController basePID = new ProfiledPIDController(.01, 0, 0, topConstraints);
 
     public SetBasePivotToAngle(BasePivot pivot, double angle) {
@@ -36,7 +36,7 @@ public class SetBasePivotToAngle extends Command {
     @Override
     public boolean isFinished() {
 
-        if (Math.abs(m_angle - m_basePivot.getPivotAngle()) < 2) {
+        if (Math.abs(m_angle - m_basePivot.getPivotAngle()) < 2 || !m_basePivot.isinRange()) {
             return true;
         } else {
             return false;

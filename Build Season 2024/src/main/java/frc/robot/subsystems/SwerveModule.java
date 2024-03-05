@@ -20,7 +20,7 @@ import frc.robot.Robot;
 
 public class SwerveModule {
     public int m_moduleNumber;
-    private Rotation2d m_angleOffset;
+    public Rotation2d m_angleOffset;
     private Rotation2d m_lastAngle;
 
     private TalonFX m_angleMotor;
@@ -31,8 +31,8 @@ public class SwerveModule {
             Constants.DRIVE_A);
 
     /* drive motor control requests */
-    private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0).withEnableFOC(true);
-    private final VelocityVoltage driveVelocity = new VelocityVoltage(0).withEnableFOC(true);
+    private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0).withEnableFOC(false);
+    private final VelocityVoltage driveVelocity = new VelocityVoltage(0).withEnableFOC(false);
 
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
@@ -83,7 +83,6 @@ public class SwerveModule {
      */
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
         if (isOpenLoop) {
-
             driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.MAX_SPEED;
             m_driveMotor.setControl(driveDutyCycle);
         } else {
@@ -103,7 +102,7 @@ public class SwerveModule {
         Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.MAX_SPEED * 0.01)) ? m_lastAngle
                 : desiredState.angle; // Prevent rotating module if speed is less then 1%. Prevents Jittering.
 
-        anglePosition.Position = Conversions.degreesToTalon(angle.getDegrees(), Constants.AZIMUTH_GEAR_RATIO);
+        anglePosition.Position = Conversions.degreesToTalon(angle.getDegrees(), Constants.ANGLE_GEAR_RATIO);
         m_angleMotor.setControl(anglePosition);
         m_lastAngle = angle;
     }
@@ -116,7 +115,7 @@ public class SwerveModule {
     private Rotation2d getAngle() {
 
         return Rotation2d.fromDegrees(
-                Conversions.talonToDegrees(m_angleMotor.getPosition().getValue(), Constants.AZIMUTH_GEAR_RATIO));
+                Conversions.talonToDegrees(m_angleMotor.getPosition().getValue(), Constants.ANGLE_GEAR_RATIO));
     }
 
     /**
@@ -128,6 +127,10 @@ public class SwerveModule {
         return Rotation2d.fromRotations(m_angleEncoder.getAbsolutePosition().getValue());
     }
 
+    public double getCANcoderWithOffset() {
+        return m_angleEncoder.getAbsolutePosition().getValue() - m_angleOffset.getDegrees();
+    }
+
     private Rotation2d waitForCANcoder() {
         /* wait for up to 250ms for a new CANcoder position */
         return Rotation2d.fromRotations(m_angleEncoder.getAbsolutePosition().waitForUpdate(250).getValue());
@@ -135,7 +138,7 @@ public class SwerveModule {
 
     public void resetToAbsolute() {
         double absolutePosition = Conversions.degreesToTalon(
-                waitForCANcoder().getDegrees() - m_angleOffset.getDegrees(), Constants.AZIMUTH_GEAR_RATIO);
+                waitForCANcoder().getDegrees() - m_angleOffset.getDegrees(), Constants.ANGLE_GEAR_RATIO);
         m_angleMotor.setPosition(absolutePosition);
     }
 

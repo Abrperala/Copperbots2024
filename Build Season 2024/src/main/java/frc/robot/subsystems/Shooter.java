@@ -1,16 +1,10 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,8 +61,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean shooterAtSpeed() {
-        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 100
-                && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM - 100;
+        return getTopEncoderVelocity() > Constants.SHOOTER_TARGET_RPM
+                && getBottomEncoderVelocity() > Constants.SHOOTER_TARGET_RPM;
 
     }
 

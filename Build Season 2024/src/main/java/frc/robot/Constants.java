@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 /**
@@ -86,27 +87,32 @@ public final class Constants {
                                 CANCODER_ID, ANGLE_OFFSET);
         }
 
+        /* Chosen Module */
+        public static final COTSFalconSwerveConstants chosenModule = COTSFalconSwerveConstants
+                        .SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDS_MK4i_L2_Plus);
+
         /* Gyro reversed */
         public static final boolean INVERT_GYRO = false;
 
         public static final SensorDirectionValue CANCODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
 
         /* Angle Motor PID Values */
-        public static final double AZIMUTH_P = 7.2;
-        public static final double AZIMUTH_I = 0.0;
-        public static final double AZIMUTH_D = 0.1;
-        public static final double AZIMUTH_F = 0;
-
-        /* Drive Motor Characterization Values */
-        public static final double DRIVE_S = (0.32);
-        public static final double DRIVE_V = (1.51);
-        public static final double DRIVE_A = (0.27);
+        public static final double AZIMUTH_P = chosenModule.angleKP;
+        public static final double AZIMUTH_I = chosenModule.angleKI;
+        public static final double AZIMUTH_D = chosenModule.angleKD;
 
         /* Drive Motor PID Values */
-        public static final double DRIVE_P = 0.12; // 0.1
+        public static final double DRIVE_P = 0.12;
         public static final double DRIVE_I = 0.0;
         public static final double DRIVE_D = 0.0;
-        public static final double DRIVE_F = 0;
+        public static final double DRIVE_F = 0.0;
+
+        /* Drive Motor Characterization Values From SYSID */
+        public static final double DRIVE_S = 0.32;
+        public static final double DRIVE_V = 1.51;
+        public static final double DRIVE_A = 0.27;
+
+        public static final double RATE_LIMITER = 1.5;
 
         /* Swerve Current Limiting */
         public static final int AZIMUTH_CURRENT_LIMIT = 25;
@@ -127,8 +133,8 @@ public final class Constants {
         public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
         /* Swerve Gear Ratios */
-        public static final double DRIVE_GEAR_RATIO = (6.75 / 1.0);
-        public static final double AZIMUTH_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
+        public static final double DRIVE_GEAR_RATIO = chosenModule.driveGearRatio;
+        public static final double ANGLE_GEAR_RATIO = chosenModule.angleGearRatio;
 
         /* Swerve Profiling Values */
         public static final double MAX_SPEED = (Units.feetToMeters(16.2)); // meters per second (theoretical from SDS)
@@ -144,15 +150,19 @@ public final class Constants {
         public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(27);
         public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(27);
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
-        public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+        public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
+
         public static final double DRIVEBASE_RADIUS = Units
                         .inchesToMeters(.5 * Math.sqrt(2 * Math.pow(DRIVETRAIN_LENGTH, 2)));
 
-        public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+        /* Swerve Kinematics */
+        public static final Translation2d[] moduleTranslations = new Translation2d[] {
                         new Translation2d(DRIVETRAIN_LENGTH / 2.0, DRIVETRAIN_WIDTH / 2.0),
                         new Translation2d(DRIVETRAIN_LENGTH / 2.0, -DRIVETRAIN_WIDTH / 2.0),
                         new Translation2d(-DRIVETRAIN_LENGTH / 2.0, DRIVETRAIN_WIDTH / 2.0),
-                        new Translation2d(-DRIVETRAIN_LENGTH / 2.0, -DRIVETRAIN_WIDTH / 2.0));
+                        new Translation2d(-DRIVETRAIN_LENGTH / 2.0, -DRIVETRAIN_WIDTH / 2.0) };
+
+        public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(moduleTranslations);
 
         public static final double STICK_DEADBAND = 0.1;
         public static final int DRIVER_PORT = 0;
@@ -217,16 +227,21 @@ public final class Constants {
          * Posisitions of Field Elements
          * / Blue Amp: 1.85, 7.60, 90
          * / Red Amp:
-         * /
+         * / Field Dimensions Meters, 8.21 x 16.54
          */
 
         public static final double HEIGHT_TO_SPEAKER_TARGET = 89;
-        public static final Pose2d BLUE_SPEAKER_POSE = new Pose2d(0.076, 5.547868, new Rotation2d());
-        public static final Pose2d RED_SPEAKER_POSE = new Pose2d(16.465042, 5.547868, new Rotation2d());
+        // apriltag 7, 8
+        public static final Pose2d BLUE_SPEAKER_POSE = new Pose2d(0.076, 5.5478, new Rotation2d());
 
-        public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.85, 7.60,
+        // apriltag 3, 4
+        public static final Pose2d RED_SPEAKER_POSE = new Pose2d(0.076, 2.6622, new Rotation2d());
+
+        // apriltag 6
+        public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.9, 7.8,
                         new Rotation2d(Math.toRadians(-90)));
-        public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, 0.5,
+        // apriltag 5
+        public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, .61,
                         new Rotation2d(Math.toRadians(90)));
         // apriltag 2
         public static final Pose2d BLUE_FAR_SOURCE_POSITION = new Pose2d(15.8, 1.18,
@@ -235,10 +250,10 @@ public final class Constants {
         public static final Pose2d BLUE_CLOSE_SOURCE_POSITION = new Pose2d(14.85, .55,
                         new Rotation2d(Math.toRadians(120)));
         // apriltag 9
-        public static final Pose2d RED_FAR_SOURCE_POSITION = new Pose2d(16.1, 6.7,
+        public static final Pose2d RED_FAR_SOURCE_POSITION = new Pose2d(16.1, 7.03,
                         new Rotation2d(Math.toRadians(-45)));
         // apriltag 10
-        public static final Pose2d RED_CLOSE_SOURCE_POSITION = new Pose2d(14.8, 7.33,
+        public static final Pose2d RED_CLOSE_SOURCE_POSITION = new Pose2d(14.8, 7.66,
                         new Rotation2d(Math.toRadians(-45)));
 
         // Shooter Constants
@@ -246,18 +261,18 @@ public final class Constants {
         public static final int SHOOT2_ID = 14;
         public static final int INTAKE_ID = 15;
 
-        public static double SHOOTER_GEARING = 1.5 / 1;
-        public static double SHOOTER_TARGET_RPM = 6300;
-        public static double SHOOTER_FREE_RPM = 5300 * SHOOTER_GEARING;
+        public static double SHOOTER_GEARING = 1 / 1.5;
+        public static double SHOOTER_TARGET_RPM = 4000;
+        public static double SHOOTER_FREE_RPM = 6300 * SHOOTER_GEARING;
 
         // Pivot Constants
 
         public static final double HEIGHT_FROM_FLOOR_TO_1ST_PIVOT = 13.25;
         public static final double LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT = 19;
-        public static final double MAX_TOP_PIVOT_ANGLE = 160;
-        public static final double MIN_TOP_PIVOT_ANGLE = -60;
-        public static final double MAX_BOTTOM_PIVOT_ANGLE = 130;
-        public static final double MIN_BOTTOM_PIVOT_ANGLE = -15;
+        public static final double MAX_TOP_PIVOT_ANGLE = 180;
+        public static final double MIN_TOP_PIVOT_ANGLE = -180;
+        public static final double MAX_BOTTOM_PIVOT_ANGLE = 180;
+        public static final double MIN_BOTTOM_PIVOT_ANGLE = -180;
 
         // LED Constants
         public static final int CANdleID = 20;

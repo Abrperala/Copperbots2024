@@ -35,7 +35,11 @@ public class KeepBasePivotToAngle extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        if (!m_basePivot.isinRange()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

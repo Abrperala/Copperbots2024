@@ -30,7 +30,7 @@ public class SetTopPivotToAngle extends Command {
 
     @Override
     public boolean isFinished() {
-        if (Math.abs(m_angle - m_topPivot.getPivotAngle()) < 2) {
+        if (Math.abs(m_angle - m_topPivot.getPivotAngle()) < 2 || !m_topPivot.isinRange()) {
             return true;
         } else {
             return false;

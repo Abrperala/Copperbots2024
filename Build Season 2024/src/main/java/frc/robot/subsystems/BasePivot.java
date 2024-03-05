@@ -33,17 +33,50 @@ public class BasePivot extends SubsystemBase {
     }
 
     public void setPivot(double set) {
+        if (isinRange()) {
+            bottomMotor.set(set);
+            topMotor.set(set);
+        } else {
+            System.out.println("Base Pivot Bad");
+        }
+    }
+
+    public void manualSetPivot(double set) {
         bottomMotor.set(set);
         topMotor.set(set);
     }
 
+    /**
+     * Gets the wrapped pivot angle within the range of (-180, 180] degrees.
+     * 
+     * This method retrieves the raw pivot angle from the DutyCycleEncoder, inverses
+     * the encoding direction, and ensures
+     * that the angle is wrapped within the specified range. The wrapping prevents
+     * jumps of plus or minus 360 degrees, providing a consistent angle.
+     *
+     * @return The wrapped pivot angle in degrees within the range (-180, 180].
+     */
     public double getPivotAngle() {
-        return basePivotEncoder.getDistance() * -1;
+        double rawAngle = basePivotEncoder.getDistance() * -1;
+        double wrappedAngle = (rawAngle % 360 + 360) % 360;
+        if (wrappedAngle > 180) {
+            wrappedAngle -= 360;
+        }
+        return wrappedAngle;
+    }
+
+    public boolean isinRange() {
+        if (getPivotAngle() > Constants.MAX_BOTTOM_PIVOT_ANGLE || getPivotAngle() < Constants.MIN_BOTTOM_PIVOT_ANGLE) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("bottomPivotAngle", getPivotAngle());
+        SmartDashboard.putNumber("Bounded Bottom Pivot Angle", getPivotAngle());
+        SmartDashboard.putNumber("real Bottom Pivot Angle", basePivotEncoder.getDistance());
     }
 
 }
