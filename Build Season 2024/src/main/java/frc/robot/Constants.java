@@ -7,6 +7,9 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -135,7 +138,6 @@ public final class Constants {
         public static final double ANGLE_GEAR_RATIO = chosenModule.angleGearRatio;
 
         /* Swerve Profiling Values */
-        public static final double MAX_SPEED = (Units.feetToMeters(16.2)); // meters per second (theoretical from SDS)
         public static final double MAX_ANGULAR_VELOCITY = Math.PI * 4.12 * 0.5; // radians per second (theoretical
                                                                                 // calculation)
         public static final double TURN_IN_PLACE_SPEED = 0.5;
@@ -166,29 +168,8 @@ public final class Constants {
         public static final int DRIVER_PORT = 0;
         public static final int OPERATOR_PORT = 1;
 
-        public static final double AUTO_P_X_CONTROLLER = 0.1; // 0.1 for auto
-        public static final double AUTO_P_Y_CONTROLLER = 0.1; // 1.4884 for auto
-        public static final double AUTO_P_THETA_CONTROLLER = 1.375; // 2.8 for auto
-        public static final double AUTO_I_THETA_CONTROLLER = 0;
-        public static final double AUTO_D_THETA_CONTROLLER = 0.0;
-        public static final double AUTO_MAX_SPEED = Units.feetToMeters(4.9);
+        public static final double MAX_SPEED = Units.feetToMeters(17.1);
         public static final double AUTO_MAX_ACCELERATION_MPS_SQUARED = 3;
-
-        public static final TrapezoidProfile.Constraints X_AUTO_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 0.5);
-        public static final TrapezoidProfile.Constraints Y_AUTO_CONSTRAINTS = new TrapezoidProfile.Constraints(0.25,
-                        0.5);
-        public static final TrapezoidProfile.Constraints THETA_AUTO_CONSTRAINTS = new TrapezoidProfile.Constraints(8,
-                        8);
-
-        public static final ProfiledPIDController AUTO_X_CONTROLLER = new ProfiledPIDController(AUTO_P_X_CONTROLLER, 0,
-                        0,
-                        X_AUTO_CONSTRAINTS);
-        public static final ProfiledPIDController AUTO_Y_CONTROLLER = new ProfiledPIDController(AUTO_P_Y_CONTROLLER, 0,
-                        0,
-                        Y_AUTO_CONSTRAINTS);
-        public static final ProfiledPIDController AUTO_THETA_CONTROLLER = new ProfiledPIDController(
-                        AUTO_P_THETA_CONTROLLER,
-                        AUTO_I_THETA_CONTROLLER, AUTO_D_THETA_CONTROLLER, THETA_AUTO_CONSTRAINTS);
 
         // Pivot Constants
         public static final int BASE1_PIVOT_ID = 16;
@@ -253,6 +234,19 @@ public final class Constants {
         // apriltag 10
         public static final Pose2d RED_CLOSE_SOURCE_POSITION = new Pose2d(14.8, 7.66,
                         new Rotation2d(Math.toRadians(-45)));
+
+        /* Auto PID Constants */
+        public static final double kPXController = 6;
+        public static final double kPYController = 3;
+        public static final double kPThetaController = 1;
+
+        /* Pathplanner Auton Config */
+        public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
+                        new PIDConstants(kPXController, 0, 0), // Translation constants
+                        new PIDConstants(kPYController, 0, 0), // Rotation constants
+                        MAX_SPEED,
+                        Constants.DRIVEBASE_RADIUS, // Drive base radius (distance from center to furthest module)
+                        new ReplanningConfig());
 
         // Shooter Constants
         public static final int SHOOT1_ID = 13;

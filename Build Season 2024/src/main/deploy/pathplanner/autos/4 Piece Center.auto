@@ -37,22 +37,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 1st Path"
-                }
-              }
-            ]
+            "name": "Top Arm To Intake"
           }
         },
         {
@@ -62,9 +49,41 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AngleForSubwooferShot"
+                  "name": "Base Arm To Intake"
                 }
               },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "4pc 1st Path"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
               {
                 "type": "path",
                 "data": {
@@ -75,15 +94,41 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Feed Shot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake Shot"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Feed Shot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake"
+                }
+              },
               {
                 "type": "named",
                 "data": {
@@ -104,12 +149,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "AngleForSubwooferShot"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "4pc 4th Path"
@@ -119,15 +158,41 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Feed Shot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake Shot"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Feed Shot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake"
+                }
+              },
               {
                 "type": "named",
                 "data": {
@@ -148,12 +213,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "AngleForSubwooferShot"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "4pc 6th Path"
@@ -163,9 +222,29 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Feed Shot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake Shot"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Feed Shot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -173,15 +252,21 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "4pc 7th Path"
+                  "name": "Arm To Intake"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4pc 7th Path"
                 }
               }
             ]
@@ -196,20 +281,34 @@
                 "data": {
                   "pathName": "4pc 8th Path"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AngleForSubwooferShot"
-                }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Feed Shot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake Shot"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Feed Shot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

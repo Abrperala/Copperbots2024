@@ -9,8 +9,8 @@ public class SetTopPivotToAngle extends Command {
 
     private final TopPivot m_topPivot;
     private double m_angle;
-    private Constraints topConstraints = new Constraints(350, 200);
-    private ProfiledPIDController topPID = new ProfiledPIDController(.01, 0, 0, topConstraints);
+    private Constraints topConstraints = new Constraints(1500, 600);
+    private ProfiledPIDController topPID = new ProfiledPIDController(.012, 0, 0, topConstraints);
 
     public SetTopPivotToAngle(TopPivot pivot, double angle) {
         this.m_topPivot = pivot;

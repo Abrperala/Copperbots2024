@@ -51,6 +51,25 @@
                 "data": {
                   "name": "Intake"
                 }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Top Arm To Intake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Base Arm To Intake"
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -94,6 +113,25 @@
                 "type": "path",
                 "data": {
                   "pathName": "3pc Source Path 3"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Top Arm To Intake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Base Arm To Intake"
+                      }
+                    }
+                  ]
                 }
               }
             ]

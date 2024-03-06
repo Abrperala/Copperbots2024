@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isNotePresent() {
-        return beamBreak.get();
+        return !beamBreak.get();
     }
 
     @Override

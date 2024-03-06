@@ -67,16 +67,8 @@ public class SwerveDrivetrain extends SubsystemBase {
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-                                                 // Constants class
-                        new PIDConstants(.02, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(.07, 0.0, 0.0), // Rotation PID constants
+                Constants.pathFollowerConfig,
 
-                        Constants.MAX_SPEED, // Max module speed, in m/s
-                        Constants.DRIVEBASE_RADIUS, // Drive base radius in meters. Distance from robot center to
-                                                    // furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
-                ),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance

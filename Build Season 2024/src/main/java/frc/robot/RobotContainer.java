@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
@@ -220,13 +221,18 @@ public class RobotContainer {
 						new SetTopPivotToAngle(m_topPivot, 36),
 						new SetBasePivotToAngle(m_basePivot, -12),
 						new Intaking(m_intake),
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -47)));
+						new ParallelCommandGroup(
+								new ParallelRaceGroup(
+										new WaitCommand(.3),
+										new FeedShot(m_intake)),
+								new SequentialCommandGroup(
+										new SetBasePivotToAngle(m_basePivot, 90),
+										new SetTopPivotToAngle(m_topPivot, -47)))));
 
 		// button for operator to set the arms to ground intake, used for traversing
 		new JoystickButton(operator, 1).onTrue(
 				new SequentialCommandGroup(
-						new SetTopPivotToAngle(m_topPivot, 36),
+						new SetTopPivotToAngle(m_topPivot, 40),
 						new SetBasePivotToAngle(m_basePivot, -12)));
 
 		// sets angle to infront of speaker
@@ -256,9 +262,13 @@ public class RobotContainer {
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 85),
 						new SetBasePivotToAngle(m_basePivot, 60),
-						new Intaking(m_intake),
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -47)));
+						new ParallelCommandGroup(
+								new ParallelRaceGroup(
+										new WaitCommand(.3),
+										new FeedShot(m_intake)),
+								new SequentialCommandGroup(
+										new SetBasePivotToAngle(m_basePivot, 90),
+										new SetTopPivotToAngle(m_topPivot, -47)))));
 
 		new JoystickButton(driver, 7).whileTrue(
 				new OutTaking(m_intake));
@@ -313,10 +323,18 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Feed Shot", new FeedShot(m_intake));
 		NamedCommands.registerCommand("Stop Shooter", new StopShooter(m_shooter));
 		NamedCommands.registerCommand("Intake",
+				new Intaking(m_intake));
+		NamedCommands.registerCommand("Arm To Intake",
 				new SequentialCommandGroup(
-						new SetTopPivotToAngle(m_topPivot, 36),
-						new SetBasePivotToAngle(m_basePivot, -12),
-						new Intaking(m_intake)));
+						new SetTopPivotToAngle(m_topPivot, 40),
+						new SetBasePivotToAngle(m_basePivot, -12)));
+		NamedCommands.registerCommand("Arm To Intake Shot",
+				new SequentialCommandGroup(
+						new KeepTopPivotToAngle(m_topPivot, 55)));
+		NamedCommands.registerCommand("Top Arm To Intake",
+				new SetTopPivotToAngle(m_topPivot, 40));
+		NamedCommands.registerCommand("Base Arm To Intake",
+				new SetBasePivotToAngle(m_basePivot, -10));
 
 	}
 
@@ -345,6 +363,7 @@ public class RobotContainer {
 		});
 		m_autoChooser.addOption("1 piece center", AutoBuilder.buildAuto("1 Piece Center"));
 		m_autoChooser.addOption("4 piece center", AutoBuilder.buildAuto("4 Piece Center"));
+		m_autoChooser.addOption("3 Piece Source", AutoBuilder.buildAuto("3 Piece Source"));
 
 	}
 
