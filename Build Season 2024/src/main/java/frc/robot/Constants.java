@@ -147,13 +147,13 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
                         Math.PI, (Math.PI * Math.PI));
 
-        public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(27);
-        public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(27);
+        public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(21.8);
+        public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(21.8);
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         public static final double DRIVEBASE_RADIUS = Units
-                        .inchesToMeters(.5 * Math.sqrt(2 * Math.pow(DRIVETRAIN_LENGTH, 2)));
+                        .inchesToMeters(15.4149278299);
 
         /* Swerve Kinematics */
         public static final Translation2d[] moduleTranslations = new Translation2d[] {
