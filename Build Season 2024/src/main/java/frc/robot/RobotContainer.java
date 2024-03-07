@@ -205,15 +205,17 @@ public class RobotContainer {
 		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
 		// button to toggle shooter
-		new JoystickButton(operator, 14).onTrue(
+		new JoystickButton(operator, 2).onTrue(
 				new ConditionalCommand(
 						new ShootToRPM(m_shooter),
 						new StopShooter(m_shooter),
 						m_shooter::shooterNotRunning));
 
-		new JoystickButton(operator, 4).onTrue(
-				new ConditionalCommand(new FeedShot(m_intake), new PrintCommand("Shooter isn't Ready!"),
-						m_shooter::shooterAtSpeed));
+		new JoystickButton(operator, 1).onTrue(
+				new SequentialCommandGroup(
+						new ShootToRPM(m_shooter),
+						new FeedShot(m_intake),
+						new StopShooter(m_shooter)));
 
 		// button to ground intake
 		new JoystickButton(driver, 1).onTrue(
@@ -230,13 +232,13 @@ public class RobotContainer {
 										new SetTopPivotToAngle(m_topPivot, -47)))));
 
 		// button for operator to set the arms to ground intake, used for traversing
-		new JoystickButton(operator, 1).onTrue(
+		new POVButton(operator, 180).onTrue(
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 40),
 						new SetBasePivotToAngle(m_basePivot, -12)));
 
 		// sets angle to infront of speaker
-		new JoystickButton(operator, 2).onTrue(
+		new POVButton(operator, 90).onTrue(
 
 				new SequentialCommandGroup(
 						new SetBasePivotToAngle(m_basePivot, 90),
@@ -246,7 +248,20 @@ public class RobotContainer {
 		// top 21, bottom 66, to top 53, 135 bottom, 67 top, 122 bottom, 92 top
 		new JoystickButton(driver, 3).onTrue(
 				new SequentialCommandGroup(
-						new SetTopPivotToAngle(m_topPivot, 0),
+						new SetTopPivotToAngle(m_topPivot, 5),
+						new SetBasePivotToAngle(m_basePivot, 70),
+						new OutTaking(m_intake),
+						new WaitCommand(.3),
+						new SetTopPivotToAngle(m_topPivot, 23),
+						new StopIntake(m_intake),
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, 0))
+
+		);
+
+		new POVButton(operator, 270).onTrue(
+				new SequentialCommandGroup(
+						new SetTopPivotToAngle(m_topPivot, 5),
 						new SetBasePivotToAngle(m_basePivot, 70),
 						new OutTaking(m_intake),
 						new WaitCommand(.3),
@@ -258,10 +273,11 @@ public class RobotContainer {
 		);
 
 		// button for source intake top 85, bottom 60
-		new JoystickButton(operator, 3).onTrue(
+		new POVButton(operator, 0).onTrue(
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 85),
 						new SetBasePivotToAngle(m_basePivot, 60),
+						new Intaking(m_intake),
 						new ParallelCommandGroup(
 								new ParallelRaceGroup(
 										new WaitCommand(.3),

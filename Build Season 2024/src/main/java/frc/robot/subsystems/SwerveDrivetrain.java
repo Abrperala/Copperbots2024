@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class SwerveDrivetrain extends SubsystemBase {
     private static final Translation2d[] WHEEL_POSITIONS = Arrays.copyOf(Constants.moduleTranslations,
             Constants.moduleTranslations.length);;
-
+    public boolean teleop = false;
     public SwerveModule[] m_swerveMods;
     public AHRS m_gyro;
     public AutoBuilder autoBuilder;
@@ -344,12 +344,14 @@ public class SwerveDrivetrain extends SubsystemBase {
     public void periodic() {
         poseEstimator.update(getYaw(), getModulePositions());
 
-        final Pose2d estimatedPose = m_limeLight
-                .getPose2DFromAlliance();
-        if (m_limeLight.getFid() != -1) {
-            poseEstimator.addVisionMeasurement(estimatedPose,
-                    m_limeLight.getTimeStamp());
-        }
+        // final Pose2d estimatedPose = m_limeLight
+        // .getPose2DFromAlliance();
+        // if (m_limeLight.getFid() != -1) {
+        // if (DriverStation.isTeleop()) {
+        // poseEstimator.addVisionMeasurement(estimatedPose,
+        // m_limeLight.getTimeStamp());
+        // }
+        // }
 
         for (SwerveModule mod : m_swerveMods) {
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",

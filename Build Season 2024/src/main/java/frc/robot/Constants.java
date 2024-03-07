@@ -90,7 +90,7 @@ public final class Constants {
 
         /* Chosen Module */
         public static final COTSFalconSwerveConstants chosenModule = COTSFalconSwerveConstants
-                        .SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDS_MK4i_L2_Plus);
+                        .SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
         /* Gyro reversed */
         public static final boolean INVERT_GYRO = false;
@@ -103,7 +103,7 @@ public final class Constants {
         public static final double AZIMUTH_D = chosenModule.angleKD;
 
         /* Drive Motor PID Values */
-        public static final double DRIVE_P = 0.12;
+        public static final double DRIVE_P = 0.1;
         public static final double DRIVE_I = 0.0;
         public static final double DRIVE_D = 0.0;
         public static final double DRIVE_F = 0.0;
@@ -147,13 +147,13 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
                         Math.PI, (Math.PI * Math.PI));
 
-        public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(21.8);
-        public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(21.8);
+        public static final double DRIVETRAIN_WIDTH = Units.inchesToMeters(21.75);
+        public static final double DRIVETRAIN_LENGTH = Units.inchesToMeters(21.75);
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         public static final double DRIVEBASE_RADIUS = Units
-                        .inchesToMeters(15.4149278299);
+                        .inchesToMeters(14.67247);
 
         /* Swerve Kinematics */
         public static final Translation2d[] moduleTranslations = new Translation2d[] {
@@ -236,8 +236,8 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(-45)));
 
         /* Auto PID Constants */
-        public static final double kPXController = 6;
-        public static final double kPYController = 3;
+        public static final double kPXController = 2;
+        public static final double kPYController = 2;
         public static final double kPThetaController = 1;
 
         /* Pathplanner Auton Config */
@@ -246,7 +246,7 @@ public final class Constants {
                         new PIDConstants(kPYController, 0, 0), // Rotation constants
                         MAX_SPEED,
                         Constants.DRIVEBASE_RADIUS, // Drive base radius (distance from center to furthest module)
-                        new ReplanningConfig());
+                        new ReplanningConfig(false, false));
 
         // Shooter Constants
         public static final int SHOOT1_ID = 13;
