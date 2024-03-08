@@ -344,14 +344,18 @@ public class SwerveDrivetrain extends SubsystemBase {
     public void periodic() {
         poseEstimator.update(getYaw(), getModulePositions());
 
-        // final Pose2d estimatedPose = m_limeLight
-        // .getPose2DFromAlliance();
-        // if (m_limeLight.getFid() != -1) {
-        // if (DriverStation.isTeleop()) {
-        // poseEstimator.addVisionMeasurement(estimatedPose,
-        // m_limeLight.getTimeStamp());
-        // }
-        // }
+        final Pose2d estimatedPose = m_limeLight
+                .getPose2DFromAlliance();
+        if (m_limeLight.getFid() != -1) {
+            if (DriverStation.isTeleop()) {
+                if (!DriverStation.isDisabled()) {
+                    if (!DriverStation.isAutonomous()) {
+                        poseEstimator.addVisionMeasurement(estimatedPose,
+                                m_limeLight.getTimeStamp());
+                    }
+                }
+            }
+        }
 
         for (SwerveModule mod : m_swerveMods) {
             SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",
