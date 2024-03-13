@@ -9,33 +9,33 @@ import com.ctre.phoenix.led.CANdleConfiguration;
 
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Candle extends SubsystemBase {
-    // private final CANdle m_candle = new CANdle(Constants.CANdleID, "DriveBus");
+    private final CANdle m_candle;
     // change for git test?
     public LEDState ledstate;
 
     public Candle() {
-
+        m_candle = new CANdle(Constants.CANdleID, "DriveBus");
         CANdleConfiguration configAll = new CANdleConfiguration();
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
         configAll.stripType = LEDStripType.RGB;
-        configAll.brightnessScalar = .2;
+        configAll.brightnessScalar = .5;
 
-        // m_candle.configAllSettings(configAll, 100);
-        // m_candle.clearAnimation(0);
+        m_candle.configAllSettings(configAll, 100);
+        m_candle.clearAnimation(0);
         ledstate = LEDState.GREEN;
         setLEDSTate(ledstate);
     }
 
     public void setLEDSTate(LEDState state) {
-
         ledstate = state;
-        // m_candle.setLEDs(state.r, state.g, state.b);
+
+        m_candle.setLEDs(state.r, state.g, state.b);
     }
 
     public LEDState getLEDState() {
@@ -54,7 +54,8 @@ public class Candle extends SubsystemBase {
         BLACK(Constants.NONE_R, Constants.NONE_G, Constants.NONE_B),
         WHITE(Constants.WHITE_R, Constants.WHITE_G, Constants.WHITE_B),
         COPPER(Constants.COPPER_R, Constants.COPPER_G, Constants.COPPER_B),
-        PINK(255, 50, 193)
+        PINK(255, 50, 193),
+        BLUE(0, 0, 225)
 
         ;
 

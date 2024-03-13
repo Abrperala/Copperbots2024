@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4,
-        "y": 5.5
+        "x": 0.8,
+        "y": 6.65
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.334724185117885,
-        "y": 7.063269283233724
+        "x": 1.5484258843161562,
+        "y": 6.965742169945878
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.31703315828284,
-        "y": 5.788606449007769
+        "x": 2.820141697290522,
+        "y": 6.9515776086184005
       },
       "prevControl": {
-        "x": 8.176703304973561,
-        "y": 5.6482765956984915
+        "x": 2.915504249850826,
+        "y": 6.953007831140476
       },
       "nextControl": {
-        "x": 8.402167887686018,
-        "y": 5.8737411784109455
+        "x": 2.3904579085254327,
+        "y": 6.945133323985037
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.4,
-        "y": 5.5
+        "x": 0.8,
+        "y": 6.65
       },
       "prevControl": {
-        "x": 7.837572826142803,
-        "y": 6.9346335843668845
+        "x": 1.3003472136117118,
+        "y": 6.643472384099827
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,29 +46,34 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -30.0,
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 60.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 60.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4PieceCenter",
+  "folder": "3PieceAmp",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 60.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

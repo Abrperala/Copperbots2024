@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,6 +37,14 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    SignalLogger.setPath("/media/sda1/ctre-logs/");
+
+    // Starts recording to data log
+    DataLogManager.start();
+
+    // Record both DS control and joystick data
+    DriverStation.startDataLog(DataLogManager.getLog());
+
   }
 
   /**
@@ -61,6 +73,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.addAutonOptions();
+    SignalLogger.stop();
   }
 
   @Override
@@ -75,7 +88,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    SignalLogger.start();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -96,6 +109,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    SignalLogger.start();
   }
 
   /** This function is called periodically during operator control. */

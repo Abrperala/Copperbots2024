@@ -121,7 +121,7 @@ public final class Constants {
         public static final double AZIMUTH_CURRENT_THRESHOLD_TIME = 0.1;
         public static final boolean AZIMUTH_ENABLE_CURRENT_LIMIT = true;
 
-        public static final int DRIVE_CURRENT_LIMIT = 35;
+        public static final int DRIVE_CURRENT_LIMIT = 40;
         public static final int DRIVE_CURRENT_THRESHOLD = 60;
         public static final double DRIVE_CURRENT_THRESHOLD_TIME = 0.1;
         public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
@@ -253,8 +253,8 @@ public final class Constants {
         public static final int SHOOT2_ID = 14;
         public static final int INTAKE_ID = 15;
 
-        public static double SHOOTER_GEARING = 1 / 1.5;
-        public static double SHOOTER_TARGET_RPM = 4000;
+        public static double SHOOTER_GEARING = 1.5 / 1;
+        public static double SHOOTER_TARGET_RPM = 8500;
         public static double SHOOTER_FREE_RPM = 6300 * SHOOTER_GEARING;
 
         // Pivot Constants

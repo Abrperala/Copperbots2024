@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -15,31 +17,33 @@ public class Shooter extends SubsystemBase {
     public TalonFX bottomShooter;
     public VelocityVoltage m_request;
     private VelocityDutyCycle shooterVelocity = new VelocityDutyCycle(0);
+    private TalonFXConfiguration shooterConfigs;
 
     public Shooter() {
         topShooter = new TalonFX(Constants.SHOOT1_ID);
         bottomShooter = new TalonFX(Constants.SHOOT2_ID);
+        shooterConfigs = new TalonFXConfiguration();
 
         m_request = new VelocityVoltage(0).withSlot(0);
 
-        var slot0Configs = new Slot0Configs();
-        slot0Configs.kS = 0.05; // Add 0.05 V output to overcome static friction
-        slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-        slot0Configs.kP = 0.11; // An error of 1 rps results in 0.11 V output
-        slot0Configs.kI = 0; // no output for integrated error
-        slot0Configs.kD = 0; // no output for error derivative
+        shooterConfigs.Slot0.kS = 0.05;
+        shooterConfigs.Slot0.kV = 0.12;
+        shooterConfigs.Slot0.kP = 0.11;
+        shooterConfigs.Slot0.kI = 0.0;
+        shooterConfigs.Slot0.kD = 0.0;
+        shooterConfigs.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 2;
+        shooterConfigs.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 1;
 
-        topShooter.getConfigurator().apply(slot0Configs);
-        bottomShooter.getConfigurator().apply(slot0Configs);
-
+        topShooter.getConfigurator().apply(shooterConfigs);
+        bottomShooter.getConfigurator().apply(shooterConfigs);
         topShooter.setInverted(false);
         bottomShooter.setInverted(true);
         topShooter.setNeutralMode(NeutralModeValue.Coast);
         bottomShooter.setNeutralMode(NeutralModeValue.Coast);
+
     }
 
     public void shooterRun(double velocity) {
-
         shooterVelocity.Velocity = velocity;
         topShooter.setControl(shooterVelocity);
         bottomShooter.setControl(shooterVelocity);

@@ -9,6 +9,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.StarboardClimber;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.TopPivot;
+import frc.robot.subsystems.Candle.LEDState;
 
 import java.util.Map;
 
@@ -23,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -68,7 +68,6 @@ public class RobotContainer {
 
 	private final JoystickButton isEvading = new JoystickButton(driver, 5);
 	private final JoystickButton isRotatingFast = new JoystickButton(driver, 6);
-
 	private final POVButton isLocked = new POVButton(driver, 180);
 
 	/**
@@ -205,10 +204,10 @@ public class RobotContainer {
 						() -> isLocked.getAsBoolean(),
 						() -> isRotatingFast.getAsBoolean()));
 
-		m_basePivot.setDefaultCommand(
-				new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
-		m_topPivot.setDefaultCommand(
-				new ManualTopPivot(m_topPivot, () -> -operator.getRawAxis(5)));
+		// m_basePivot.setDefaultCommand(
+		// new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
+		// m_topPivot.setDefaultCommand(
+		// new ManualTopPivot(m_topPivot, () -> -operator.getRawAxis(5)));
 
 	}
 
@@ -216,7 +215,7 @@ public class RobotContainer {
 
 		// TODO: change buttons for comp
 
-		new JoystickButton(driver, 14).onTrue(
+		new JoystickButton(operator, 1).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetLeds(m_candle, Candle.LEDState.YELLOW),
@@ -229,26 +228,34 @@ public class RobotContainer {
 		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
 		// button to toggle shooter
-		new JoystickButton(operator, 14).onTrue(
-				new ConditionalCommand(
-						new ShootToRPM(m_shooter),
-						new StopShooter(m_shooter),
-						m_shooter::shooterNotRunning));
+		new JoystickButton(driver, 13).onTrue(
+				new ParallelCommandGroup(
+						new ShootToLob(m_shooter),
+						new SetLeds(m_candle, LEDState.RED)));
 
-		new JoystickButton(operator, 1).onTrue(
-				new SequentialCommandGroup(
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -52),
+		new JoystickButton(driver, 13).onFalse(
+				new ParallelCommandGroup(
+						new StopShooter(m_shooter),
+						new SetLeds(m_candle, LEDState.GREEN)));
+
+		new JoystickButton(operator, 2).onTrue(
+				new ParallelCommandGroup(
 						new ShootToRPM(m_shooter),
-						new FeedShot(m_intake),
-						new StopShooter(m_shooter)));
+						new SetLeds(m_candle, LEDState.RED)));
+
+		new JoystickButton(operator, 2).onFalse(
+				new ParallelCommandGroup(
+						new StopShooter(m_shooter),
+						new SetLeds(m_candle, LEDState.GREEN)));
 
 		// button to ground intake
 		new JoystickButton(driver, 1).onTrue(
 				new SequentialCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.ORANGE),
 						new SetTopPivotToAngle(m_topPivot, 36),
 						new SetBasePivotToAngle(m_basePivot, -10),
 						new Intaking(m_intake),
+						new SetLeds(m_candle, Candle.LEDState.GREEN),
 						new ParallelCommandGroup(
 								new ParallelRaceGroup(
 										new WaitCommand(.2),
@@ -268,18 +275,26 @@ public class RobotContainer {
 
 				new SequentialCommandGroup(
 						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetLeds(m_candle, Candle.LEDState.GREEN),
+						new SetTopPivotToAngle(m_topPivot, -52)));
+
+		new JoystickButton(driver, 2).onTrue(
+				new SequentialCommandGroup(
+						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetTopPivotToAngle(m_topPivot, -52)));
 
 		// Button to Score in Amp
 		// top 21, bottom 66, to top 53, 135 bottom, 67 top, 122 bottom, 92 top
 		new JoystickButton(driver, 3).onTrue(
 				new SequentialCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.YELLOW),
 						new SetTopPivotToAngle(m_topPivot, 5),
 						new SetBasePivotToAngle(m_basePivot, 70),
 						new OutTaking(m_intake),
 						new WaitCommand(.3),
 						new SetTopPivotToAngle(m_topPivot, 23),
 						new StopIntake(m_intake),
+						new SetLeds(m_candle, Candle.LEDState.GREEN),
 						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetTopPivotToAngle(m_topPivot, 0))
 
@@ -287,12 +302,14 @@ public class RobotContainer {
 
 		new POVButton(operator, 270).onTrue(
 				new SequentialCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.YELLOW),
 						new SetTopPivotToAngle(m_topPivot, 5),
 						new SetBasePivotToAngle(m_basePivot, 70),
 						new OutTaking(m_intake),
 						new WaitCommand(.3),
 						new SetTopPivotToAngle(m_topPivot, 23),
 						new StopIntake(m_intake),
+						new SetLeds(m_candle, Candle.LEDState.GREEN),
 						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetTopPivotToAngle(m_topPivot, 0))
 
@@ -307,9 +324,11 @@ public class RobotContainer {
 		// button for source intake top 85, bottom 60
 		new POVButton(operator, 0).onTrue(
 				new SequentialCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.ORANGE),
 						new SetTopPivotToAngle(m_topPivot, 85),
 						new SetBasePivotToAngle(m_basePivot, 60),
 						new Intaking(m_intake),
+						new SetLeds(m_candle, Candle.LEDState.GREEN),
 						new ParallelCommandGroup(
 								new ParallelRaceGroup(
 										new WaitCommand(.2),
@@ -319,13 +338,22 @@ public class RobotContainer {
 										new SetTopPivotToAngle(m_topPivot, -52)))));
 
 		new JoystickButton(driver, 7).whileTrue(
-				new OutTaking(m_intake));
+				new ParallelCommandGroup(
+						new OutTaking(m_intake),
+						new SetLeds(m_candle, LEDState.BLUE)));
 
 		new JoystickButton(driver, 7).onFalse(
-				new StopIntake(m_intake));
+				new ParallelCommandGroup(
+						new StopIntake(m_intake),
+						new SetLeds(m_candle, LEDState.GREEN)));
 
 		new JoystickButton(driver, 8).whileTrue(
-				new ManualIntaking(m_intake));
+				new ParallelCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.ORANGE),
+						new ManualIntaking(m_intake)));
+
+		new JoystickButton(driver, 8).onFalse(
+				new SetLeds(m_candle, Candle.LEDState.GREEN));
 
 		new JoystickButton(operator, 6).whileTrue(
 				new StarboardClimb(m_starboardClimb, -.5));
@@ -375,7 +403,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Arm To Intake",
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 40),
-						new SetBasePivotToAngle(m_basePivot, -12)));
+						new SetBasePivotToAngle(m_basePivot, -10)));
 		NamedCommands.registerCommand("Arm To Intake Shot",
 				new SequentialCommandGroup(
 						new KeepTopPivotToAngle(m_topPivot, 55)));
@@ -402,7 +430,8 @@ public class RobotContainer {
 		SmartDashboard.putData("Auto mode", m_autoChooser);
 		// should confirm your selection for Auton, Im pretty sure it will just show me
 		// a button like last time instead of the name of the Auton
-		SmartDashboard.putString("Chosen Auton?", m_autoChooser.getSelected().toString());
+		// SmartDashboard.putString("Chosen Auton?",
+		// m_autoChooser.getSelected().toString());
 
 	}
 
@@ -410,7 +439,7 @@ public class RobotContainer {
 		m_autoChooser.setDefaultOption("none", new InstantCommand() {
 		});
 		m_autoChooser.addOption("1 piece center", AutoBuilder.buildAuto("1 Piece Center"));
-		m_autoChooser.addOption("4 piece center", AutoBuilder.buildAuto("4 Piece Center"));
+		m_autoChooser.addOption("5 piece center", AutoBuilder.buildAuto("5 Piece Center"));
 		m_autoChooser.addOption("3 Piece Source", AutoBuilder.buildAuto("3 Piece Source"));
 		m_autoChooser.addOption("Shoot Only", new SequentialCommandGroup(
 				new SetBasePivotToAngle(m_basePivot, 90),
@@ -418,8 +447,9 @@ public class RobotContainer {
 				new ShootToRPM(m_shooter),
 				new FeedShot(m_intake),
 				new StopShooter(m_shooter)));
-		m_autoChooser.addOption("fixed 4 Piece Center", AutoBuilder.buildAuto("4 Piece Center Non-Miss"));
 		m_autoChooser.addOption("1 Piece Source", AutoBuilder.buildAuto("1 Piece Source"));
+		m_autoChooser.addOption("BB 5 Piece Center", AutoBuilder.buildAuto("BB 5 Piece Center"));
+		m_autoChooser.addOption("3 Piece Amp", AutoBuilder.buildAuto("3 Piece Amp"));
 
 	}
 
@@ -446,7 +476,6 @@ public class RobotContainer {
 		EIGHTTEEN,
 		NINETEEN,
 		TWENTY
-
 	}
 
 	// An example selector method for the selectcommand. Returns the selector that

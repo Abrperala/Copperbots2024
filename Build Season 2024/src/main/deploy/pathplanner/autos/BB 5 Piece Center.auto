@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.48
+      "x": 1.35,
+      "y": 5.5
     },
-    "rotation": 0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -53,9 +53,61 @@
                 }
               },
               {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 3.0
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.7
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "BB Special Path 1"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "Arm To Intake Shot"
                 }
               },
               {
@@ -63,31 +115,57 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 1.0
+                        "name": "Feed Shot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm To Intake"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 3.0
+                            }
+                          }
+                        ]
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "4pc 1st Path"
+                        "pathName": "BB Special Path 2"
                       }
                     }
                   ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 2nd Path"
                 }
               }
             ]
@@ -130,28 +208,35 @@
                 }
               },
               {
-                "type": "named",
+                "type": "race",
                 "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 3rdPath"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 4th Path"
+                  "commands": [
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 5.0
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "BB Special Path 3"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -190,32 +275,39 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Arm To Intake"
+                  "name": "Top Arm To Intake"
                 }
               },
               {
-                "type": "named",
+                "type": "race",
                 "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 5th Path"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 6th Path"
+                  "commands": [
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 5.0
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "BB Special Path 4"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -232,80 +324,9 @@
                 }
               },
               {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Feed Shot"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
                 "type": "named",
                 "data": {
-                  "name": "Arm To Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 7th Path"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4pc 8th Path"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Arm To Intake Shot"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Feed Shot"
-                      }
-                    }
-                  ]
+                  "name": "Feed Shot"
                 }
               }
             ]

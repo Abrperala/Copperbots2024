@@ -42,7 +42,7 @@ public final class CTREConfigs {
         /* Current Limiting */
         var driveCurrentLimits = swerveDriveFXConfig.CurrentLimits;
         driveCurrentLimits.SupplyCurrentLimitEnable = Constants.DRIVE_ENABLE_CURRENT_LIMIT;
-        driveCurrentLimits.SupplyCurrentLimit = Constants.DRIVE_CURRENT_THRESHOLD_TIME;
+        driveCurrentLimits.SupplyCurrentLimit = Constants.DRIVE_CURRENT_LIMIT;
         driveCurrentLimits.SupplyCurrentThreshold = Constants.DRIVE_CURRENT_THRESHOLD;
         driveCurrentLimits.SupplyTimeThreshold = Constants.DRIVE_CURRENT_THRESHOLD_TIME;
 

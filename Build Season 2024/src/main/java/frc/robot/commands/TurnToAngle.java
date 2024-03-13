@@ -32,7 +32,7 @@ public class TurnToAngle extends Command {
    */
   @Override
   public void execute() {
-    pid = new PIDController(.0001, 0, 0);
+    pid = new PIDController(.01, 0, 0);
     if (Math.abs(goalAngle.getAsDouble() - m_drivetrain.getPose().getRotation().getDegrees()) < 1) {
       m_targetSpeeds = new ChassisSpeeds();
     } else {

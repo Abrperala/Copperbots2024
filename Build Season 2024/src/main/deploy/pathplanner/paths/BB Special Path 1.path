@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 1.35,
+        "y": 5.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0000000000000018,
-        "y": 0.0
+        "x": 2.3499999999999996,
+        "y": 5.5
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 2.7323938733388164,
+        "y": 5.531335051274091
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 2.3521533028814297,
+        "y": 5.531335051274091
+      },
+      "nextControl": {
+        "x": 2.896529152545809,
+        "y": 5.531335051274091
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.35,
+        "y": 5.5
+      },
+      "prevControl": {
+        "x": 1.8724432243736313,
+        "y": 5.482908153850496
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,8 +48,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,10 +59,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "BB Special",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

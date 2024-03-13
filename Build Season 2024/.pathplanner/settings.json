@@ -5,8 +5,10 @@
   "pathFolders": [
     "1PieceCenter",
     "2PieceDisruptSource",
+    "3Piece Source",
     "4PieceCenter",
-    "3Piece Source"
+    "BB Special",
+    "3PieceAmp"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

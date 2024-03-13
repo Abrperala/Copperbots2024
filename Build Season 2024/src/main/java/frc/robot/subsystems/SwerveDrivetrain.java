@@ -41,9 +41,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public SwerveDrivetrain() {
         m_gyro = new AHRS(SPI.Port.kMXP);
-        while (m_gyro.isCalibrating())
-            ;
-        Timer.delay(5);
+
         m_gyro.reset();
         System.out.println("NavX MXP has been reset!");
 
@@ -332,8 +330,20 @@ public class SwerveDrivetrain extends SubsystemBase {
         double height = Constants.HEIGHT_TO_SPEAKER_TARGET
                 - (Constants.LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT + Constants.HEIGHT_FROM_FLOOR_TO_1ST_PIVOT);
         double output = Units.radiansToDegrees(Math.atan(Units.inchesToMeters(height) / getDistanceFromSpeaker()));
-
+        if (output < 46) {
+            output = output - 2;
+        }
+        if (output < 22) {
+            output = output + 1;
+        }
+        if (output < 20) {
+            output = output + 1;
+        }
+        if (output < 18) {
+            output = output + 1;
+        }
         return -output;
+
     }
 
     public double getAverageofMethods() {
@@ -368,7 +378,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
-        SmartDashboard.putNumber("real robot pose rot", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("real robot pose rot",
+                getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
         SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
         SmartDashboard.putNumber("angle To Face Speaker", getAngleToFaceSpeaker());
