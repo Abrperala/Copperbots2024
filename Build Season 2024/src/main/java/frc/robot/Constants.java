@@ -236,7 +236,7 @@ public final class Constants {
                         new Rotation2d(Math.toRadians(-45)));
 
         /* Auto PID Constants */
-        public static final double kPXController = 2;
+        public static final double kPXController = 2.5;
         public static final double kPYController = 2;
         public static final double kPThetaController = 1;
 
@@ -254,7 +254,7 @@ public final class Constants {
         public static final int INTAKE_ID = 15;
 
         public static double SHOOTER_GEARING = 1.5 / 1;
-        public static double SHOOTER_TARGET_RPM = 8500;
+        public static double SHOOTER_TARGET_RPM = 7500;
         public static double SHOOTER_FREE_RPM = 6300 * SHOOTER_GEARING;
 
         // Pivot Constants

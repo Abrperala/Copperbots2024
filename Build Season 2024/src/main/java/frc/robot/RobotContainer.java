@@ -206,8 +206,14 @@ public class RobotContainer {
 
 		// m_basePivot.setDefaultCommand(
 		// new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
-		// m_topPivot.setDefaultCommand(
-		// new ManualTopPivot(m_topPivot, () -> -operator.getRawAxis(5)));
+		m_topPivot.setDefaultCommand(
+				new ConditionalCommand(
+						new ConditionalCommand(
+								new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+								new InstantCommand(),
+								m_drivetrain::isInWing),
+						new InstantCommand(),
+						m_basePivot::isIntaking));
 
 	}
 
@@ -218,7 +224,7 @@ public class RobotContainer {
 		new JoystickButton(operator, 1).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
-								new SetLeds(m_candle, Candle.LEDState.YELLOW),
+								new SetLeds(m_candle, Candle.LEDState.RED),
 								m_selectCommand,
 								new SetLeds(m_candle, Candle.LEDState.GREEN)),
 
@@ -272,7 +278,6 @@ public class RobotContainer {
 
 		// sets angle to infront of speaker
 		new POVButton(operator, 90).onTrue(
-
 				new SequentialCommandGroup(
 						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetLeds(m_candle, Candle.LEDState.GREEN),
@@ -300,6 +305,7 @@ public class RobotContainer {
 
 		);
 
+		// TODO: find out why so slow
 		new POVButton(operator, 270).onTrue(
 				new SequentialCommandGroup(
 						new SetLeds(m_candle, Candle.LEDState.YELLOW),
@@ -325,15 +331,16 @@ public class RobotContainer {
 		new POVButton(operator, 0).onTrue(
 				new SequentialCommandGroup(
 						new SetLeds(m_candle, Candle.LEDState.ORANGE),
-						new SetTopPivotToAngle(m_topPivot, 85),
-						new SetBasePivotToAngle(m_basePivot, 60),
+						new ParallelCommandGroup(
+								new SetTopPivotToAngle(m_topPivot, 85),
+								new SetBasePivotToAngle(m_basePivot, 60)),
 						new Intaking(m_intake),
 						new SetLeds(m_candle, Candle.LEDState.GREEN),
 						new ParallelCommandGroup(
 								new ParallelRaceGroup(
 										new WaitCommand(.2),
 										new FeedShot(m_intake)),
-								new SequentialCommandGroup(
+								new ParallelCommandGroup(
 										new SetBasePivotToAngle(m_basePivot, 90),
 										new SetTopPivotToAngle(m_topPivot, -52)))));
 
@@ -362,10 +369,10 @@ public class RobotContainer {
 				new PortClimb(m_portClimb, -.5));
 
 		new JoystickButton(operator, 8).whileTrue(
-				new StarboardClimb(m_starboardClimb, .3));
+				new StarboardClimb(m_starboardClimb, .5));
 
 		new JoystickButton(operator, 7).whileTrue(
-				new PortClimb(m_portClimb, .3));
+				new PortClimb(m_portClimb, .5));
 
 	}
 
@@ -428,10 +435,6 @@ public class RobotContainer {
 
 		// allows you to choose the options for Auton
 		SmartDashboard.putData("Auto mode", m_autoChooser);
-		// should confirm your selection for Auton, Im pretty sure it will just show me
-		// a button like last time instead of the name of the Auton
-		// SmartDashboard.putString("Chosen Auton?",
-		// m_autoChooser.getSelected().toString());
 
 	}
 
@@ -440,6 +443,7 @@ public class RobotContainer {
 		});
 		m_autoChooser.addOption("1 piece center", AutoBuilder.buildAuto("1 Piece Center"));
 		m_autoChooser.addOption("5 piece center", AutoBuilder.buildAuto("5 Piece Center"));
+		m_autoChooser.addOption("4 piece center", AutoBuilder.buildAuto("4 Piece Center"));
 		m_autoChooser.addOption("3 Piece Source", AutoBuilder.buildAuto("3 Piece Source"));
 		m_autoChooser.addOption("Shoot Only", new SequentialCommandGroup(
 				new SetBasePivotToAngle(m_basePivot, 90),

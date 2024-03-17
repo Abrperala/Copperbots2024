@@ -24,7 +24,7 @@ public class Candle extends SubsystemBase {
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
         configAll.stripType = LEDStripType.RGB;
-        configAll.brightnessScalar = .5;
+        configAll.brightnessScalar = .7;
 
         m_candle.configAllSettings(configAll, 100);
         m_candle.clearAnimation(0);
