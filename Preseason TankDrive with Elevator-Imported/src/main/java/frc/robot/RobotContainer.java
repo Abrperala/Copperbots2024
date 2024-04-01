@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import frc.robot.commands.GetNote;
 // import frc.robot.commands.SetElevator;
 // import frc.robot.commands.SetElevatorHome;
 import frc.robot.commands.StickDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 // import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = new Drivetrain();
+  private final Limelight m_limelight = new Limelight(); 
 
   // private final Elevator m_elevator = new Elevator();
 
@@ -27,7 +30,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    m_drivetrain.setDefaultCommand(new StickDrive(m_drivetrain, ()->fullControl.getRawAxis(0), ()->fullControl.getRawAxis(5) ));
+    m_drivetrain.setDefaultCommand(new StickDrive(m_drivetrain, ()-> -fullControl.getRawAxis(2), ()-> fullControl.getRawAxis(1) ));
 
   }
 
@@ -35,6 +38,7 @@ public class RobotContainer {
  
     // new JoystickButton(fullControl, 6).onTrue(new SetElevator(m_elevator));
     // new JoystickButton(fullControl, 5).onTrue(new SetElevatorHome(m_elevator));
+    new JoystickButton(fullControl, 1).onTrue(new GetNote(m_drivetrain, m_limelight));
 
   }
 

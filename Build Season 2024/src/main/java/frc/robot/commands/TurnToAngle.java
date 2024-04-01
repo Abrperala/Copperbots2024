@@ -32,7 +32,7 @@ public class TurnToAngle extends Command {
    */
   @Override
   public void execute() {
-    pid = new PIDController(.01, 0, 0);
+    pid = new PIDController(.010, 0.01, 0);
     if (Math.abs(goalAngle.getAsDouble() - m_drivetrain.getPose().getRotation().getDegrees()) < 1) {
       m_targetSpeeds = new ChassisSpeeds();
     } else {
@@ -46,12 +46,11 @@ public class TurnToAngle extends Command {
   }
 
   @Override
-  /**
-   * stops the command when the gyro error is within 0.05%
-   */
+
   public boolean isFinished() {
+    // return Math.abs(goalAngle.getAsDouble() -
+    // m_drivetrain.getPose().getRotation().getDegrees()) < 6;
     return false;
-    // Math.abs(goalAngle - m_drivetrain.getPose().getRotation().getDegrees()) < 1;
   }
 
   /**

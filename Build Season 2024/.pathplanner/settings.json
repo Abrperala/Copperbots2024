@@ -6,9 +6,10 @@
     "1PieceCenter",
     "2PieceDisruptSource",
     "3Piece Source",
+    "3PieceAmp",
     "4PieceCenter",
     "BB Special",
-    "3PieceAmp"
+    "2PieceSource"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

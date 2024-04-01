@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -47,8 +48,7 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 8;
                 public static final int ANGLE_MOTOR_ID = 7;
                 public static final int CANCODER_ID = 12;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(143.701172);
-
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-34.365234 + 180);
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -59,8 +59,7 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 4;
                 public static final int ANGLE_MOTOR_ID = 3;
                 public static final int CANCODER_ID = 10;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(165.498047);
-
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(169.156250);
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -71,7 +70,7 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 6;
                 public static final int ANGLE_MOTOR_ID = 5;
                 public static final int CANCODER_ID = 11;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-41.923828);
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-40.087891);
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -82,7 +81,7 @@ public final class Constants {
                 public static final int DRIVE_MOTOR_ID = 2;
                 public static final int ANGLE_MOTOR_ID = 1;
                 public static final int CANCODER_ID = 9;
-                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(47.197266);
+                public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-129.990234 + 180);
                 public static final SwerveModuleConstants constants = new SwerveModuleConstants(DRIVE_MOTOR_ID,
                                 ANGLE_MOTOR_ID,
                                 CANCODER_ID, ANGLE_OFFSET);
@@ -214,29 +213,29 @@ public final class Constants {
         public static final Pose2d BLUE_SPEAKER_POSE = new Pose2d(0.076, 5.5478, new Rotation2d());
 
         // apriltag 3, 4
-        public static final Pose2d RED_SPEAKER_POSE = new Pose2d(0.076, 2.6622, new Rotation2d());
+        public static final Pose2d RED_SPEAKER_POSE = new Pose2d(16.424, 5.5478, new Rotation2d());
 
         // apriltag 6
-        public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.9, 7.8,
+        public static final Pose2d BLUE_AMP_SCORING_POSITION = new Pose2d(1.9, 7.7,
                         new Rotation2d(Math.toRadians(-90)));
         // apriltag 5
-        public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(1.85, .61,
-                        new Rotation2d(Math.toRadians(90)));
+        public static final Pose2d RED_AMP_SCORING_POSITION = new Pose2d(14.7, 7.7,
+                        new Rotation2d(Math.toRadians(-90)));
         // apriltag 2
         public static final Pose2d BLUE_FAR_SOURCE_POSITION = new Pose2d(15.8, 1.18,
-                        new Rotation2d(Math.toRadians(120)));
+                        new Rotation2d(Math.toRadians(-60)));
         // apriltag 1
         public static final Pose2d BLUE_CLOSE_SOURCE_POSITION = new Pose2d(14.85, .55,
-                        new Rotation2d(Math.toRadians(120)));
+                        new Rotation2d(Math.toRadians(-60)));
         // apriltag 9
-        public static final Pose2d RED_FAR_SOURCE_POSITION = new Pose2d(16.1, 7.03,
-                        new Rotation2d(Math.toRadians(-45)));
+        public static final Pose2d RED_FAR_SOURCE_POSITION = new Pose2d(0.7, 1.18,
+                        new Rotation2d(Math.toRadians(-120)));
         // apriltag 10
-        public static final Pose2d RED_CLOSE_SOURCE_POSITION = new Pose2d(14.8, 7.66,
-                        new Rotation2d(Math.toRadians(-45)));
+        public static final Pose2d RED_CLOSE_SOURCE_POSITION = new Pose2d(1.65, .55,
+                        new Rotation2d(Math.toRadians(-120)));
 
         /* Auto PID Constants */
-        public static final double kPXController = 2.5;
+        public static final double kPXController = 3;
         public static final double kPYController = 2;
         public static final double kPThetaController = 1;
 
@@ -247,6 +246,10 @@ public final class Constants {
                         MAX_SPEED,
                         Constants.DRIVEBASE_RADIUS, // Drive base radius (distance from center to furthest module)
                         new ReplanningConfig(false, false));
+
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(Constants.MAX_SPEED,
+                        Constants.AUTO_MAX_ACCELERATION_MPS_SQUARED, Units.degreesToRadians(540),
+                        Units.degreesToRadians(720));
 
         // Shooter Constants
         public static final int SHOOT1_ID = 13;

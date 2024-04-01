@@ -37,7 +37,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     public AHRS m_gyro;
     public AutoBuilder autoBuilder;
     private final SwerveDrivePoseEstimator poseEstimator;
-    private Limelight m_limeLight = Limelight.getInstance();
+    public Limelight m_limeLight = Limelight.getInstance();
 
     public SwerveDrivetrain() {
         m_gyro = new AHRS(SPI.Port.kMXP);
@@ -308,6 +308,22 @@ public class SwerveDrivetrain extends SubsystemBase {
         return distance;
     }
 
+    public boolean isInWing() {
+        if (GeneralUtils.isAllianceBlue()) {
+            if (getPose().getX() < 4 && 0 < getPose().getX()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (getPose().getX() > 12.5 && getPose().getX() < 16) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     public double getAngleToFaceSpeaker() {
         Pose2d speakerPose;
         if (GeneralUtils.isAllianceBlue()) {
@@ -318,6 +334,11 @@ public class SwerveDrivetrain extends SubsystemBase {
         double x = getPose().getX() - speakerPose.getX();
         double y = getPose().getY() - speakerPose.getY();
         double angle = Units.radiansToDegrees(Math.atan(y / x));
+        if (GeneralUtils.isAllianceBlue()) {
+
+        } else {
+            angle = angle - 180;
+        }
         return angle;
     }
 
@@ -357,34 +378,29 @@ public class SwerveDrivetrain extends SubsystemBase {
         final Pose2d estimatedPose = m_limeLight
                 .getPose2DFromAlliance();
         if (m_limeLight.getFid() != -1) {
-            if (DriverStation.isTeleop()) {
-                if (!DriverStation.isDisabled()) {
-                    if (!DriverStation.isAutonomous()) {
-                        poseEstimator.addVisionMeasurement(estimatedPose,
-                                m_limeLight.getTimeStamp());
-                    }
-                }
-            }
+            poseEstimator.addVisionMeasurement(estimatedPose,
+                    m_limeLight.getTimeStamp());
+
         }
 
-        for (SwerveModule mod : m_swerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",
-                    mod.getCANcoder().getDegrees() - mod.m_angleOffset.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated",
-                    mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity",
-                    mod.getState().speedMetersPerSecond);
-        }
+        // for (SwerveModule mod : m_swerveMods) {
+        // SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",
+        // mod.getCANcoder().getDegrees() - mod.m_angleOffset.getDegrees());
+        // SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated",
+        // mod.getPosition().angle.getDegrees());
+        // SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity",
+        // mod.getState().speedMetersPerSecond);
+        // }
 
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot",
                 getPose().getRotation().getDegrees());
-        SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
-        SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
+        // SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
+        // SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
         SmartDashboard.putNumber("angle To Face Speaker", getAngleToFaceSpeaker());
-        SmartDashboard.putNumber("angle to shoot in speaker",
-                getTrigToScoreInSpeaker());
+        // SmartDashboard.putNumber("angle to shoot in speaker",
+        // getTrigToScoreInSpeaker());
 
     }
 }

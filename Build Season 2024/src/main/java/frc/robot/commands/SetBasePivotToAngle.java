@@ -9,7 +9,7 @@ public class SetBasePivotToAngle extends Command {
 
     private final BasePivot m_basePivot;
     private double m_angle;
-    private Constraints topConstraints = new Constraints(1500, 600);
+    private Constraints topConstraints = new Constraints(3000, 1200);
     private ProfiledPIDController basePID = new ProfiledPIDController(.012, 0, 0, topConstraints);
 
     public SetBasePivotToAngle(BasePivot pivot, double angle) {

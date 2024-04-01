@@ -71,7 +71,8 @@ public class TopPivot extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Bounded Top Pivot Angle", getPivotAngle());
-        SmartDashboard.putNumber("Real Top Pivot Angle", topPivotEncoder.getDistance());
+        // SmartDashboard.putNumber("Real Top Pivot Angle",
+        // topPivotEncoder.getDistance());
 
     }
 }

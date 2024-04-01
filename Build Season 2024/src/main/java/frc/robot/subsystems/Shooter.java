@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
         shooterConfigs.Slot0.kI = 0.0;
         shooterConfigs.Slot0.kD = 0.0;
         shooterConfigs.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 2;
-        shooterConfigs.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 1;
+        shooterConfigs.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = .75;
 
         topShooter.getConfigurator().apply(shooterConfigs);
         bottomShooter.getConfigurator().apply(shooterConfigs);
@@ -81,10 +81,10 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         // SmartDashboard.putBoolean("Shooter Ready?", shooterAtSpeed());
-        SmartDashboard.putNumber("Top Shooter RPM", getTopEncoderVelocity());
-        SmartDashboard.putNumber("Bottom Shooter RPM", getBottomEncoderVelocity());
-        SmartDashboard.putBoolean("Shooter not running?", shooterNotRunning());
-        SmartDashboard.putNumber("shooter setSpeed", getShooterSpeed());
+        // SmartDashboard.putNumber("Top Shooter RPM", getTopEncoderVelocity());
+        // SmartDashboard.putNumber("Bottom Shooter RPM", getBottomEncoderVelocity());
+        // SmartDashboard.putBoolean("Shooter not running?", shooterNotRunning());
+        // SmartDashboard.putNumber("shooter setSpeed", getShooterSpeed());
     }
 
 }

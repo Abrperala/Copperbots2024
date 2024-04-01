@@ -30,7 +30,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("is note present", isNotePresent());
+        SmartDashboard.putBoolean("is note intaked", isNotePresent());
 
     }
 }

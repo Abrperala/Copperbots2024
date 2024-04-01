@@ -9,8 +9,8 @@ public class KeepBasePivotToAngle extends Command {
 
     private final BasePivot m_basePivot;
     private double m_angle;
-    private Constraints topConstraints = new Constraints(1000, 350);
-    private ProfiledPIDController basePID = new ProfiledPIDController(.012, 0, 0, topConstraints);
+    private Constraints topConstraints = new Constraints(3000, 1200);
+    private ProfiledPIDController basePID = new ProfiledPIDController(.01, 0, 0, topConstraints);
 
     public KeepBasePivotToAngle(BasePivot pivot, double angle) {
         this.m_basePivot = pivot;

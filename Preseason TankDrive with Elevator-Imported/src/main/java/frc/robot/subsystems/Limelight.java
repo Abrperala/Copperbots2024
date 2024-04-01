@@ -4,8 +4,7 @@
 
 package frc.robot.subsystems;
 
-import frc.lib.util.GeneralUtils;
-import frc.lib.util.LimelightHelpers;
+import frc.robot.LimelightHelpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,8 +16,6 @@ public class Limelight extends SubsystemBase {
     public Limelight() {
     }
 
-    // set angle 35
-
     public static Limelight instance;
 
     public static Limelight getInstance() {
@@ -28,20 +25,16 @@ public class Limelight extends SubsystemBase {
         return instance;
     }
 
-    public boolean getNoteTV() {
-        return LimelightHelpers.getTV("limelight-note");
-    }
-
-    public double getNoteTX() {
-        return LimelightHelpers.getTX("limelight-note");
-    }
-
-    public double getNoteTY() {
-        return LimelightHelpers.getTY("limelight-note");
-    }
-
     public boolean getTV() {
         return LimelightHelpers.getTV("");
+    }
+
+    public double getTX() {
+        return LimelightHelpers.getTX("");
+    }
+
+    public double getTY() {
+        return LimelightHelpers.getTY("");
     }
 
     public double getFid() {
@@ -69,33 +62,12 @@ public class Limelight extends SubsystemBase {
         return getPose2DFromAlliance().getRotation().getDegrees();
     }
 
-    public boolean hasTargetAprilTag() {
-        if (GeneralUtils.isAllianceBlue()) {
-            if (getFid() == 1 || getFid() == 2 || getFid() == 6 || getFid() == 7 || getFid() == 8) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (getFid() == 5 || getFid() == 9 || getFid() == 10 || getFid() == 3 || getFid() == 4) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("pose x", getX());
-        // SmartDashboard.putNumber("pose y", getY());
-        // SmartDashboard.putNumber("LL rot", getRotation());
         SmartDashboard.putNumber("AprilTag ID #", getFid());
-        // SmartDashboard.putBoolean("Apriltag Present", hasTargetAprilTag());
-        SmartDashboard.putBoolean("Note Present", getNoteTV());
-        SmartDashboard.putNumber("Note x", getNoteTX());
-        SmartDashboard.putNumber("Note Y", getNoteTY());
-
+        SmartDashboard.putBoolean("note Present", getTV());
+        SmartDashboard.putNumber("error x", getTX());
+        SmartDashboard.putNumber("error Y", getTY());
     }
 
 }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.lib.util.GeneralUtils;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -71,6 +72,10 @@ public class SwerveDrive extends Command {
 
         double xAxisFiltered = m_xAxisLimiter.calculate(xAxisSquared);
         double yAxisFiltered = m_yAxisLimiter.calculate(yAxisSquared);
+        if (!GeneralUtils.isAllianceBlue()) {
+            xAxisFiltered = -xAxisFiltered;
+            yAxisFiltered = -yAxisFiltered;
+        }
 
         /* Drive */
         m_swerveDrivetrain.drive(

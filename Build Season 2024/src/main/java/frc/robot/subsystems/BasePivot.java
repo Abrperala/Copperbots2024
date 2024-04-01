@@ -73,10 +73,19 @@ public class BasePivot extends SubsystemBase {
         }
     }
 
+    public boolean isIntaking() {
+        if (getPivotAngle() > 70) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Bounded Bottom Pivot Angle", getPivotAngle());
-        SmartDashboard.putNumber("real Bottom Pivot Angle", basePivotEncoder.getDistance());
+        // SmartDashboard.putNumber("real Bottom Pivot Angle",
+        // basePivotEncoder.getDistance());
     }
 
 }
