@@ -211,34 +211,46 @@ public class RobotContainer {
 						() -> isLocked.getAsBoolean(),
 						() -> isRotatingFast.getAsBoolean()));
 
-		m_basePivot.setDefaultCommand(
-				new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
-		m_topPivot.setDefaultCommand(
-				// new ConditionalCommand(
-				// new ConditionalCommand(
-				// new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
-				// new InstantCommand(),
-				// m_drivetrain::isInWing),
-				// new InstantCommand(),
-				// m_basePivot::isIntaking));
+		// m_basePivot.setDefaultCommand(
+		// 		new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
+		// m_topPivot.setDefaultCommand(
+		// 		// new ConditionalCommand(
+		// 		// new ConditionalCommand(
+		// 		// new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+		// 		// new InstantCommand(),
+		// 		// m_drivetrain::isInWing),
+		// 		// new InstantCommand(),
+		// 		// m_basePivot::isIntaking));
 
-				new ManualTopPivot(m_topPivot, () -> operator.getRawAxis(5)));
+		// 		new ManualTopPivot(m_topPivot, () -> operator.getRawAxis(5)));
 
 	}
 
 	private void configureBindings() {
 
-		// TODO: change buttons for comp
+		new POVButton(operator, 270).onTrue(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								new SetLeds(m_candle, Candle.LEDState.RED),
+								new ShootToLob(m_shooter),
+								new SetTopPivotToAngle(m_topPivot, -1),
+								new SetBasePivotToAngle(m_basePivot, 119)),
+						new WaitCommand(.2),
+						new FeedShot(m_intake),
+						new ParallelCommandGroup(
+								new StopShooter(m_shooter),
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -52),
+								new SetLeds(m_candle, Candle.LEDState.GREEN))));
+		// button to chase note, only use while intake is down -driver touchpad
 		new JoystickButton(driver, 14).onTrue(
 				new SequentialCommandGroup(
 						new ParallelRaceGroup(
 								new GetNote(m_drivetrain),
-								new Intaking(m_intake)),
-						new AutoIntaking(m_intake),
-						new WaitCommand(.1),
-						new StopIntake(m_intake)));
+								new Intaking(m_intake))));
 
-		new JoystickButton(driver, 3).onTrue(
+		// button to score in amp or speaker, uses apriltag -driver Circle
+		new JoystickButton(operator, 1).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetLeds(m_candle, Candle.LEDState.RED),
@@ -248,6 +260,7 @@ public class RobotContainer {
 						new InstantCommand(),
 						m_limelight::hasTargetAprilTag));
 
+		// button to pass -driver d-pad up
 		new POVButton(driver, 0).onTrue(
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
@@ -257,30 +270,47 @@ public class RobotContainer {
 						new FeedShot(m_intake),
 						new StopShooter(m_shooter)));
 
+		// button to shoot note straight up, -driver d-pad right
+		// new POVButton(driver, 90).onTrue(
+		// 		new SequentialCommandGroup(
+		// 				new ParallelCommandGroup(
+		// 						new ShootToRPM(m_shooter),
+		// 						new SetTopPivotToAngle(m_topPivot, -30),
+		// 						new SetBasePivotToAngle(m_basePivot, 50)),
+		// 				new FeedShot(m_intake),
+		// 				new StopShooter(m_shooter),
+		// 				new SetBasePivotToAngle(m_basePivot, 90)));
+
+		// button to zero gyro -driver select
 		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
-		// button to toggle shooter
+		// button to lightly spin shooter wheels -driver playstation symbol on press
 		new JoystickButton(driver, 13).onTrue(
 				new ParallelCommandGroup(
 						new ShootToLob(m_shooter),
 						new SetLeds(m_candle, LEDState.RED)));
 
+		// button to stop lightly spinning the shooter wheels -driver playstation symbol
+		// on release
 		new JoystickButton(driver, 13).onFalse(
 				new ParallelCommandGroup(
 						new StopShooter(m_shooter),
 						new SetLeds(m_candle, LEDState.GREEN)));
 
+		// button to spin shooter wheels to max -operator X button on press
 		new JoystickButton(operator, 2).onTrue(
 				new ParallelCommandGroup(
 						new ShootToRPM(m_shooter),
 						new SetLeds(m_candle, LEDState.RED)));
 
+		// button to stop lightly spinning the shooter wheels -operator X button
+		// on release
 		new JoystickButton(operator, 2).onFalse(
 				new ParallelCommandGroup(
 						new StopShooter(m_shooter),
 						new SetLeds(m_candle, LEDState.GREEN)));
 
-		// button to ground intake
+		// button to ground intake -driver triangle button
 		new JoystickButton(driver, 1).onTrue(
 				new SequentialCommandGroup(
 						new SetLeds(m_candle, Candle.LEDState.ORANGE),
@@ -291,63 +321,47 @@ public class RobotContainer {
 						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetTopPivotToAngle(m_topPivot, -52)));
 
-		// button for operator to set the arms to ground intake, used for traversing
+		// button to set the arms to ground intake -operator d-pad down
 		new POVButton(operator, 180).onTrue(
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 40),
 						new SetBasePivotToAngle(m_basePivot, -10)));
 
-		// sets angle to infront of speaker
+		// sets arm angle to shoot infront of speaker -operator d-pad right
 		new POVButton(operator, 90).onTrue(
 				new SequentialCommandGroup(
 						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetLeds(m_candle, Candle.LEDState.GREEN),
 						new SetTopPivotToAngle(m_topPivot, -52)));
 
+		// sets arm angle to shoot infront of speaker -driver X button
 		new JoystickButton(driver, 2).onTrue(
 				new SequentialCommandGroup(
 						new SetBasePivotToAngle(m_basePivot, 90),
 						new SetTopPivotToAngle(m_topPivot, -52)));
 
-		// Button to Score in Amp
-		// top 21, bottom 66, to top 53, 135 bottom, 67 top, 122 bottom, 92 top, 115
-		// bottom, -6 top
-		// new JoystickButton(driver, 3).onTrue(
+		// Button to score in amp through intake -operator d-pad left
+		// new POVButton(operator, 270).onTrue(
 		// new SequentialCommandGroup(
 		// new SetLeds(m_candle, Candle.LEDState.YELLOW),
-		// new SetTopPivotToAngle(m_topPivot, -5),
-		// new SetBasePivotToAngle(m_basePivot, 120),
-		// new ParallelCommandGroup(
-		// new FeedShot(m_intake),
-		// new ShootToLob(m_shooter),
-		// new WaitCommand(.5)),
-		// new StopShooter(m_shooter),
-		// new SetLeds(m_candle, Candle.LEDState.GREEN))
+		// new SetTopPivotToAngle(m_topPivot, 5),
+		// new SetBasePivotToAngle(m_basePivot, 70),
+		// new OutTaking(m_intake),
+		// new WaitCommand(.3),
+		// new SetTopPivotToAngle(m_topPivot, 23),
+		// new StopIntake(m_intake),
+		// new SetLeds(m_candle, Candle.LEDState.GREEN),
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, 0))
 
 		// );
 
-		new POVButton(operator, 270).onTrue(
-				new SequentialCommandGroup(
-						new SetLeds(m_candle, Candle.LEDState.YELLOW),
-						new SetTopPivotToAngle(m_topPivot, 5),
-						new SetBasePivotToAngle(m_basePivot, 70),
-						new OutTaking(m_intake),
-						new WaitCommand(.3),
-						new SetTopPivotToAngle(m_topPivot, 23),
-						new StopIntake(m_intake),
-						new SetLeds(m_candle, Candle.LEDState.GREEN),
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, 0))
-
-		);
-
-		// button for backup source intake+
+		// button for backup source intake -driver square
 		new JoystickButton(driver, 4).onTrue(
 				new SequentialCommandGroup(
 						new SetTopPivotToAngle(m_topPivot, 86),
 						new SetBasePivotToAngle(m_basePivot, 63)));
 
-		// button for source intake top 85, bottom 60
+		// button for source intake -operator d-pad up
 		new POVButton(operator, 0).onTrue(
 				new SequentialCommandGroup(
 						new SetLeds(m_candle, Candle.LEDState.ORANGE),
@@ -355,10 +369,10 @@ public class RobotContainer {
 								new KeepTopPivotToAngle(m_topPivot, 86),
 								new KeepBasePivotToAngle(m_basePivot, 63),
 								new Intaking(m_intake)),
-						new SetLeds(m_candle, Candle.LEDState.GREEN),
-
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -52)));
+						new ParallelCommandGroup(
+								new SetLeds(m_candle, Candle.LEDState.GREEN),
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -52))));
 
 		new JoystickButton(driver, 7).whileTrue(
 				new ParallelCommandGroup(
@@ -460,6 +474,8 @@ public class RobotContainer {
 		m_autoChooser.addOption("1 piece center", AutoBuilder.buildAuto("1 Piece Center"));
 		m_autoChooser.addOption("5 piece center", AutoBuilder.buildAuto("5 Piece Center"));
 		m_autoChooser.addOption("4 piece center", AutoBuilder.buildAuto("4 Piece Center"));
+		m_autoChooser.addOption("3 piece center", AutoBuilder.buildAuto("3 Piece Center"));
+
 		m_autoChooser.addOption("3 Piece Source", AutoBuilder.buildAuto("3 Piece Source"));
 		m_autoChooser.addOption("Shoot Only", new SequentialCommandGroup(
 				new SetBasePivotToAngle(m_basePivot, 90),
@@ -470,6 +486,68 @@ public class RobotContainer {
 		m_autoChooser.addOption("1 Piece Source", AutoBuilder.buildAuto("1 Piece Source"));
 		m_autoChooser.addOption("BB 5 Piece Center", AutoBuilder.buildAuto("BB 5 Piece Center"));
 		m_autoChooser.addOption("3 Piece Amp", AutoBuilder.buildAuto("3 Piece Amp"));
+		m_autoChooser.addOption("Blue Amp 3 Piece",
+				new SequentialCommandGroup(
+						new ShootToRPM(m_shooter),
+						new ParallelRaceGroup(
+								new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+								new KeepBasePivotToAngle(m_basePivot, 90),
+								new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
+								new SequentialCommandGroup(
+										new ShootToRPM(m_shooter),
+										new WaitCommand(.3),
+										new FeedShot(m_intake),
+										new StopIntake(m_intake))),
+						new ParallelCommandGroup(
+								new SetTopPivotToAngle(m_topPivot, 40),
+								new SetBasePivotToAngle(m_basePivot, -10),
+								new AutoIntaking(m_intake),
+								new SequentialCommandGroup(
+										new WaitCommand(.2),
+										AutoBuilder.pathfindToPose(
+												new Pose2d(2.5, 7, new Rotation2d(Math.toRadians(0))),
+												Constants.PATH_CONSTRAINTS))),
+						new StopIntake(m_intake),
+						new ParallelCommandGroup(
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -52),
+								AutoBuilder.pathfindToPose(new Pose2d(2.3, 6.5, new Rotation2d(Math.toRadians(30))),
+										Constants.PATH_CONSTRAINTS)),
+						new ParallelRaceGroup(
+								new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+								new KeepBasePivotToAngle(m_basePivot, 90),
+								new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
+								new SequentialCommandGroup(
+										new ShootToRPM(m_shooter),
+										new WaitCommand(.8),
+										new FeedShot(m_intake),
+										new StopIntake(m_intake))),
+						new ParallelCommandGroup(
+								new SetTopPivotToAngle(m_topPivot, 40),
+								new SetBasePivotToAngle(m_basePivot, -10),
+								new AutoIntaking(m_intake),
+								AutoBuilder.pathfindToPose(
+										new Pose2d(7, 7.4, new Rotation2d(Math.toRadians(0))),
+										Constants.PATH_CONSTRAINTS)),
+						new ParallelRaceGroup(
+								new GetNote(m_drivetrain),
+								new Intaking(m_intake)),
+						new ParallelCommandGroup(
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, m_drivetrain.getTrigToScoreInSpeaker()),
+								AutoBuilder.pathfindToPose(new Pose2d(1.5, 6.6, new Rotation2d(Math.toRadians(40))),
+										Constants.PATH_CONSTRAINTS)),
+						new ParallelRaceGroup(
+								new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+								new KeepBasePivotToAngle(m_basePivot, 90),
+								new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
+								new SequentialCommandGroup(
+										new ShootToRPM(m_shooter),
+										new WaitCommand(.5),
+										new FeedShot(m_intake),
+										new StopIntake(m_intake),
+										new StopShooter(m_shooter)))));
+
 		m_autoChooser.addOption("Blue Source Side 2 Piece",
 				new SequentialCommandGroup(
 						new ShootToRPM(m_shooter),
@@ -604,6 +682,7 @@ public class RobotContainer {
 								new Intaking(m_intake)),
 						new ParallelCommandGroup(
 								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, m_drivetrain.getTrigToScoreInSpeaker()),
 								AutoBuilder.pathfindToPose(new Pose2d(1.7, 4.64, new Rotation2d(Math.toRadians(-10))),
 										Constants.PATH_CONSTRAINTS)),
 						new ParallelRaceGroup(
@@ -612,7 +691,7 @@ public class RobotContainer {
 								new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
 								new SequentialCommandGroup(
 										new ShootToRPM(m_shooter),
-										new WaitCommand(1),
+										new WaitCommand(.5),
 										new FeedShot(m_intake),
 										new StopIntake(m_intake),
 										new StopShooter(m_shooter)))));
@@ -669,6 +748,7 @@ public class RobotContainer {
 								new Intaking(m_intake)),
 						new ParallelCommandGroup(
 								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, m_drivetrain.getTrigToScoreInSpeaker()),
 								AutoBuilder.pathfindToPose(
 										new Pose2d(14.84, 4.64, new Rotation2d(Math.toRadians(-170))),
 										Constants.PATH_CONSTRAINTS)),
@@ -678,7 +758,7 @@ public class RobotContainer {
 								new TurnToAngle(m_drivetrain, () -> m_drivetrain.getAngleToFaceSpeaker()),
 								new SequentialCommandGroup(
 										new ShootToRPM(m_shooter),
-										new WaitCommand(1),
+										new WaitCommand(.5),
 										new FeedShot(m_intake),
 										new StopIntake(m_intake),
 										new StopShooter(m_shooter)))));

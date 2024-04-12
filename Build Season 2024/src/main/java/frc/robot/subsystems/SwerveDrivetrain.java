@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SwerveDrivetrain extends SubsystemBase {
@@ -40,7 +41,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     public Limelight m_limeLight = Limelight.getInstance();
 
     public SwerveDrivetrain() {
-        m_gyro = new AHRS(SPI.Port.kMXP);
+        m_gyro = new AHRS(SerialPort.Port.kMXP);
 
         m_gyro.reset();
         System.out.println("NavX MXP has been reset!");
@@ -334,11 +335,6 @@ public class SwerveDrivetrain extends SubsystemBase {
         double x = getPose().getX() - speakerPose.getX();
         double y = getPose().getY() - speakerPose.getY();
         double angle = Units.radiansToDegrees(Math.atan(y / x));
-        if (GeneralUtils.isAllianceBlue()) {
-
-        } else {
-            angle = angle - 180;
-        }
         return angle;
     }
 
@@ -396,7 +392,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot",
                 getPose().getRotation().getDegrees());
-        // SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
+        SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
         // SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
         SmartDashboard.putNumber("angle To Face Speaker", getAngleToFaceSpeaker());
         // SmartDashboard.putNumber("angle to shoot in speaker",

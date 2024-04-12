@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.GeneralUtils;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 /**
@@ -32,14 +33,18 @@ public class TurnToAngle extends Command {
    */
   @Override
   public void execute() {
+    double currentAngle = m_drivetrain.getPose().getRotation().getDegrees();
+    if (!GeneralUtils.isAllianceBlue()) {
+      currentAngle = m_drivetrain.m_limeLight.getRedDegrees();
+    }
     pid = new PIDController(.010, 0.01, 0);
-    if (Math.abs(goalAngle.getAsDouble() - m_drivetrain.getPose().getRotation().getDegrees()) < 1) {
+    if (Math.abs(goalAngle.getAsDouble() - currentAngle) < 1) {
       m_targetSpeeds = new ChassisSpeeds();
     } else {
       m_targetSpeeds = new ChassisSpeeds(
           0.0,
           0.0,
-          pid.calculate(m_drivetrain.getPose().getRotation().getDegrees(), goalAngle.getAsDouble()));
+          pid.calculate(currentAngle, goalAngle.getAsDouble()));
     }
 
     m_drivetrain.setChassisSpeeds(m_targetSpeeds);

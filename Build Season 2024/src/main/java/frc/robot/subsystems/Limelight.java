@@ -69,6 +69,10 @@ public class Limelight extends SubsystemBase {
         return getPose2DFromAlliance().getRotation().getDegrees();
     }
 
+    public double getRedDegrees() {
+        return LimelightHelpers.getBotPose2d_wpiRed("").getRotation().getDegrees();
+    }
+
     public boolean hasTargetAprilTag() {
         if (GeneralUtils.isAllianceBlue()) {
             if (getFid() == 1 || getFid() == 2 || getFid() == 6 || getFid() == 7 || getFid() == 8) {
