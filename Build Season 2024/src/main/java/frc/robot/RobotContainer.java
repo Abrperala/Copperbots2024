@@ -212,17 +212,17 @@ public class RobotContainer {
 						() -> isRotatingFast.getAsBoolean()));
 
 		// m_basePivot.setDefaultCommand(
-		// 		new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
-		// m_topPivot.setDefaultCommand(
-		// 		// new ConditionalCommand(
-		// 		// new ConditionalCommand(
-		// 		// new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
-		// 		// new InstantCommand(),
-		// 		// m_drivetrain::isInWing),
-		// 		// new InstantCommand(),
-		// 		// m_basePivot::isIntaking));
+		// new ManualBasePivot(m_basePivot, () -> operator.getRawAxis(1)));
+		m_topPivot.setDefaultCommand(
+				new ConditionalCommand(
+						new ConditionalCommand(
+								new AutoTopPivot(m_topPivot, () -> m_drivetrain.getTrigToScoreInSpeaker()),
+								new InstantCommand(),
+								m_drivetrain::isInWing),
+						new InstantCommand(),
+						m_basePivot::isIntaking));
 
-		// 		new ManualTopPivot(m_topPivot, () -> operator.getRawAxis(5)));
+		// new ManualTopPivot(m_topPivot, () -> operator.getRawAxis(5)));
 
 	}
 
@@ -272,14 +272,14 @@ public class RobotContainer {
 
 		// button to shoot note straight up, -driver d-pad right
 		// new POVButton(driver, 90).onTrue(
-		// 		new SequentialCommandGroup(
-		// 				new ParallelCommandGroup(
-		// 						new ShootToRPM(m_shooter),
-		// 						new SetTopPivotToAngle(m_topPivot, -30),
-		// 						new SetBasePivotToAngle(m_basePivot, 50)),
-		// 				new FeedShot(m_intake),
-		// 				new StopShooter(m_shooter),
-		// 				new SetBasePivotToAngle(m_basePivot, 90)));
+		// new SequentialCommandGroup(
+		// new ParallelCommandGroup(
+		// new ShootToRPM(m_shooter),
+		// new SetTopPivotToAngle(m_topPivot, -30),
+		// new SetBasePivotToAngle(m_basePivot, 50)),
+		// new FeedShot(m_intake),
+		// new StopShooter(m_shooter),
+		// new SetBasePivotToAngle(m_basePivot, 90)));
 
 		// button to zero gyro -driver select
 		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
@@ -410,7 +410,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("AngleForSubwooferShot",
 				new SequentialCommandGroup(
 						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -52)));
+						new SetTopPivotToAngle(m_topPivot, -42)));
 		NamedCommands.registerCommand("Shoot",
 				new SequentialCommandGroup(
 						new ConditionalCommand(

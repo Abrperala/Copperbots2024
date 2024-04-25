@@ -359,6 +359,9 @@ public class SwerveDrivetrain extends SubsystemBase {
         if (output < 18) {
             output = output + 1;
         }
+        if (output > 20) {
+            output = output - 5;
+        }
         return -output;
 
     }
@@ -379,24 +382,24 @@ public class SwerveDrivetrain extends SubsystemBase {
 
         }
 
-        // for (SwerveModule mod : m_swerveMods) {
-        // SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",
-        // mod.getCANcoder().getDegrees() - mod.m_angleOffset.getDegrees());
-        // SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated",
-        // mod.getPosition().angle.getDegrees());
-        // SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity",
-        // mod.getState().speedMetersPerSecond);
-        // }
+        for (SwerveModule mod : m_swerveMods) {
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Angle",
+                    mod.getCANcoder().getDegrees() - mod.m_angleOffset.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Integrated",
+                    mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.m_moduleNumber + " Velocity",
+                    mod.getState().speedMetersPerSecond);
+        }
 
         SmartDashboard.putNumber("real robot pose x", getPose().getX());
         SmartDashboard.putNumber("real robot pose y", getPose().getY());
         SmartDashboard.putNumber("real robot pose rot",
                 getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("Gyro Rot", getYaw().getDegrees());
-        // SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
+        SmartDashboard.putNumber("Distance to Speaker", getDistanceFromSpeaker());
         SmartDashboard.putNumber("angle To Face Speaker", getAngleToFaceSpeaker());
-        // SmartDashboard.putNumber("angle to shoot in speaker",
-        // getTrigToScoreInSpeaker());
+        SmartDashboard.putNumber("angle to shoot in speaker",
+                getTrigToScoreInSpeaker());
 
     }
 }

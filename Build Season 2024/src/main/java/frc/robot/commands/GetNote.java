@@ -32,14 +32,14 @@ public class GetNote extends Command {
 
     @Override
     public void execute() {
-        if (!(Math.abs(m_drivetrain.m_limeLight.getNoteTX()) < 3)) {
+        if (!(Math.abs(m_drivetrain.m_limeLight.getNoteTX()) < 5)) {
             m_targetSpeeds = new ChassisSpeeds(
-                    2,
+                    1,
                     0,
                     calculateXOutput());
         } else {
             m_targetSpeeds = new ChassisSpeeds(
-                    2,
+                    1,
                     0,
                     0);
         }
