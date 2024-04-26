@@ -17,6 +17,7 @@ import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Wrist;
+import frc.robot.Subsystems.Shooter.ShooterState;
 import frc.robot.generated.TunerConstants;
 
 public class RobotContainer {
@@ -139,10 +140,10 @@ public class RobotContainer {
                 // new InstantCommand(intake::outtaking));
 
                 driverTouchpad.whileTrue(
-                                new InstantCommand(shooter::spinShooter));
+                                new InstantCommand(() -> shooter.setShooterState(ShooterState.Amping)));
 
                 driverTouchpad.onFalse(
-                                new InstantCommand(shooter::stopShooter));
+                                new InstantCommand(() -> shooter.setShooterState(ShooterState.Standby)));
 
                 driverCrossButton.whileTrue(drivetrain.applyRequest(() -> brake));
                 driverSquareButton.whileTrue(drivetrain

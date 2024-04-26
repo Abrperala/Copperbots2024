@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
     }
 
     /**
-     * gets the state of the Intake
+     * returns the current state of the intake
      * 
      * @return IntakeState
      */
