@@ -17,6 +17,7 @@ import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Wrist;
+import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.generated.TunerConstants;
 
 public class RobotContainer {
@@ -126,11 +127,11 @@ public class RobotContainer {
                 driverLeftBumper.onFalse(
                                 new InstantCommand(arm::stopTurning));
 
-                // driverTriangle.whileTrue(
-                // new InstantCommand(intake::intaking));
+                driverTriangle.onTrue(
+                                new InstantCommand(() -> intake.setIntakeState(IntakeState.Intaking)));
 
-                // driverTriangle.onFalse(
-                // new InstantCommand(intake::stopIntake));
+                driverTriangle.onFalse(
+                                new InstantCommand(() -> intake.setIntakeState(IntakeState.Standby)));
 
                 // driverCircle.onFalse(
                 // new InstantCommand(intake::stopIntake));
