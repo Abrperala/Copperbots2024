@@ -11,12 +11,15 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Subsystems.Arm;
+import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Wrist;
+import frc.robot.Subsystems.Climb.ClimbState;
 import frc.robot.Subsystems.Shooter.ShooterState;
 import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.generated.TunerConstants;
@@ -31,6 +34,9 @@ public class RobotContainer {
         private final Arm arm = new Arm();
         private final Intake intake = new Intake();
         private final Shooter shooter = new Shooter();
+        private final Climb portClimb = new Climb(22);
+        private final Climb starboardClimb = new Climb(21);
+
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -134,11 +140,21 @@ public class RobotContainer {
                 driverTriangle.onFalse(
                                 new InstantCommand(() -> intake.setIntakeState(IntakeState.Standby)));
 
-                // driverCircle.onFalse(
-                // new InstantCommand(intake::stopIntake));
+                driverCircle.onFalse(
+                                new ParallelCommandGroup(
+                                                new InstantCommand(() -> portClimb.setClimbState(ClimbState.Standby)),
+                                                new InstantCommand(
+                                                                () -> starboardClimb.setClimbState(ClimbState.Standby))
 
-                // driverCircle.whileTrue(
-                // new InstantCommand(intake::outtaking));
+                                ));
+
+                driverCircle.whileTrue(
+                                new ParallelCommandGroup(
+                                                new InstantCommand(() -> portClimb.setClimbState(ClimbState.ClimbUp)),
+                                                new InstantCommand(
+                                                                () -> starboardClimb.setClimbState(ClimbState.ClimbUp))
+
+                                ));
 
                 driverTouchpad.whileTrue(
                                 new InstantCommand(() -> shooter.setShooterState(ShooterState.Amping)));

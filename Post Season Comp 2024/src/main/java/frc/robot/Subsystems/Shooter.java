@@ -47,8 +47,12 @@ public class Shooter extends SubsystemBase {
     public void setShooterState(ShooterState shooterState) {
         m_shooterState = shooterState;
         shooterVelocity.Velocity = m_shooterState.shooterVelocity;
-        shootermotor1Fx.setControl(shooterVelocity);
-        shootermotor2Fx.setControl(shooterVelocity);
+        if (m_shooterState == ShooterState.Standby) {
+            stopShooters();
+        } else {
+            shootermotor1Fx.setControl(shooterVelocity);
+            shootermotor2Fx.setControl(shooterVelocity);
+        }
     };
 
     /**
@@ -58,6 +62,15 @@ public class Shooter extends SubsystemBase {
      */
     public ShooterState getShooterState() {
         return m_shooterState;
+    }
+
+    /**
+     * stops the shooter motors
+     * 
+     */
+    public void stopShooters() {
+        shootermotor1Fx.stopMotor();
+        shootermotor2Fx.stopMotor();
     }
 
     public enum ShooterState {
