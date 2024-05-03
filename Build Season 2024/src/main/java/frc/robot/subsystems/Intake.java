@@ -28,9 +28,14 @@ public class Intake extends SubsystemBase {
         return !beamBreak.get();
     }
 
+    public double getAmps() {
+        return intake.getOutputCurrent();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("is note intaked", isNotePresent());
+        SmartDashboard.putNumber("intake amps", getAmps());
 
     }
 }

@@ -37,13 +37,13 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    SignalLogger.setPath("/media/sda1/ctre-logs/");
+    // SignalLogger.setPath("/media/sda1/ctre-logs/");
 
     // Starts recording to data log
-    DataLogManager.start();
+    // DataLogManager.start();
 
     // Record both DS control and joystick data
-    DriverStation.startDataLog(DataLogManager.getLog());
+    // DriverStation.startDataLog(DataLogManager.getLog());
 
   }
 
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.addAutonOptions();
-    SignalLogger.stop();
+    // SignalLogger.stop();
   }
 
   @Override
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    SignalLogger.start();
+    // SignalLogger.start();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    SignalLogger.start();
+    // SignalLogger.start();
   }
 
   /** This function is called periodically during operator control. */

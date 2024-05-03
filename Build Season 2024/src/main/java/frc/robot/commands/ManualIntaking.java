@@ -19,7 +19,7 @@ public class ManualIntaking extends Command {
 
     @Override
     public void execute() {
-        m_intake.setIntakeSpeed(.5);
+        m_intake.setIntakeSpeed(1);
     }
 
     @Override
