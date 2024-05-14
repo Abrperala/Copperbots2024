@@ -53,6 +53,7 @@ public class RobotContainer {
         private final JoystickButton driverLeftTriggerButton = new JoystickButton(driver, 7);
         private final JoystickButton driverRightTriggerButton = new JoystickButton(driver, 8);
         private final JoystickButton driverTouchpad = new JoystickButton(driver, 14);
+        private final JoystickButton driverOptionsButton = new JoystickButton(driver,  10);
 
         private final POVButton driverTopPov = new POVButton(driver, 0);
         private final POVButton driverTopRightPov = new POVButton(driver, 45);
@@ -66,10 +67,9 @@ public class RobotContainer {
         private void configureBindings() {
 
                 drivetrain.setDefaultCommand(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed)
-                                                .withVelocityY(-driver.getLeftX() * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
+                                drivetrain.applyRequest(() -> drive.withVelocityX(-(driver.getLeftY() * driver.getLeftY() * Math.signum(driver.getLeftY())) * MaxSpeed)
+                                                .withVelocityY(-(driver.getLeftX()* driver.getLeftX() * Math.signum(driver.getLeftX())) * MaxSpeed)
+                                                .withRotationalRate(-(driver.getRightX() * driver.getRightX() * Math.signum(driver.getRightX())) * MaxAngularRate)));
                 driverTopPov.whileTrue(
                                 drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)
                                                 .withVelocityY(0 * MaxSpeed)
@@ -166,6 +166,9 @@ public class RobotContainer {
                 driverSquareButton.whileTrue(drivetrain
                                 .applyRequest(() -> point.withModuleDirection(
                                                 new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+                driverOptionsButton.onTrue(
+                        new InstantCommand(drivetrain::tareEverything)
+                );
 
                 if (Utils.isSimulation()) {
                         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

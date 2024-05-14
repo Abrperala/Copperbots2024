@@ -15,11 +15,11 @@ import java.util.Map;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,6 +63,7 @@ public class RobotContainer {
 	private final PS4Controller driver = new PS4Controller(0);
 	private final PS4Controller operator = new PS4Controller(1);
 	private final PS4Controller testing = new PS4Controller(2);
+	private final PS4Controller limitcontroller = new PS4Controller(3);
 
 	/* Drive Controls */
 	private final int translationAxis = PS4Controller.Axis.kLeftY.value;
@@ -70,7 +71,7 @@ public class RobotContainer {
 	private final int rotationAxis = PS4Controller.Axis.kRightX.value;
 
 	private final JoystickButton isEvading = new JoystickButton(driver, 5);
-	private final JoystickButton isRotatingFast = new JoystickButton(driver, 6);
+	private final JoystickButton isRotatingFast = new JoystickButton(limitcontroller, 6);
 	private final POVButton isLocked = new POVButton(driver, 180);
 
 	/**
@@ -203,9 +204,9 @@ public class RobotContainer {
 		m_drivetrain.setDefaultCommand(
 				new SwerveDrive(
 						m_drivetrain,
-						() -> driver.getRawAxis(translationAxis),
-						() -> driver.getRawAxis(strafeAxis),
-						() -> driver.getRawAxis(rotationAxis),
+						() -> limitcontroller.getRawAxis(translationAxis),
+						() -> limitcontroller.getRawAxis(strafeAxis),
+						() -> limitcontroller.getRawAxis(rotationAxis),
 						() -> false,
 						() -> isEvading.getAsBoolean(),
 						() -> isLocked.getAsBoolean(),
@@ -228,6 +229,100 @@ public class RobotContainer {
 
 	private void configureBindings() {
 
+		/*
+		 * Test/Demo buttons
+		 * 
+		 * 
+		 * 
+		 */
+
+		// // demo button to amp
+		// new JoystickButton(testing, 3).onTrue(
+		// new SequentialCommandGroup(
+		// new ParallelCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.RED),
+		// new ShootToLob(m_shooter),
+		// new SetTopPivotToAngle(m_topPivot, -1),
+		// new SetBasePivotToAngle(m_basePivot, 119)),
+		// new WaitCommand(.2),
+		// new FeedShot(m_intake),
+		// new ParallelCommandGroup(
+		// new StopShooter(m_shooter),
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, -52),
+		// new SetLeds(m_candle, Candle.LEDState.GREEN))));
+
+		// demo button to ground intake
+		new JoystickButton(testing, 1).onTrue(
+				new SequentialCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.ORANGE),
+						new SetTopPivotToAngle(m_topPivot, 36),
+						new SetBasePivotToAngle(m_basePivot, -10),
+						new Intaking(m_intake),
+						new ParallelCommandGroup(
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new RumbleCommand(testing, RumbleType.kBothRumble, 1, 1),
+								new SetLeds(m_candle, Candle.LEDState.GREEN)),
+						new SetTopPivotToAngle(m_topPivot, -52)));
+
+		// demo button to shoot
+		new JoystickButton(testing, 2).onTrue(
+				new ConditionalCommand(
+						new SequentialCommandGroup(
+								new SetLeds(m_candle, Candle.LEDState.RED),
+								m_selectCommand,
+								new SetLeds(m_candle, Candle.LEDState.GREEN)),
+
+						new InstantCommand(),
+						m_limelight::hasTargetAprilTag));
+
+		// new POVButton(testing, 0).onTrue(
+		// new SequentialCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.ORANGE),
+		// new ParallelRaceGroup(
+		// new KeepTopPivotToAngle(m_topPivot, 86),
+		// new KeepBasePivotToAngle(m_basePivot, 63),
+		// new Intaking(m_intake)),
+		// new ParallelCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.GREEN),
+		// new RumbleCommand(testing, RumbleType.kRightRumble, 1, 1),
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, -52))));
+
+		// demo button to zero gyro
+		new JoystickButton(testing, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+
+		new JoystickButton(limitcontroller, 1).onTrue(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								new SetLeds(m_candle, Candle.LEDState.RED),
+								new ShootToLob(m_shooter),
+								new SetTopPivotToAngle(m_topPivot, -10),
+								new SetBasePivotToAngle(m_basePivot, 90)),
+						new WaitCommand(.2),
+						new FeedShot(m_intake),
+						new ParallelCommandGroup(
+								new StopShooter(m_shooter),
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -52),
+								new SetLeds(m_candle, Candle.LEDState.GREEN))));
+
+		new JoystickButton(limitcontroller, 6).whileTrue(
+				new StarboardClimb(m_starboardClimb, -.75));
+
+		new JoystickButton(limitcontroller, 5).whileTrue(
+				new PortClimb(m_portClimb, -.75));
+
+		new JoystickButton(limitcontroller, 8).whileTrue(
+				new StarboardClimb(m_starboardClimb, .75));
+
+		new JoystickButton(limitcontroller, 7).whileTrue(
+				new PortClimb(m_portClimb, .75));
+
+		/*
+		 * end of demo buttons
+		 */
+
 		new POVButton(operator, 270).onTrue(
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
@@ -242,6 +337,7 @@ public class RobotContainer {
 								new SetBasePivotToAngle(m_basePivot, 90),
 								new SetTopPivotToAngle(m_topPivot, -52),
 								new SetLeds(m_candle, Candle.LEDState.GREEN))));
+
 		// button to chase note, only use while intake is down -driver touchpad
 		new JoystickButton(driver, 14).onTrue(
 				new SequentialCommandGroup(
@@ -250,15 +346,15 @@ public class RobotContainer {
 								new Intaking(m_intake))));
 
 		// button to score in amp or speaker, uses apriltag -driver Circle
-		new JoystickButton(operator, 1).onTrue(
-				new ConditionalCommand(
-						new SequentialCommandGroup(
-								new SetLeds(m_candle, Candle.LEDState.RED),
-								m_selectCommand,
-								new SetLeds(m_candle, Candle.LEDState.GREEN)),
+		// new JoystickButton(operator, 1).onTrue(
+		// new ConditionalCommand(
+		// new SequentialCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.RED),
+		// m_selectCommand,
+		// new SetLeds(m_candle, Candle.LEDState.GREEN)),
 
-						new InstantCommand(),
-						m_limelight::hasTargetAprilTag));
+		// new InstantCommand(),
+		// m_limelight::hasTargetAprilTag));
 
 		// button to pass -driver d-pad up
 		new POVButton(driver, 0).onTrue(
@@ -317,8 +413,10 @@ public class RobotContainer {
 						new SetTopPivotToAngle(m_topPivot, 36),
 						new SetBasePivotToAngle(m_basePivot, -10),
 						new Intaking(m_intake),
-						new SetLeds(m_candle, Candle.LEDState.GREEN),
-						new SetBasePivotToAngle(m_basePivot, 90),
+						new ParallelCommandGroup(
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new RumbleCommand(driver, RumbleType.kBothRumble, 1, 1),
+								new SetLeds(m_candle, Candle.LEDState.GREEN)),
 						new SetTopPivotToAngle(m_topPivot, -52)));
 
 		// button to set the arms to ground intake -operator d-pad down
@@ -371,6 +469,7 @@ public class RobotContainer {
 								new Intaking(m_intake)),
 						new ParallelCommandGroup(
 								new SetLeds(m_candle, Candle.LEDState.GREEN),
+								new RumbleCommand(driver, RumbleType.kRightRumble, 1, 1),
 								new SetBasePivotToAngle(m_basePivot, 90),
 								new SetTopPivotToAngle(m_topPivot, -52))));
 

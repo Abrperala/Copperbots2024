@@ -257,7 +257,7 @@ public final class Constants {
         public static final int INTAKE_ID = 15;
 
         public static double SHOOTER_GEARING = 1.5 / 1;
-        public static double SHOOTER_TARGET_RPM = 8000;
+        public static double SHOOTER_TARGET_RPM = 5000;
         public static double SHOOTER_FREE_RPM = 6300 * SHOOTER_GEARING;
 
         // Pivot Constants

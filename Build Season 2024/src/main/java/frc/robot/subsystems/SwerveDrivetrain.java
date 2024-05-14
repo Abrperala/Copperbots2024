@@ -347,21 +347,9 @@ public class SwerveDrivetrain extends SubsystemBase {
         double height = Constants.HEIGHT_TO_SPEAKER_TARGET
                 - (Constants.LENGTH_FROM_1ST_PIVOT_TO_2ND_PIVOT + Constants.HEIGHT_FROM_FLOOR_TO_1ST_PIVOT);
         double output = Units.radiansToDegrees(Math.atan(Units.inchesToMeters(height) / getDistanceFromSpeaker()));
-        if (output < 46) {
-            output = output - 2;
-        }
-        if (output < 22) {
-            output = output + 1;
-        }
-        if (output < 20) {
-            output = output + 1;
-        }
-        if (output < 18) {
-            output = output + 1;
-        }
-        if (output > 20) {
-            output = output - 5;
-        }
+
+        output = output - 3;
+
         return -output;
 
     }

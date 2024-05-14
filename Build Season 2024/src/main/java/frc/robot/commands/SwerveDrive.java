@@ -24,6 +24,7 @@ public class SwerveDrive extends Command {
     private BooleanSupplier m_isEvading;
     private BooleanSupplier m_isLocked;
     private BooleanSupplier m_isRotatingFast;
+    private boolean limitSpeed = false;
 
     public SwerveDrive(SwerveDrivetrain swerveDrivetrain,
             DoubleSupplier translationSup,
@@ -55,16 +56,28 @@ public class SwerveDrive extends Command {
 
         double rotationScalar = 1;
 
-        if (m_isRotatingFast.getAsBoolean()) {
-            rotationScalar = 2;
+        if (m_isRotatingFast.getAsBoolean() && !limitSpeed) {
+
+            limitSpeed = true;
         } else {
-            rotationScalar = 1;
+
+            limitSpeed = false;
         }
 
-        /* Get Values, Deadband */
-        double xAxis = MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.STICK_DEADBAND);
-        double yAxis = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.STICK_DEADBAND);
-        double rAxis = MathUtil.applyDeadband(m_rotationSup.getAsDouble(), Constants.STICK_DEADBAND);
+        double xAxis;
+        double yAxis;
+        double rAxis;
+        if (limitSpeed) {
+            xAxis = MathUtil.applyDeadband(m_translationSup.getAsDouble() * .5, Constants.STICK_DEADBAND);
+            yAxis = MathUtil.applyDeadband(m_strafeSup.getAsDouble() * .5, Constants.STICK_DEADBAND);
+            rAxis = MathUtil.applyDeadband(m_rotationSup.getAsDouble() * .5, Constants.STICK_DEADBAND);
+
+        } else {
+            xAxis = MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.STICK_DEADBAND);
+            yAxis = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.STICK_DEADBAND);
+            rAxis = MathUtil.applyDeadband(m_rotationSup.getAsDouble(), Constants.STICK_DEADBAND);
+
+        }
 
         double xAxisSquared = xAxis * xAxis * Math.signum(xAxis);
         double yAxisSquared = yAxis * yAxis * Math.signum(yAxis);
