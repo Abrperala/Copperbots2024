@@ -39,7 +39,7 @@ public class TunerConstants {
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
-    public static final double kSpeedAt12VoltsMps = 4.73;
+    public static final double kSpeedAt12VoltsMps = 5.203; 
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
@@ -93,7 +93,8 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 8;
     private static final int kFrontLeftSteerMotorId = 7;
     private static final int kFrontLeftEncoderId = 12;
-    private static final double kFrontLeftEncoderOffset = 0.09716796875;
+    private static final double kFrontLeftEncoderOffset = 0.0974121093741;
+    //
 
     private static final double kFrontLeftXPosInches = 10.89;
     private static final double kFrontLeftYPosInches = 10.89;
@@ -102,7 +103,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 4;
     private static final int kFrontRightSteerMotorId = 3;
     private static final int kFrontRightEncoderId = 10;
-    private static final double kFrontRightEncoderOffset = -0.46728515;
+    private static final double kFrontRightEncoderOffset = -0.46337890625;
 
     private static final double kFrontRightXPosInches = 10.89;
     private static final double kFrontRightYPosInches = -10.89;
@@ -111,7 +112,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 6;
     private static final int kBackLeftSteerMotorId = 5;
     private static final int kBackLeftEncoderId = 11;
-    private static final double kBackLeftEncoderOffset = -0.38818359375;
+    private static final double kBackLeftEncoderOffset = -0.3837890625;
 
     private static final double kBackLeftXPosInches = -10.89;
     private static final double kBackLeftYPosInches = 10.89;
@@ -120,7 +121,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 2;
     private static final int kBackRightSteerMotorId = 1;
     private static final int kBackRightEncoderId = 9;
-    private static final double kBackRightEncoderOffset = -0.15307617;
+    private static final double kBackRightEncoderOffset = -0.146240234375;
 
     private static final double kBackRightXPosInches = -10.89;
     private static final double kBackRightYPosInches = -10.89;
