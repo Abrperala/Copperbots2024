@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.NetworkTables;
 
 public class Wrist extends SubsystemBase {
     private TalonFX wristmotorFx;
@@ -44,9 +45,9 @@ public class Wrist extends SubsystemBase {
 
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("wristmotor voltage ", wristmotorFx.getMotorVoltage().getValueAsDouble());
-    }
+//   @Override
+//     public void periodic() {
+//         NetworkTables.updateState("Wrist", getWristState().toString());
+//     }
 
 }

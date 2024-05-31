@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Commands.SeekNote;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
+import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Wrist;
 import frc.robot.Subsystems.Climb.ClimbState;
 import frc.robot.Subsystems.Shooter.ShooterState;
@@ -29,6 +31,8 @@ public class RobotContainer {
         private double MaxAngularRate = 1.5 * Math.PI;
 
         private final PS4Controller driver = new PS4Controller(0);
+        private final PS4Controller testing = new PS4Controller(2);
+
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
         private final Wrist wrist = new Wrist();
         private final Arm arm = new Arm();
@@ -36,6 +40,7 @@ public class RobotContainer {
         private final Shooter shooter = new Shooter();
         private final Climb portClimb = new Climb(22);
         private final Climb starboardClimb = new Climb(21);
+        private final Vision vision = new Vision();
 
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
@@ -53,7 +58,7 @@ public class RobotContainer {
         private final JoystickButton driverLeftTriggerButton = new JoystickButton(driver, 7);
         private final JoystickButton driverRightTriggerButton = new JoystickButton(driver, 8);
         private final JoystickButton driverTouchpad = new JoystickButton(driver, 14);
-        private final JoystickButton driverOptionsButton = new JoystickButton(driver,  10);
+        private final JoystickButton driverOptionsButton = new JoystickButton(driver, 10);
 
         private final POVButton driverTopPov = new POVButton(driver, 0);
         private final POVButton driverTopRightPov = new POVButton(driver, 45);
@@ -64,12 +69,21 @@ public class RobotContainer {
         private final POVButton driverLeftPov = new POVButton(driver, 270);
         private final POVButton driverLeftTopPov = new POVButton(driver, 315);
 
+        private final JoystickButton testingSquareButton = new JoystickButton(testing, 1);
+
         private void configureBindings() {
 
                 drivetrain.setDefaultCommand(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(-(driver.getLeftY() * driver.getLeftY() * Math.signum(driver.getLeftY())) * MaxSpeed)
-                                                .withVelocityY(-(driver.getLeftX()* driver.getLeftX() * Math.signum(driver.getLeftX())) * MaxSpeed)
-                                                .withRotationalRate(-(driver.getRightX() * driver.getRightX() * Math.signum(driver.getRightX())) * MaxAngularRate)));
+                                drivetrain.applyRequest(() -> drive
+                                                .withVelocityX(-(testing.getLeftY() * testing.getLeftY()
+                                                                * Math.signum(testing.getLeftY())) * MaxSpeed)
+                                                .withVelocityY(-(testing.getLeftX() * testing.getLeftX()
+                                                                * Math.signum(testing.getLeftX())) * MaxSpeed)
+                                                .withRotationalRate(-(testing.getRightX() * testing.getRightX()
+                                                                * Math.signum(testing.getRightX())) * MaxAngularRate)));
+
+                testingSquareButton.onTrue(new SeekNote(drivetrain));
+
                 driverTopPov.whileTrue(
                                 drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)
                                                 .withVelocityY(0 * MaxSpeed)
@@ -167,8 +181,7 @@ public class RobotContainer {
                                 .applyRequest(() -> point.withModuleDirection(
                                                 new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
                 driverOptionsButton.onTrue(
-                        new InstantCommand(drivetrain::tareEverything)
-                );
+                                new InstantCommand(drivetrain::tareEverything));
 
                 if (Utils.isSimulation()) {
                         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

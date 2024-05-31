@@ -19,13 +19,6 @@ public class ShootToLob extends Command {
     @Override
     public void execute() {
         m_shooter.shooterRun(20);
-
-    }
-
-    @Override
-    public boolean isFinished() {
-
-        return true;
     }
 
     @Override

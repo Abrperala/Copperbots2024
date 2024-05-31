@@ -204,9 +204,9 @@ public class RobotContainer {
 		m_drivetrain.setDefaultCommand(
 				new SwerveDrive(
 						m_drivetrain,
-						() -> limitcontroller.getRawAxis(translationAxis),
-						() -> limitcontroller.getRawAxis(strafeAxis),
-						() -> limitcontroller.getRawAxis(rotationAxis),
+						() -> testing.getRawAxis(translationAxis),
+						() -> testing.getRawAxis(strafeAxis),
+						() -> testing.getRawAxis(rotationAxis),
 						() -> false,
 						() -> isEvading.getAsBoolean(),
 						() -> isLocked.getAsBoolean(),
@@ -237,23 +237,27 @@ public class RobotContainer {
 		 */
 
 		// // demo button to amp
-		// new JoystickButton(testing, 3).onTrue(
-		// new SequentialCommandGroup(
-		// new ParallelCommandGroup(
-		// new SetLeds(m_candle, Candle.LEDState.RED),
-		// new ShootToLob(m_shooter),
-		// new SetTopPivotToAngle(m_topPivot, -1),
-		// new SetBasePivotToAngle(m_basePivot, 119)),
-		// new WaitCommand(.2),
-		// new FeedShot(m_intake),
-		// new ParallelCommandGroup(
-		// new StopShooter(m_shooter),
-		// new SetBasePivotToAngle(m_basePivot, 90),
-		// new SetTopPivotToAngle(m_topPivot, -52),
-		// new SetLeds(m_candle, Candle.LEDState.GREEN))));
+		new POVButton(testing, 270).onTrue(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								new SequentialCommandGroup(
+										new Intaking(m_intake),
+										new WaitCommand(1),
+										new StopIntake(m_intake)),
+								new SetLeds(m_candle, Candle.LEDState.RED),
+								new ShootToLob(m_shooter),
+								new SetTopPivotToAngle(m_topPivot, -1),
+								new SetBasePivotToAngle(m_basePivot, 119)),
+						new WaitCommand(.2),
+						new FeedShot(m_intake),
+						new ParallelCommandGroup(
+								new StopShooter(m_shooter),
+								new SetBasePivotToAngle(m_basePivot, 90),
+								new SetTopPivotToAngle(m_topPivot, -52),
+								new SetLeds(m_candle, Candle.LEDState.GREEN))));
 
 		// demo button to ground intake
-		new JoystickButton(testing, 1).onTrue(
+		new POVButton(testing, 180).onTrue(
 				new SequentialCommandGroup(
 						new SetLeds(m_candle, Candle.LEDState.ORANGE),
 						new SetTopPivotToAngle(m_topPivot, 36),
@@ -266,7 +270,7 @@ public class RobotContainer {
 						new SetTopPivotToAngle(m_topPivot, -52)));
 
 		// demo button to shoot
-		new JoystickButton(testing, 2).onTrue(
+		new JoystickButton(testing, 1).onTrue(
 				new ConditionalCommand(
 						new SequentialCommandGroup(
 								new SetLeds(m_candle, Candle.LEDState.RED),
@@ -275,6 +279,13 @@ public class RobotContainer {
 
 						new InstantCommand(),
 						m_limelight::hasTargetAprilTag));
+
+		// button to chase note, only use while intake is down -driver touchpad
+		new JoystickButton(testing, 4).onTrue(
+				new SequentialCommandGroup(
+						new ParallelRaceGroup(
+								new GetNote(m_drivetrain),
+								new Intaking(m_intake))));
 
 		// new POVButton(testing, 0).onTrue(
 		// new SequentialCommandGroup(
@@ -292,9 +303,13 @@ public class RobotContainer {
 		// demo button to zero gyro
 		new JoystickButton(testing, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
 
-		new JoystickButton(limitcontroller, 1).onTrue(
+		new JoystickButton(testing, 2).onTrue(
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
+								new SequentialCommandGroup(
+										new Intaking(m_intake),
+										new WaitCommand(1),
+										new StopIntake(m_intake)),
 								new SetLeds(m_candle, Candle.LEDState.RED),
 								new ShootToLob(m_shooter),
 								new SetTopPivotToAngle(m_topPivot, -10),
@@ -307,43 +322,57 @@ public class RobotContainer {
 								new SetTopPivotToAngle(m_topPivot, -52),
 								new SetLeds(m_candle, Candle.LEDState.GREEN))));
 
-		new JoystickButton(limitcontroller, 6).whileTrue(
-				new StarboardClimb(m_starboardClimb, -.75));
+		new JoystickButton(testing, 7).whileTrue(
+				new ParallelCommandGroup(
+						new OutTaking(m_intake),
+						new SetLeds(m_candle, LEDState.BLUE)));
 
-		new JoystickButton(limitcontroller, 5).whileTrue(
-				new PortClimb(m_portClimb, -.75));
+		new JoystickButton(testing, 7).onFalse(
+				new ParallelCommandGroup(
+						new StopIntake(m_intake),
+						new SetLeds(m_candle, LEDState.GREEN)));
 
-		new JoystickButton(limitcontroller, 8).whileTrue(
-				new StarboardClimb(m_starboardClimb, .75));
+		new JoystickButton(testing, 8).whileTrue(
+				new ParallelCommandGroup(
+						new SetLeds(m_candle, Candle.LEDState.ORANGE),
+						new ManualIntaking(m_intake)));
 
-		new JoystickButton(limitcontroller, 7).whileTrue(
-				new PortClimb(m_portClimb, .75));
+		new JoystickButton(testing, 8).onFalse(
+				new SetLeds(m_candle, Candle.LEDState.GREEN));
+
+		// sets arm angle to shoot infront of speaker -operator d-pad right
+		new POVButton(testing, 90).onTrue(
+				new SequentialCommandGroup(
+						new SetBasePivotToAngle(m_basePivot, 90),
+						new SetTopPivotToAngle(m_topPivot, -52),
+						new StopShooter(m_shooter),
+						new StopIntake(m_intake)));
 
 		/*
 		 * end of demo buttons
 		 */
 
-		new POVButton(operator, 270).onTrue(
-				new SequentialCommandGroup(
-						new ParallelCommandGroup(
-								new SetLeds(m_candle, Candle.LEDState.RED),
-								new ShootToLob(m_shooter),
-								new SetTopPivotToAngle(m_topPivot, -1),
-								new SetBasePivotToAngle(m_basePivot, 119)),
-						new WaitCommand(.2),
-						new FeedShot(m_intake),
-						new ParallelCommandGroup(
-								new StopShooter(m_shooter),
-								new SetBasePivotToAngle(m_basePivot, 90),
-								new SetTopPivotToAngle(m_topPivot, -52),
-								new SetLeds(m_candle, Candle.LEDState.GREEN))));
+		// new POVButton(operator, 270).onTrue(
+		// new SequentialCommandGroup(
+		// new ParallelCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.RED),
+		// new ShootToLob(m_shooter),
+		// new SetTopPivotToAngle(m_topPivot, -1),
+		// new SetBasePivotToAngle(m_basePivot, 119)),
+		// new WaitCommand(.2),
+		// new FeedShot(m_intake),
+		// new ParallelCommandGroup(
+		// new StopShooter(m_shooter),
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, -52),
+		// new SetLeds(m_candle, Candle.LEDState.GREEN))));
 
-		// button to chase note, only use while intake is down -driver touchpad
-		new JoystickButton(driver, 14).onTrue(
-				new SequentialCommandGroup(
-						new ParallelRaceGroup(
-								new GetNote(m_drivetrain),
-								new Intaking(m_intake))));
+		// // button to chase note, only use while intake is down -driver touchpad
+		// new JoystickButton(driver, 14).onTrue(
+		// new SequentialCommandGroup(
+		// new ParallelRaceGroup(
+		// new GetNote(m_drivetrain),
+		// new Intaking(m_intake))));
 
 		// button to score in amp or speaker, uses apriltag -driver Circle
 		// new JoystickButton(operator, 1).onTrue(
@@ -357,7 +386,7 @@ public class RobotContainer {
 		// m_limelight::hasTargetAprilTag));
 
 		// button to pass -driver d-pad up
-		new POVButton(driver, 0).onTrue(
+		new POVButton(testing, 0).onTrue(
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
 								new ShootToRPM(m_shooter),
@@ -378,64 +407,65 @@ public class RobotContainer {
 		// new SetBasePivotToAngle(m_basePivot, 90)));
 
 		// button to zero gyro -driver select
-		new JoystickButton(driver, 10).onTrue(new InstantCommand(m_drivetrain::zeroGyro));
+		// new JoystickButton(driver, 10).onTrue(new
+		// InstantCommand(m_drivetrain::zeroGyro));
 
 		// button to lightly spin shooter wheels -driver playstation symbol on press
-		new JoystickButton(driver, 13).onTrue(
-				new ParallelCommandGroup(
-						new ShootToLob(m_shooter),
-						new SetLeds(m_candle, LEDState.RED)));
+		// new JoystickButton(driver, 13).onTrue(
+		// new ParallelCommandGroup(
+		// new ShootToLob(m_shooter),
+		// new SetLeds(m_candle, LEDState.RED)));
 
 		// button to stop lightly spinning the shooter wheels -driver playstation symbol
 		// on release
-		new JoystickButton(driver, 13).onFalse(
-				new ParallelCommandGroup(
-						new StopShooter(m_shooter),
-						new SetLeds(m_candle, LEDState.GREEN)));
+		// new JoystickButton(driver, 13).onFalse(
+		// new ParallelCommandGroup(
+		// new StopShooter(m_shooter),
+		// new SetLeds(m_candle, LEDState.GREEN)));
 
 		// button to spin shooter wheels to max -operator X button on press
-		new JoystickButton(operator, 2).onTrue(
-				new ParallelCommandGroup(
-						new ShootToRPM(m_shooter),
-						new SetLeds(m_candle, LEDState.RED)));
+		// new JoystickButton(operator, 2).onTrue(
+		// new ParallelCommandGroup(
+		// new ShootToRPM(m_shooter),
+		// new SetLeds(m_candle, LEDState.RED)));
 
 		// button to stop lightly spinning the shooter wheels -operator X button
 		// on release
-		new JoystickButton(operator, 2).onFalse(
-				new ParallelCommandGroup(
-						new StopShooter(m_shooter),
-						new SetLeds(m_candle, LEDState.GREEN)));
+		// new JoystickButton(operator, 2).onFalse(
+		// new ParallelCommandGroup(
+		// new StopShooter(m_shooter),
+		// new SetLeds(m_candle, LEDState.GREEN)));
 
 		// button to ground intake -driver triangle button
-		new JoystickButton(driver, 1).onTrue(
-				new SequentialCommandGroup(
-						new SetLeds(m_candle, Candle.LEDState.ORANGE),
-						new SetTopPivotToAngle(m_topPivot, 36),
-						new SetBasePivotToAngle(m_basePivot, -10),
-						new Intaking(m_intake),
-						new ParallelCommandGroup(
-								new SetBasePivotToAngle(m_basePivot, 90),
-								new RumbleCommand(driver, RumbleType.kBothRumble, 1, 1),
-								new SetLeds(m_candle, Candle.LEDState.GREEN)),
-						new SetTopPivotToAngle(m_topPivot, -52)));
+		// new JoystickButton(driver, 1).onTrue(
+		// new SequentialCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.ORANGE),
+		// new SetTopPivotToAngle(m_topPivot, 36),
+		// new SetBasePivotToAngle(m_basePivot, -10),
+		// new Intaking(m_intake),
+		// new ParallelCommandGroup(
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new RumbleCommand(driver, RumbleType.kBothRumble, 1, 1),
+		// new SetLeds(m_candle, Candle.LEDState.GREEN)),
+		// new SetTopPivotToAngle(m_topPivot, -52)));
 
 		// button to set the arms to ground intake -operator d-pad down
-		new POVButton(operator, 180).onTrue(
-				new SequentialCommandGroup(
-						new SetTopPivotToAngle(m_topPivot, 40),
-						new SetBasePivotToAngle(m_basePivot, -10)));
+		// new POVButton(operator, 180).onTrue(
+		// new SequentialCommandGroup(
+		// new SetTopPivotToAngle(m_topPivot, 40),
+		// new SetBasePivotToAngle(m_basePivot, -10)));
 
 		// sets arm angle to shoot infront of speaker -operator d-pad right
-		new POVButton(operator, 90).onTrue(
-				new SequentialCommandGroup(
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -52)));
+		// new POVButton(operator, 90).onTrue(
+		// new SequentialCommandGroup(
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, -52)));
 
 		// sets arm angle to shoot infront of speaker -driver X button
-		new JoystickButton(driver, 2).onTrue(
-				new SequentialCommandGroup(
-						new SetBasePivotToAngle(m_basePivot, 90),
-						new SetTopPivotToAngle(m_topPivot, -52)));
+		// new JoystickButton(driver, 2).onTrue(
+		// new SequentialCommandGroup(
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, -52)));
 
 		// Button to score in amp through intake -operator d-pad left
 		// new POVButton(operator, 270).onTrue(
@@ -454,54 +484,54 @@ public class RobotContainer {
 		// );
 
 		// button for backup source intake -driver square
-		new JoystickButton(driver, 4).onTrue(
-				new SequentialCommandGroup(
-						new SetTopPivotToAngle(m_topPivot, 86),
-						new SetBasePivotToAngle(m_basePivot, 63)));
+		// new JoystickButton(driver, 4).onTrue(
+		// new SequentialCommandGroup(
+		// new SetTopPivotToAngle(m_topPivot, 86),
+		// new SetBasePivotToAngle(m_basePivot, 63)));
 
-		// button for source intake -operator d-pad up
-		new POVButton(operator, 0).onTrue(
-				new SequentialCommandGroup(
-						new SetLeds(m_candle, Candle.LEDState.ORANGE),
-						new ParallelRaceGroup(
-								new KeepTopPivotToAngle(m_topPivot, 86),
-								new KeepBasePivotToAngle(m_basePivot, 63),
-								new Intaking(m_intake)),
-						new ParallelCommandGroup(
-								new SetLeds(m_candle, Candle.LEDState.GREEN),
-								new RumbleCommand(driver, RumbleType.kRightRumble, 1, 1),
-								new SetBasePivotToAngle(m_basePivot, 90),
-								new SetTopPivotToAngle(m_topPivot, -52))));
+		// // button for source intake -operator d-pad up
+		// new POVButton(operator, 0).onTrue(
+		// new SequentialCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.ORANGE),
+		// new ParallelRaceGroup(
+		// new KeepTopPivotToAngle(m_topPivot, 86),
+		// new KeepBasePivotToAngle(m_basePivot, 63),
+		// new Intaking(m_intake)),
+		// new ParallelCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.GREEN),
+		// new RumbleCommand(driver, RumbleType.kRightRumble, 1, 1),
+		// new SetBasePivotToAngle(m_basePivot, 90),
+		// new SetTopPivotToAngle(m_topPivot, -52))));
 
-		new JoystickButton(driver, 7).whileTrue(
-				new ParallelCommandGroup(
-						new OutTaking(m_intake),
-						new SetLeds(m_candle, LEDState.BLUE)));
+		// new JoystickButton(driver, 7).whileTrue(
+		// new ParallelCommandGroup(
+		// new OutTaking(m_intake),
+		// new SetLeds(m_candle, LEDState.BLUE)));
 
-		new JoystickButton(driver, 7).onFalse(
-				new ParallelCommandGroup(
-						new StopIntake(m_intake),
-						new SetLeds(m_candle, LEDState.GREEN)));
+		// new JoystickButton(driver, 7).onFalse(
+		// new ParallelCommandGroup(
+		// new StopIntake(m_intake),
+		// new SetLeds(m_candle, LEDState.GREEN)));
 
-		new JoystickButton(driver, 8).whileTrue(
-				new ParallelCommandGroup(
-						new SetLeds(m_candle, Candle.LEDState.ORANGE),
-						new ManualIntaking(m_intake)));
+		// new JoystickButton(driver, 8).whileTrue(
+		// new ParallelCommandGroup(
+		// new SetLeds(m_candle, Candle.LEDState.ORANGE),
+		// new ManualIntaking(m_intake)));
 
-		new JoystickButton(driver, 8).onFalse(
-				new SetLeds(m_candle, Candle.LEDState.GREEN));
+		// new JoystickButton(driver, 8).onFalse(
+		// new SetLeds(m_candle, Candle.LEDState.GREEN));
 
-		new JoystickButton(operator, 6).whileTrue(
-				new StarboardClimb(m_starboardClimb, -.75));
+		// new JoystickButton(operator, 6).whileTrue(
+		// new StarboardClimb(m_starboardClimb, -.75));
 
-		new JoystickButton(operator, 5).whileTrue(
-				new PortClimb(m_portClimb, -.75));
+		// new JoystickButton(operator, 5).whileTrue(
+		// new PortClimb(m_portClimb, -.75));
 
-		new JoystickButton(operator, 8).whileTrue(
-				new StarboardClimb(m_starboardClimb, .75));
+		// new JoystickButton(operator, 8).whileTrue(
+		// new StarboardClimb(m_starboardClimb, .75));
 
-		new JoystickButton(operator, 7).whileTrue(
-				new PortClimb(m_portClimb, .75));
+		// new JoystickButton(operator, 7).whileTrue(
+		// new PortClimb(m_portClimb, .75));
 
 	}
 

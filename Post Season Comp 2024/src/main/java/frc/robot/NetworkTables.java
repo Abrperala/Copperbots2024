@@ -12,8 +12,10 @@ public class NetworkTables {
     static NetworkTableInstance inst = NetworkTableInstance.getDefault();
     final static NetworkTable stateTable = inst.getTable("States");
 
-    static StringPublisher intakeStatePublisher = stateTable.getStringTopic("Intake").publish();;
-    static StringPublisher shooterStatePublisher = stateTable.getStringTopic("Shooter").publish();;
+    static StringPublisher intakeStatePublisher = stateTable.getStringTopic("Intake").publish();
+    static StringPublisher shooterStatePublisher = stateTable.getStringTopic("Shooter").publish();
+    static StringPublisher armStatePublisher = stateTable.getStringTopic("Arm").publish();
+    static StringPublisher wristStatePublisher = stateTable.getStringTopic("Wrist").publish();
 
     public NetworkTables() {
 
@@ -31,9 +33,19 @@ public class NetworkTables {
                 shooterStatePublisher.set(state);
                 break;
 
+            case "Wrist":
+                wristStatePublisher.set(state);
+                break;
+
+            case "Arm":
+                armStatePublisher.set(state);
+                break;
+
             default:
-                System.out.print("Check State Names");
+                System.out.print("Check the name of" + name);
         }
+
+        
     }
 
 }

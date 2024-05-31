@@ -4,6 +4,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.NetworkTables;
+import frc.robot.Subsystems.Intake.IntakeState;
 
 public class Arm extends SubsystemBase {
 
@@ -72,7 +74,10 @@ public class Arm extends SubsystemBase {
     public void setArmState(ArmState state){
         armState = state;
         
-        
+    }
+
+    public ArmState getArmState(){
+        return armState;
     }
 
     public enum ArmState {
@@ -85,6 +90,11 @@ public class Arm extends SubsystemBase {
         private ArmState(double angle) {
             this.angle = angle;
         };
+    }
+
+      @Override
+    public void periodic() {
+        NetworkTables.updateState("Arm", getArmState().toString());
     }
 
 }
