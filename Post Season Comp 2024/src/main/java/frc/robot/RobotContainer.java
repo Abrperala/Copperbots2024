@@ -58,7 +58,7 @@ public class RobotContainer {
         private final JoystickButton driverLeftTriggerButton = new JoystickButton(driver, 7);
         private final JoystickButton driverRightTriggerButton = new JoystickButton(driver, 8);
         private final JoystickButton driverTouchpad = new JoystickButton(driver, 14);
-        private final JoystickButton driverOptionsButton = new JoystickButton(driver, 10);
+        private final JoystickButton driverOptionsButton = new JoystickButton(testing, 10);
 
         private final POVButton driverTopPov = new POVButton(driver, 0);
         private final POVButton driverTopRightPov = new POVButton(driver, 45);
