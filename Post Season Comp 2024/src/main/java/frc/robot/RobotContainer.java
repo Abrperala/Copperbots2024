@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,10 +12,19 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Commands.DriveToPose;
+import frc.robot.Commands.IntakeNote;
+import frc.robot.Commands.IntakeUntilTripped;
 import frc.robot.Commands.SeekNote;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climb;
@@ -59,6 +70,7 @@ public class RobotContainer {
         private final JoystickButton driverRightTriggerButton = new JoystickButton(driver, 8);
         private final JoystickButton driverTouchpad = new JoystickButton(driver, 14);
         private final JoystickButton driverOptionsButton = new JoystickButton(testing, 10);
+        private final JoystickButton testingTouchpad = new JoystickButton(testing, 14);
 
         private final POVButton driverTopPov = new POVButton(driver, 0);
         private final POVButton driverTopRightPov = new POVButton(driver, 45);
@@ -70,6 +82,8 @@ public class RobotContainer {
         private final POVButton driverLeftTopPov = new POVButton(driver, 315);
 
         private final JoystickButton testingSquareButton = new JoystickButton(testing, 1);
+
+        private Command runAuto = drivetrain.getAutoPath("test");
 
         private void configureBindings() {
 
@@ -83,6 +97,11 @@ public class RobotContainer {
                                                                 * Math.signum(testing.getRightX())) * MaxAngularRate)));
 
                 testingSquareButton.onTrue(new SeekNote(drivetrain));
+
+                testingTouchpad.onTrue(new IntakeNote(drivetrain, intake, drivetrain.getNotePose()));
+
+                testingTouchpad.onTrue(
+                                new ParallelCommandGroup(new IntakeUntilTripped(intake)));
 
                 driverTopPov.whileTrue(
                                 drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)

@@ -127,4 +127,27 @@ public class Conversions {
     public static double inchesToMeters(double inches) {
         return inches * INCHES_TO_METERS;
     }
+
+    /**
+     * Normalize an angle to the range [-180, 180].
+     *
+     * @param angle the raw angle from the gyro
+     * @return the normalized angle in the range [-180, 180]
+     */
+    public static double normalizeAngle(double angle) {
+        // Normalize the angle to be within [0, 360)
+        angle = angle % 360;
+
+        // If the angle is negative, convert it to the range [0, 360)
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        // Convert angles greater than 180 to the range [-180, 180]
+        if (angle > 180) {
+            angle -= 360;
+        }
+
+        return angle;
+    }
 }

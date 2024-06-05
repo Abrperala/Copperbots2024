@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 
 public class Vision extends SubsystemBase {
@@ -57,12 +58,16 @@ public class Vision extends SubsystemBase {
         return LimelightHelpers.getTX("limelight-left");
     }
 
+    public boolean getTv() {
+        return LimelightHelpers.getTV("limelight-left");
+    }
+
     @Override
     public void periodic() {
 
         SmartDashboard.putNumber("distance from note to camera", getDistanceFromNote());
         SmartDashboard.putNumber("distance from robot to note", getDistanceFromNoteToRobot());
-
+        SmartDashboard.putBoolean("noteseen", getTv());
     }
 
 }

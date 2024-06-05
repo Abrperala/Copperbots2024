@@ -7,15 +7,32 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.PathfindHolonomic;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.lib.math.Conversions;
 import frc.robot.Subsystems.Vision;
+import frc.robot.generated.TunerConstants;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements
@@ -26,11 +43,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    Pose2d desiredPose = new Pose2d();
+
     public Vision m_vision = Vision.getInstance();
+    private final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds();
+
+    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+    private final NetworkTable table = inst.getTable("Pose");
+    private final DoubleArrayPublisher notePub = table.getDoubleArrayTopic("notePose").publish();
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
+        configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -38,16 +64,74 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+        configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
 
-    public Pose2d getNotePose() {
-        Pose2d botPose2d = getState().Pose;
-        double rot = botPose2d.getRotation().getDegrees() - m_vision.getTx() + 90;
+    private void configurePathPlanner() {
+        double driveBaseRadius = 0;
+        for (var moduleLocation : m_moduleLocations) {
+            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+        }
 
-        return new Pose2d(0, 0, rot);
+        AutoBuilder.configureHolonomic(
+                () -> this.getState().Pose, // Supplier of current robot pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+                                                                             // robot
+                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants.kSpeedAt12VoltsMps,
+                        Units.inchesToMeters(14.67247),
+                        new ReplanningConfig(false, false)),
+                () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Assume the path needs to be
+                                                                                         // flipped for Red vs Blue,
+                                                                                         // this is normally the case
+                this); // Subsystem for requirements
+    }
+
+    public Pose2d getNotePose() {
+        if (m_vision.getTv()) {
+            Pose2d botPose2d = getState().Pose;
+            // calculates the angle field relative to the note
+            double angle = botPose2d.getRotation().getDegrees() - m_vision.getTx() + 90;
+            angle = Conversions.normalizeAngle(angle);
+            double distance = Conversions.inchesToMeters(m_vision.getDistanceFromNoteToRobot());
+            double angleRad = Math.toRadians(angle);
+
+            // Calculate the object's coordinates
+            double objectX = botPose2d.getX() + distance * Math.cos(angleRad);
+            double objectY = botPose2d.getY() + distance * Math.sin(angleRad);
+
+            return new Pose2d(objectX, objectY, new Rotation2d(angleRad));
+        }
+
+        else {
+            return new Pose2d();
+        }
+
+    }
+
+    public Command getAutoPath(String pathName) {
+        return new PathPlannerAuto(pathName);
+    }
+
+    public Command driveToPose(Pose2d pose) {
+
+        return AutoBuilder.pathfindToPose(pose, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI),
+                0);
+    }
+
+    public Pose2d getPathfindingPose() {
+
+        return desiredPose;
+    }
+
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -72,6 +156,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     @Override
     public void periodic() {
         SmartDashboard.putNumber("rot", getState().Pose.getRotation().getDegrees());
+        Pose2d notePose = getNotePose();
+        notePub.set(new double[] {
+                notePose.getX(),
+                notePose.getY(),
+                notePose.getRotation().getDegrees()
+        });
     }
 
 }
