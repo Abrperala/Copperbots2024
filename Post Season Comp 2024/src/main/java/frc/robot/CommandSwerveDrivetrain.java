@@ -120,14 +120,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public Command driveToPose(Pose2d pose) {
-
         return AutoBuilder.pathfindToPose(pose, new PathConstraints(2, 1.25, 1 * Math.PI, 0.5 * Math.PI),
                 0);
-    }
-
-    public Pose2d getPathfindingPose() {
-
-        return desiredPose;
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
@@ -156,12 +150,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     @Override
     public void periodic() {
         SmartDashboard.putNumber("rot", getState().Pose.getRotation().getDegrees());
-        Pose2d notePose = getNotePose();
-        notePub.set(new double[] {
-                notePose.getX(),
-                notePose.getY(),
-                notePose.getRotation().getDegrees()
-        });
+
+        if (m_vision.getTv()) {
+            Pose2d notePose = getNotePose();
+            notePub.set(new double[] {
+                    notePose.getX(),
+                    notePose.getY(),
+                    notePose.getRotation().getDegrees()
+            });
+        }
+
     }
 
 }

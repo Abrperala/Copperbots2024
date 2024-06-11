@@ -100,9 +100,6 @@ public class RobotContainer {
 
                 testingTouchpad.onTrue(new IntakeNote(drivetrain, intake, drivetrain.getNotePose()));
 
-                testingTouchpad.onTrue(
-                                new ParallelCommandGroup(new IntakeUntilTripped(intake)));
-
                 driverTopPov.whileTrue(
                                 drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)
                                                 .withVelocityY(0 * MaxSpeed)
