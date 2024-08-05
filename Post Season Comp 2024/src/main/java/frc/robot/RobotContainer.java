@@ -23,17 +23,23 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Commands.DriveToPose;
+import frc.robot.Commands.IntakeFeed;
 import frc.robot.Commands.IntakeNote;
 import frc.robot.Commands.IntakeUntilTripped;
 import frc.robot.Commands.SeekNote;
+import frc.robot.Commands.SetArmState;
+import frc.robot.Commands.SetShooterState;
+import frc.robot.Commands.SetWristState;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Wrist;
+import frc.robot.Subsystems.Arm.ArmState;
 import frc.robot.Subsystems.Climb.ClimbState;
 import frc.robot.Subsystems.Shooter.ShooterState;
+import frc.robot.Subsystems.Wrist.WristState;
 import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.generated.TunerConstants;
 
@@ -82,10 +88,31 @@ public class RobotContainer {
         private final POVButton driverLeftTopPov = new POVButton(driver, 315);
 
         private final JoystickButton testingSquareButton = new JoystickButton(testing, 1);
+        private final JoystickButton testingCrossButton = new JoystickButton(testing, 2);
+        private final JoystickButton testingCircleButton = new JoystickButton(testing, 3);
+        private final JoystickButton testingTriangle = new JoystickButton(testing, 4);
 
         private Command runAuto = drivetrain.getAutoPath("test");
 
         private void configureBindings() {
+
+                final Command groundIntaking = new SequentialCommandGroup(new SetWristState(wrist, WristState.Intaking),
+                                new WaitCommand(.1), new SetArmState(arm, ArmState.Intaking),
+                                new IntakeUntilTripped(intake), new SetArmState(arm, ArmState.Standby),
+                                new WaitCommand(.3), new SetWristState(wrist, WristState.Standby));
+
+                final Command standbyArmAndWrist = new SequentialCommandGroup(new SetArmState(arm, ArmState.Standby),
+                                new WaitCommand(.3), new SetWristState(wrist, WristState.Standby));
+
+                final Command Amping = new SequentialCommandGroup(new IntakeUntilTripped(intake),
+                                new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Amping),
+                                                new SetArmState(arm, ArmState.Amping),
+                                                new SetWristState(wrist, WristState.Amping)),
+                                new WaitCommand(.2),
+                                new IntakeFeed(intake),
+                                new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Standby),
+                                                new SetArmState(arm, ArmState.Standby),
+                                                new SetWristState(wrist, WristState.Standby)));
 
                 drivetrain.setDefaultCommand(
                                 drivetrain.applyRequest(() -> drive
@@ -96,7 +123,13 @@ public class RobotContainer {
                                                 .withRotationalRate(-(testing.getRightX() * testing.getRightX()
                                                                 * Math.signum(testing.getRightX())) * MaxAngularRate)));
 
-                testingSquareButton.onTrue(new SeekNote(drivetrain));
+                testingCircleButton.onTrue(standbyArmAndWrist);
+
+                testingCrossButton.onTrue(new SetWristState(wrist, WristState.Amping));
+
+                testingSquareButton.onTrue(groundIntaking);
+
+                testingTriangle.onTrue(Amping);
 
                 testingTouchpad.onTrue(new IntakeNote(drivetrain, intake, drivetrain.getNotePose()));
 

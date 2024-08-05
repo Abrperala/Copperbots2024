@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.NetworkTables;
 
@@ -76,8 +75,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public enum ShooterState {
-        Shooting(5000),
-        Amping(3000),
+        Shooting(6000),
+        Amping(5000),
         Reving(1000),
         Standby(0);
 

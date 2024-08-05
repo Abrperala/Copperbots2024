@@ -1,11 +1,15 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.NetworkTables;
-import frc.robot.Subsystems.Intake.IntakeState;
 
 public class Arm extends SubsystemBase {
 
@@ -13,12 +17,39 @@ public class Arm extends SubsystemBase {
     private TalonFX rightarmmotorFX;
     private DutyCycleEncoder armEncoder;
     private ArmState armState;
+    private ProfiledPIDController armPID;
+    private Constraints armConstraints;
 
     public Arm() {
         leftarmmotorFX = new TalonFX(16);
         rightarmmotorFX = new TalonFX(17);
         armEncoder = new DutyCycleEncoder(3);
+
+        armConstraints = new Constraints(3000, 1200);
+        armPID = new ProfiledPIDController(.013, 0, 0, armConstraints);
+        armEncoder.setDistancePerRotation(360);
+        armEncoder.setPositionOffset(.791);
+
+        rightarmmotorFX.getConfigurator().apply(new TalonFXConfiguration());
+        leftarmmotorFX.getConfigurator().apply(new TalonFXConfiguration());
+
+        TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
+
+        fx_cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        rightarmmotorFX.getConfigurator().apply(fx_cfg);
+        leftarmmotorFX.getConfigurator().apply(fx_cfg);
+
+        rightarmmotorFX.setInverted(false);
+        leftarmmotorFX.setInverted(false);
+
         armState = ArmState.Standby;
+
+    }
+
+    public void setArmPosition() {
+        double output = armPID.calculate(getArmAngle(), getArmState().angle);
+        leftarmmotorFX.set(output);
+        rightarmmotorFX.set(output);
 
     }
 
@@ -32,7 +63,7 @@ public class Arm extends SubsystemBase {
      *
      * @return The wrapped pivot angle in degrees within the range (-180, 180].
      */
-    public double getPivotAngle() {
+    public double getArmAngle() {
         double rawAngle = armEncoder.getDistance() * -1;
         double wrappedAngle = (rawAngle % 360 + 360) % 360;
         if (wrappedAngle > 180) {
@@ -71,19 +102,22 @@ public class Arm extends SubsystemBase {
         rightarmmotorFX.stopMotor();
 
     }
-    public void setArmState(ArmState state){
+
+    public void setArmState(ArmState state) {
         armState = state;
-        
+        armPID.reset(getArmAngle());
+
     }
 
-    public ArmState getArmState(){
+    public ArmState getArmState() {
         return armState;
     }
 
     public enum ArmState {
         Standby(90),
         Intaking(-10),
-        Sourcing(63);
+        Sourcing(63),
+        Amping(119);
 
         public double angle;
 
@@ -92,9 +126,11 @@ public class Arm extends SubsystemBase {
         };
     }
 
-      @Override
+    @Override
     public void periodic() {
+        setArmPosition();
         NetworkTables.updateState("Arm", getArmState().toString());
+        SmartDashboard.putNumber("Arm Encoder", getArmAngle());
     }
 
 }
