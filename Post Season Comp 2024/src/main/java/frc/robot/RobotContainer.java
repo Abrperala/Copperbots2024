@@ -94,6 +94,10 @@ public class RobotContainer {
 
         private Command runAuto = drivetrain.getAutoPath("test");
 
+        public RobotContainer() {
+                configureBindings();
+        }
+
         private void configureBindings() {
 
                 final Command groundIntaking = new SequentialCommandGroup(new SetWristState(wrist, WristState.Intaking),
@@ -105,11 +109,13 @@ public class RobotContainer {
                                 new WaitCommand(.3), new SetWristState(wrist, WristState.Standby));
 
                 final Command Amping = new SequentialCommandGroup(new IntakeUntilTripped(intake),
+                                new IntakeUntilTripped(intake),
                                 new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Amping),
                                                 new SetArmState(arm, ArmState.Amping),
                                                 new SetWristState(wrist, WristState.Amping)),
-                                new WaitCommand(.2),
+                                new WaitCommand(.4),
                                 new IntakeFeed(intake),
+                                new WaitCommand(.2),
                                 new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Standby),
                                                 new SetArmState(arm, ArmState.Standby),
                                                 new SetWristState(wrist, WristState.Standby)));
@@ -125,107 +131,14 @@ public class RobotContainer {
 
                 testingCircleButton.onTrue(standbyArmAndWrist);
 
-                testingCrossButton.onTrue(new SetWristState(wrist, WristState.Amping));
-
                 testingSquareButton.onTrue(groundIntaking);
 
                 testingTriangle.onTrue(Amping);
 
                 testingTouchpad.onTrue(new IntakeNote(drivetrain, intake, drivetrain.getNotePose()));
 
-                driverTopPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)
-                                                .withVelocityY(0 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverRightPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(.0 * MaxSpeed)
-                                                .withVelocityY(-.5 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverBottomPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(-.5 * MaxSpeed)
-                                                .withVelocityY(.0 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverLeftPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(.0 * MaxSpeed)
-                                                .withVelocityY(.5 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverTopRightPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)
-                                                .withVelocityY(-.5 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverRightBottomPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(-.5 * MaxSpeed)
-                                                .withVelocityY(-.5 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverLeftbottomPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(-.5 * MaxSpeed)
-                                                .withVelocityY(.5 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverLeftTopPov.whileTrue(
-                                drivetrain.applyRequest(() -> drive.withVelocityX(.5 * MaxSpeed)
-                                                .withVelocityY(.5 * MaxSpeed)
-                                                .withRotationalRate(-driver.getRightX() * MaxAngularRate)));
-
-                driverLeftTriggerButton.whileTrue(
-                                new InstantCommand(wrist::turnClockwise));
-
-                driverRightTriggerButton.whileTrue(
-                                new InstantCommand(wrist::turnCounterClockwise));
-
-                driverLeftTriggerButton.onFalse(
-                                new InstantCommand(wrist::stopTurning));
-
-                driverRightTriggerButton.onFalse(
-                                new InstantCommand(wrist::stopTurning));
-
-                driverRightBumper.whileTrue(
-                                new InstantCommand(arm::turnClockwise));
-
-                driverLeftBumper.whileTrue(
-                                new InstantCommand(arm::turnCounterClockwise));
-
-                driverRightBumper.onFalse(
-                                new InstantCommand(arm::stopTurning));
-
-                driverLeftBumper.onFalse(
-                                new InstantCommand(arm::stopTurning));
-
-                driverTriangle.onTrue(
-                                new InstantCommand(() -> intake.setIntakeState(IntakeState.Intaking)));
-
-                driverTriangle.onFalse(
-                                new InstantCommand(() -> intake.setIntakeState(IntakeState.Standby)));
-
-                driverCircle.onFalse(
-                                new ParallelCommandGroup(
-                                                new InstantCommand(() -> portClimb.setClimbState(ClimbState.Standby)),
-                                                new InstantCommand(
-                                                                () -> starboardClimb.setClimbState(ClimbState.Standby))
-
-                                ));
-
-                driverCircle.whileTrue(
-                                new ParallelCommandGroup(
-                                                new InstantCommand(() -> portClimb.setClimbState(ClimbState.ClimbUp)),
-                                                new InstantCommand(
-                                                                () -> starboardClimb.setClimbState(ClimbState.ClimbUp))
-
-                                ));
-
-                driverTouchpad.whileTrue(
-                                new InstantCommand(() -> shooter.setShooterState(ShooterState.Amping)));
-
-                driverTouchpad.onFalse(
-                                new InstantCommand(() -> shooter.setShooterState(ShooterState.Standby)));
-
                 driverCrossButton.whileTrue(drivetrain.applyRequest(() -> brake));
+
                 driverSquareButton.whileTrue(drivetrain
                                 .applyRequest(() -> point.withModuleDirection(
                                                 new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
@@ -236,10 +149,6 @@ public class RobotContainer {
                         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
                 }
                 drivetrain.registerTelemetry(logger::telemeterize);
-        }
-
-        public RobotContainer() {
-                configureBindings();
         }
 
         public Command getAutonomousCommand() {

@@ -1,7 +1,5 @@
 package frc.robot.Subsystems;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 

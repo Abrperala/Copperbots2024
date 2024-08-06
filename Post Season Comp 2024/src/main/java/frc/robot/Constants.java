@@ -1,9 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean

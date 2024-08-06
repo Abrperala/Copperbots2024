@@ -2,7 +2,6 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -75,8 +74,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public enum ShooterState {
-        Shooting(6000),
-        Amping(5000),
+        Shooting(7000),
+        Amping(6000),
         Reving(1000),
         Standby(0);
 
