@@ -78,6 +78,7 @@ public class Wrist extends SubsystemBase {
         Intaking(36),
         Sourcing(63),
         Shooting(0),
+        SpeakerShot(-52),
         Amping(-5);
 
         public double angle;

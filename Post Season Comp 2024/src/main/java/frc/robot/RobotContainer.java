@@ -28,6 +28,7 @@ import frc.robot.Commands.IntakeNote;
 import frc.robot.Commands.IntakeUntilTripped;
 import frc.robot.Commands.SeekNote;
 import frc.robot.Commands.SetArmState;
+import frc.robot.Commands.SetClimbState;
 import frc.robot.Commands.SetShooterState;
 import frc.robot.Commands.SetWristState;
 import frc.robot.Subsystems.Arm;
@@ -76,7 +77,6 @@ public class RobotContainer {
         private final JoystickButton driverRightTriggerButton = new JoystickButton(driver, 8);
         private final JoystickButton driverTouchpad = new JoystickButton(driver, 14);
         private final JoystickButton driverOptionsButton = new JoystickButton(testing, 10);
-        private final JoystickButton testingTouchpad = new JoystickButton(testing, 14);
 
         private final POVButton driverTopPov = new POVButton(driver, 0);
         private final POVButton driverTopRightPov = new POVButton(driver, 45);
@@ -91,6 +91,11 @@ public class RobotContainer {
         private final JoystickButton testingCrossButton = new JoystickButton(testing, 2);
         private final JoystickButton testingCircleButton = new JoystickButton(testing, 3);
         private final JoystickButton testingTriangle = new JoystickButton(testing, 4);
+        private final JoystickButton testingLeftBumper = new JoystickButton(testing, 5);
+        private final JoystickButton testingRightBumper = new JoystickButton(testing, 6);
+        private final JoystickButton testingLeftTriggerButton = new JoystickButton(testing, 7);
+        private final JoystickButton testingRightTriggerButton = new JoystickButton(testing, 8);
+        private final JoystickButton testingTouchpad = new JoystickButton(testing, 14);
 
         private Command runAuto = drivetrain.getAutoPath("test");
 
@@ -108,7 +113,7 @@ public class RobotContainer {
                 final Command standbyArmAndWrist = new SequentialCommandGroup(new SetArmState(arm, ArmState.Standby),
                                 new WaitCommand(.3), new SetWristState(wrist, WristState.Standby));
 
-                final Command Amping = new SequentialCommandGroup(new IntakeUntilTripped(intake),
+                final Command amping = new SequentialCommandGroup(new IntakeUntilTripped(intake),
                                 new IntakeUntilTripped(intake),
                                 new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Amping),
                                                 new SetArmState(arm, ArmState.Amping),
@@ -119,6 +124,56 @@ public class RobotContainer {
                                 new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Standby),
                                                 new SetArmState(arm, ArmState.Standby),
                                                 new SetWristState(wrist, WristState.Standby)));
+
+                final Command sourceIntaking = new SequentialCommandGroup(
+                                new ParallelCommandGroup(new SetArmState(arm, ArmState.Sourcing),
+                                                new SetWristState(wrist, WristState.Sourcing),
+                                                new IntakeUntilTripped(intake)),
+                                new ParallelCommandGroup(new SetArmState(arm, ArmState.Standby),
+                                                new SetWristState(wrist, WristState.Standby)));
+
+                final Command speakerShot = new SequentialCommandGroup(
+                                new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Shooting),
+                                                new SetArmState(arm, ArmState.Standby),
+                                                new SetWristState(wrist, WristState.SpeakerShot)),
+                                new WaitCommand(.4),
+                                new IntakeFeed(intake),
+                                new WaitCommand(.2),
+                                new ParallelCommandGroup(new SetShooterState(shooter, ShooterState.Standby),
+                                                new SetArmState(arm, ArmState.Standby),
+                                                new SetWristState(wrist, WristState.Standby)));
+
+                final Command portClimbUp = new SetClimbState(portClimb, ClimbState.ClimbUp);
+
+                final Command portClimbDown = new SetClimbState(portClimb, ClimbState.ClimbDown);
+
+                final Command portClimbStandby = new SetClimbState(portClimb, ClimbState.Standby);
+
+                final Command starboardClimbUp = new SetClimbState(starboardClimb, ClimbState.ClimbUp);
+
+                final Command starboardClimbDown = new SetClimbState(starboardClimb, ClimbState.ClimbDown);
+
+                final Command starboardClimbStandby = new SetClimbState(starboardClimb, ClimbState.Standby);
+
+                testingLeftTriggerButton.onTrue(portClimbUp);
+
+                testingLeftTriggerButton.onFalse(portClimbStandby);
+
+                testingLeftBumper.onTrue(portClimbDown);
+
+                testingLeftBumper.onFalse(portClimbStandby);
+
+                testingRightTriggerButton.onTrue(starboardClimbUp);
+
+                testingRightTriggerButton.onFalse(starboardClimbStandby);
+
+                testingRightBumper.onTrue(starboardClimbDown);
+
+                testingRightBumper.onFalse(starboardClimbStandby);
+
+                testingCrossButton.onTrue(sourceIntaking);
+
+                testingTouchpad.onTrue(speakerShot);
 
                 drivetrain.setDefaultCommand(
                                 drivetrain.applyRequest(() -> drive
@@ -133,9 +188,7 @@ public class RobotContainer {
 
                 testingSquareButton.onTrue(groundIntaking);
 
-                testingTriangle.onTrue(Amping);
-
-                testingTouchpad.onTrue(new IntakeNote(drivetrain, intake, drivetrain.getNotePose()));
+                testingTriangle.onTrue(amping);
 
                 driverCrossButton.whileTrue(drivetrain.applyRequest(() -> brake));
 

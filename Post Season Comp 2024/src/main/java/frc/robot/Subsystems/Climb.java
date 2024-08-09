@@ -44,7 +44,7 @@ public class Climb extends SubsystemBase {
     public enum ClimbState {
         ClimbUp(.5),
         ClimbDown(-.5),
-        ClimbeHold(0), // TODO: find a way for the climb to calculate the output needed to stay climbed
+        ClimbHold(0), // TODO: find a way for the climb to calculate the output needed to stay climbed
         Standby(0);
 
         public double climbPercent;
