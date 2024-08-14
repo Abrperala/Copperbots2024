@@ -49,6 +49,7 @@ public class RobotContainer {
         private double MaxAngularRate = 1.5 * Math.PI;
 
         private final PS4Controller driver = new PS4Controller(0);
+        private final PS4Controller operator = new PS4Controller(1);
         private final PS4Controller testing = new PS4Controller(2);
 
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
@@ -76,7 +77,7 @@ public class RobotContainer {
         private final JoystickButton driverLeftTriggerButton = new JoystickButton(driver, 7);
         private final JoystickButton driverRightTriggerButton = new JoystickButton(driver, 8);
         private final JoystickButton driverTouchpad = new JoystickButton(driver, 14);
-        private final JoystickButton driverOptionsButton = new JoystickButton(testing, 10);
+        private final JoystickButton driverOptionsButton = new JoystickButton(driver, 10);
 
         private final POVButton driverTopPov = new POVButton(driver, 0);
         private final POVButton driverTopRightPov = new POVButton(driver, 45);
@@ -87,15 +88,24 @@ public class RobotContainer {
         private final POVButton driverLeftPov = new POVButton(driver, 270);
         private final POVButton driverLeftTopPov = new POVButton(driver, 315);
 
-        private final JoystickButton testingSquareButton = new JoystickButton(testing, 1);
-        private final JoystickButton testingCrossButton = new JoystickButton(testing, 2);
-        private final JoystickButton testingCircleButton = new JoystickButton(testing, 3);
-        private final JoystickButton testingTriangle = new JoystickButton(testing, 4);
-        private final JoystickButton testingLeftBumper = new JoystickButton(testing, 5);
-        private final JoystickButton testingRightBumper = new JoystickButton(testing, 6);
-        private final JoystickButton testingLeftTriggerButton = new JoystickButton(testing, 7);
-        private final JoystickButton testingRightTriggerButton = new JoystickButton(testing, 8);
-        private final JoystickButton testingTouchpad = new JoystickButton(testing, 14);
+        private final JoystickButton operatorSquareButton = new JoystickButton(operator, 1);
+        private final JoystickButton operatorCrossButton = new JoystickButton(operator, 2);
+        private final JoystickButton operatorCircleButton = new JoystickButton(operator, 3);
+        private final JoystickButton operatorTriangle = new JoystickButton(operator, 4);
+        private final JoystickButton operatorLeftBumper = new JoystickButton(operator, 5);
+        private final JoystickButton operatorRightBumper = new JoystickButton(operator, 6);
+        private final JoystickButton operatorLeftTriggerButton = new JoystickButton(operator, 7);
+        private final JoystickButton operatorRightTriggerButton = new JoystickButton(operator, 8);
+        private final JoystickButton operatorTouchpad = new JoystickButton(operator, 14);
+
+        private final POVButton operatorTopPov = new POVButton(operator, 0);
+        private final POVButton operatorTopRightPov = new POVButton(operator, 45);
+        private final POVButton operatorRightPov = new POVButton(operator, 90);
+        private final POVButton operatorRightBottomPov = new POVButton(operator, 135);
+        private final POVButton operatorBottomPov = new POVButton(operator, 180);
+        private final POVButton operatorLeftbottomPov = new POVButton(operator, 225);
+        private final POVButton operatorLeftPov = new POVButton(operator, 270);
+        private final POVButton operatorLeftTopPov = new POVButton(operator, 315);
 
         private Command runAuto = drivetrain.getAutoPath("test");
 
@@ -155,40 +165,40 @@ public class RobotContainer {
 
                 final Command starboardClimbStandby = new SetClimbState(starboardClimb, ClimbState.Standby);
 
-                testingLeftTriggerButton.onTrue(portClimbUp);
+                operatorLeftTriggerButton.onTrue(portClimbUp);
 
-                testingLeftTriggerButton.onFalse(portClimbStandby);
+                operatorLeftTriggerButton.onFalse(portClimbStandby);
 
-                testingLeftBumper.onTrue(portClimbDown);
+                operatorLeftBumper.onTrue(portClimbDown);
 
-                testingLeftBumper.onFalse(portClimbStandby);
+                operatorLeftBumper.onFalse(portClimbStandby);
 
-                testingRightTriggerButton.onTrue(starboardClimbUp);
+                operatorRightTriggerButton.onTrue(starboardClimbUp);
 
-                testingRightTriggerButton.onFalse(starboardClimbStandby);
+                operatorRightTriggerButton.onFalse(starboardClimbStandby);
 
-                testingRightBumper.onTrue(starboardClimbDown);
+                operatorRightBumper.onTrue(starboardClimbDown);
 
-                testingRightBumper.onFalse(starboardClimbStandby);
+                operatorRightBumper.onFalse(starboardClimbStandby);
 
-                testingCrossButton.onTrue(sourceIntaking);
+                operatorTopPov.onTrue(sourceIntaking);
 
-                testingTouchpad.onTrue(speakerShot);
+                operatorRightPov.onTrue(speakerShot);
 
                 drivetrain.setDefaultCommand(
                                 drivetrain.applyRequest(() -> drive
-                                                .withVelocityX(-(testing.getLeftY() * testing.getLeftY()
-                                                                * Math.signum(testing.getLeftY())) * MaxSpeed)
-                                                .withVelocityY(-(testing.getLeftX() * testing.getLeftX()
-                                                                * Math.signum(testing.getLeftX())) * MaxSpeed)
-                                                .withRotationalRate(-(testing.getRightX() * testing.getRightX()
-                                                                * Math.signum(testing.getRightX())) * MaxAngularRate)));
+                                                .withVelocityX(-(driver.getLeftY() * driver.getLeftY()
+                                                                * Math.signum(driver.getLeftY())) * MaxSpeed)
+                                                .withVelocityY(-(driver.getLeftX() * driver.getLeftX()
+                                                                * Math.signum(driver.getLeftX())) * MaxSpeed)
+                                                .withRotationalRate(-(driver.getRightX() * driver.getRightX()
+                                                                * Math.signum(driver.getRightX())) * MaxAngularRate)));
 
-                testingCircleButton.onTrue(standbyArmAndWrist);
+                operatorCircleButton.onTrue(standbyArmAndWrist);
 
-                testingSquareButton.onTrue(groundIntaking);
+                operatorBottomPov.onTrue(groundIntaking);
 
-                testingTriangle.onTrue(amping);
+                operatorLeftPov.onTrue(amping);
 
                 driverCrossButton.whileTrue(drivetrain.applyRequest(() -> brake));
 
@@ -205,6 +215,6 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                return AutoBuilder.buildAuto("test");
+                return new PrintCommand("No Auto lol");
         }
 }
